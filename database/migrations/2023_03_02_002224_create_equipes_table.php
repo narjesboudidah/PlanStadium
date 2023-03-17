@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('equipes', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_2')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nom_equipe');
+            $table->foreign('user_id','user_id_fk_3')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nom_equipe',40);
             $table->string('adresse');
             $table->string('pays');
             $table->string('logo');
-            $table->string('type_equipe');
+            $table->string('type_equipe',15);
             $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();

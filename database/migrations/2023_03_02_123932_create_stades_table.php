@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('stades', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_3')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nom');
+            $table->foreign('user_id','user_id_fk_4')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nom',30);
             $table->string('adresse');
-            $table->string('ville');
-            $table->string('pays');
+            $table->string('ville',50);
+            $table->string('pays',50);
             $table->text('description');
             $table->integer('capacite')->nullable();
             $table->integer('longitude')->nullable();

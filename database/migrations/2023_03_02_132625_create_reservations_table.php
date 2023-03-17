@@ -25,10 +25,10 @@ return new class extends Migration
             $table->unsignedInteger('stade_id');
             $table->foreign('stade_id','stade_id_fk_10')->references('id')->on('stades')->onDelete('cascade');
 
-            $table->time('date_debut');
-            $table->time('date_fin');
-            $table->string('type_reservation');
-            $table->string('statut');
+            $table->date('date_debut');
+            $table->date('date_fin');
+            $table->string('type_reservation',50);
+            $table->string('statut',30);
 
             $table->softDeletes();
             $table->timestamps();

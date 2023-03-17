@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_6')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nom');
-            $table->string('annee');
+            $table->foreign('user_id','user_id_fk_8')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nom',30);
+            $table->string('annee',4);
             $table->date('date_debut');
             $table->date('date_fin');
-            $table->string('type_competition');
+            $table->string('type_competition',30);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('role_user_pivots', function (Blueprint $table) {
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id', 'user_id_fk_1')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id', 'user_id_fk_7')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('role_id');
-            $table->foreign('role_id', 'role_id_fk_8')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('role_id', 'role_id_fk_7')->references('id')->on('roles')->onDelete('cascade');
             $table->unsignedInteger('ste_id');
-            $table->foreign('ste_id','ste_id_fk_9')->references('id')->on('societe_maintenances')->onDelete('cascade');
+            $table->foreign('ste_id','ste_id_fk_7')->references('id')->on('societe_maintenances')->onDelete('cascade');
            
             $table->unsignedInteger('equipe_id');
-            $table->foreign('equipe_id','equipe_id_fk_14')->references('id')->on('equipes')->onDelete('cascade');
+            $table->foreign('equipe_id','equipe_id_fk_7')->references('id')->on('equipes')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

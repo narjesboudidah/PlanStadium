@@ -16,16 +16,16 @@ return new class extends Migration
         Schema::create('maintenances', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_5')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id','user_id_fk_6')->references('id')->on('users')->onDelete('cascade');
            
             $table->unsignedInteger('ste_id');
-            $table->foreign('ste_id','ste_id_fk_1')->references('id')->on('societe_maintenances')->onDelete('cascade');
+            $table->foreign('ste_id','ste_id_fk_6')->references('id')->on('societe_maintenances')->onDelete('cascade');
            
             $table->unsignedInteger('stade_id');
-            $table->foreign('stade_id','stade_id_fk_1')->references('id')->on('stades')->onDelete('cascade');
+            $table->foreign('stade_id','stade_id_fk_6')->references('id')->on('stades')->onDelete('cascade');
 
-            $table->time('date_debut');
-            $table->time('date_fin');
+            $table->date('date_debut');
+            $table->date('date_fin');
             $table->string('statut');
 
             $table->softDeletes();

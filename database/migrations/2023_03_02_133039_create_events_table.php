@@ -17,18 +17,18 @@ return new class extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_12')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id','user_id_fk_11')->references('id')->on('users')->onDelete('cascade');
            
             $table->unsignedInteger('equipe_id');
-            $table->foreign('equipe_id','equipe_id_fk_12')->references('id')->on('equipes')->onDelete('cascade');
+            $table->foreign('equipe_id','equipe_id_fk_11')->references('id')->on('equipes')->onDelete('cascade');
            
             $table->unsignedInteger('stade_id');
-            $table->foreign('stade_id','stade_id_fk_12')->references('id')->on('stades')->onDelete('cascade');
+            $table->foreign('stade_id','stade_id_fk_11')->references('id')->on('stades')->onDelete('cascade');
 
-            $table->time('date_debut');
-            $table->time('date_fin');
+            $table->date('date_debut');
+            $table->date('date_fin');
             $table->string('type_reservation');
-            $table->softDeletes()->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('societe_maintenances', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_4')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nom');
+            $table->foreign('user_id','user_id_fk_5')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nom',30);
             $table->string('email')->nullable();
             $table->string('adresse');
-            $table->string('tel');
+            $table->string('tel',25);
             $table->string('logo');
             $table->timestamps();
             $table->softDeletes();
