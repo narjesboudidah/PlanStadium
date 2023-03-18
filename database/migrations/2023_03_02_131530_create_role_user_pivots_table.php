@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreign('user_id', 'user_id_fk_7')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('role_id');
             $table->foreign('role_id', 'role_id_fk_7')->references('id')->on('roles')->onDelete('cascade');
-            $table->unsignedInteger('ste_id');
+            $table->unsignedInteger('ste_id')->nullable();
             $table->foreign('ste_id','ste_id_fk_7')->references('id')->on('societe_maintenances')->onDelete('cascade');
            
-            $table->unsignedInteger('equipe_id');
+            $table->unsignedInteger('equipe_id')->nullable();
             $table->foreign('equipe_id','equipe_id_fk_7')->references('id')->on('equipes')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
