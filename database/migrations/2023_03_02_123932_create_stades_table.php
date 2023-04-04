@@ -18,12 +18,11 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id','user_id_fk_3')->references('id')->on('users')->onDelete('cascade');
             $table->string('nom');
-            $table->string('ville');
             $table->string('pays');
             $table->integer('capacite')->nullable();
             $table->integer('surface')->nullable();
             $table->integer('longitude')->nullable();
-            $table->integer('altitude')->nullable();
+            $table->integer('latitude')->nullable();
             $table->string('proprietaire');
             $table->string('telephone');
             $table->string('adresse');

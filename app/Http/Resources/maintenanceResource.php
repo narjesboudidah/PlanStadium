@@ -16,7 +16,6 @@ class maintenanceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            //mouch bidharoura tsamih id badlou kima t7eb
             'date debut' => $this->date_debut,
             'date fin' => $this->date_fin,
             'statut' => $this->statut,

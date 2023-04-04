@@ -45,7 +45,6 @@ class stadesController extends Controller
         $todayDate = date('m/d/Y');
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
-            'ville' => 'required|string|max:255',
             'pays' => 'required|string|max:255',
             'capacite' => 'nullable|numeric',
             'surface' => 'nullable|numeric',
@@ -84,7 +83,6 @@ class stadesController extends Controller
         $todayDate = date('m/d/Y');
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
-            'ville' => 'required|string|max:255',
             'pays' => 'required|string|max:255',
             'capacite' => 'nullable|numeric',
             'surface' => 'nullable|numeric',

@@ -9,7 +9,7 @@ class societe_maintenances extends Model
 {
     use HasFactory;
     protected $table='societe_maintenances';
-    protected $fillable=['nom','email','adresse','tel','logo','contact_nom','contact_telephone','contact_email','user_id'];
+    protected $fillable=['nom','email','adresse','tel','logo','user_id'];
     protected $guarded = ['created_at', 'updated_at'];
 
     public function user(){

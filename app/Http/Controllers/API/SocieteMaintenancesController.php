@@ -49,9 +49,6 @@ class SocieteMaintenancesController extends Controller
             'tel' => 'required|unique:societe_maintenances',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048|unique:societe_maintenances',
             'email' => 'required|email|unique:societe_maintenances',
-            'contact_nom' => 'nullable|string|max:255',
-            'contact_telephone' => 'nullable|string|unique:societe_maintenances',
-            'contact_email' => 'nullable|email|unique:societe_maintenances',
             'user_id' => 'required|exists:users,id',
         ]);
 
@@ -83,9 +80,6 @@ class SocieteMaintenancesController extends Controller
             'tel' => 'required|unique:societe_maintenances',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048|unique:societe_maintenances',
             'email' => 'required|email|unique:societe_maintenances',
-            'contact_nom' => 'nullable|string|max:255',
-            'contact_telephone' => 'nullable|string|unique:societe_maintenances',
-            'contact_email' => 'nullable|email|unique:societe_maintenances',
             'user_id' => 'required|exists:users,id',
         ]);
 

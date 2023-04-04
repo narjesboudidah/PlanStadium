@@ -18,7 +18,6 @@ class equipeResource extends JsonResource
             'id' => $this->id,
             'nom equipe' => $this->nom_equipe, //mouch bidharoura tsamih id badlou kima t7eb
             'adresse' => $this->adresse,
-            'ville' => $this->ville,
             'pays' => $this->pays,
             'logo' => $this->logo,
             'site web' => $this->site_web,

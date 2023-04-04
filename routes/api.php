@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 //Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
-
+Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
 Route::middleware(['auth'])->group(function () {
     Route::middleware(['superadmin'])->group(function () {
 
@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/event/{id}', [\App\Http\Controllers\API\eventsController::class, 'destroy'])->middleware('admin_equipe');
 
         //User
-        Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
+       // Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
         Route::post('/users', [\App\Http\Controllers\API\usersController::class, 'store']);
         Route::get('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'show']);
         Route::put('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'update']);

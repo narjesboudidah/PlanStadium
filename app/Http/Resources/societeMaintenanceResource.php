@@ -21,9 +21,6 @@ class societeMaintenanceResource extends JsonResource
             'telephone' => $this->tel,
             'logo' => $this->logo,
             'email' => $this->email,
-            'contact_nom' => $this->contact_nom,
-            'contact_telephone' => $this->contact_telephone,
-            'contact_email' => $this->contact_email,
             'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
