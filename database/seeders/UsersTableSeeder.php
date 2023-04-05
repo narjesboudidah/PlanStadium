@@ -21,9 +21,9 @@ class UsersTableSeeder extends Seeder
 
 
         /*  DB::table('users')->delete();
-        
+
         DB::table('users')->insert(array (
-        0 => 
+        0 =>
         array (
         'id' => 1,
         'nom' => 'Admin',
@@ -39,7 +39,7 @@ class UsersTableSeeder extends Seeder
         'deleted_at' => NULL,
         'notify_token' => NULL,
         ),
-        1 => 
+        1 =>
         array (
         'id' => 2,
         'nom' => 'Admin',
@@ -55,7 +55,7 @@ class UsersTableSeeder extends Seeder
         'deleted_at' => NULL,
         'notify_token' => NULL,
         ),
-        2 => 
+        2 =>
         array (
         'id' => 2,
         'nom' => 'Admin',
@@ -95,7 +95,7 @@ class UsersTableSeeder extends Seeder
         'badge' => NULL,
         ),
         ));**/
-        
+
         User::create([
             'nom' => 'Balghouthi',
             'prenom' => 'Sirine',

@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\API\UsersController;
+use App\Http\Controllers\Auth\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 });*/
 //Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
     Route::middleware(['superadmin'])->group(function () {
 
@@ -31,11 +34,11 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/event/{id}', [\App\Http\Controllers\API\eventsController::class, 'destroy'])->middleware('admin_equipe');
 
         //User
-        Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
-        Route::post('/users', [\App\Http\Controllers\API\usersController::class, 'store']);
-        Route::get('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'show']);
-        Route::put('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'update']);
-        Route::delete('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'destroy']);
+        Route::get('/users', [usersController::class, 'index']);
+        Route::get('/user/{id}', [usersController::class, 'show']);
+        Route::post('/users', [usersController::class, 'store']);
+        Route::put('/user/{id}', [usersController::class, 'update']);
+        Route::delete('/user/{id}', [usersController::class, 'destroy']);
 
         Route::middleware(['admin_ste'])->group(function () {
             //Maintenances
@@ -91,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/permission/{id}', [\App\Http\Controllers\API\permissionsController::class, 'update']);
         Route::delete('/permission/{id}', [\App\Http\Controllers\API\permissionsController::class, 'destroy']);
 
-        //permission role pivots 
+        //permission role pivots
         Route::get('/PermissionRolePivots', [\App\Http\Controllers\API\permission_rolesController::class, 'index']);
         Route::post('/PermissionRolePivots', [\App\Http\Controllers\API\permission_rolesController::class, 'store']);
         Route::get('/PermissionRolePivot/{id}', [\App\Http\Controllers\API\permission_rolesController::class, 'show']);

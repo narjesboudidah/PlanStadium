@@ -50,7 +50,7 @@ class usersController extends Controller
             'telephone' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'adresse' => 'required',
-            'password' => 'required|confirmed|string'/*.new isValidPassword()*/,
+            'password' => 'required|string'/*.new isValidPassword()*/,
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -81,7 +81,7 @@ class usersController extends Controller
             'telephone' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'adresse' => 'required',
-            'password' => 'required|confirmed|string'/*.new isValidPassword() */,
+            'password' => 'required|string'/*.new isValidPassword() */,
         ]);
 
         if ($validator->fails()) {
