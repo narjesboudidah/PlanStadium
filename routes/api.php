@@ -34,11 +34,19 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/event/{id}', [\App\Http\Controllers\API\eventsController::class, 'destroy'])->middleware('admin_equipe');
 
         //User
+<<<<<<< HEAD
         Route::get('/users', [usersController::class, 'index']);
         Route::get('/user/{id}', [usersController::class, 'show']);
         Route::post('/users', [usersController::class, 'store']);
         Route::put('/user/{id}', [usersController::class, 'update']);
         Route::delete('/user/{id}', [usersController::class, 'destroy']);
+=======
+       // Route::get('/users', [\App\Http\Controllers\API\usersController::class, 'index']);
+        Route::post('/users', [\App\Http\Controllers\API\usersController::class, 'store']);
+        Route::get('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'show']);
+        Route::put('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'update']);
+        Route::delete('/user/{id}', [\App\Http\Controllers\API\usersController::class, 'destroy']);
+>>>>>>> 92d9e1227fdc20aa444fcb5a67c2f001854b24ed
 
         Route::middleware(['admin_ste'])->group(function () {
             //Maintenances

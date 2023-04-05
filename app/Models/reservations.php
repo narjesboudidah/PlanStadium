@@ -9,7 +9,7 @@ class reservations extends Model
 {
     use HasFactory;
     protected $table='reservations';
-    protected $fillable=['date_debut','date_fin','type_reservation','statut','description','user_id','equipe_id','stade_id'];
+    protected $fillable=['date_debut','date_fin','type_reservation','statut','user_id','equipe_id','stade_id'];
     protected $guarded = ['created_at', 'updated_at'];
     
     public function events(){

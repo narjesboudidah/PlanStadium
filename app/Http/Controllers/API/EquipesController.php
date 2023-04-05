@@ -44,7 +44,6 @@ class EquipesController extends Controller
         $validator = Validator::make($request->all(), [
             'nom_equipe' => 'required|max:255|unique:equipes',
             'adresse' => 'required|string|max:255',
-            'ville' => 'required|string',
             'pays' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'site_web' => 'nullable|string',
@@ -77,7 +76,6 @@ class EquipesController extends Controller
         $validator = Validator::make($request->all(), [
             'nom_equipe' => 'required|max:255|unique:equipes',
             'adresse' => 'required|string|max:255',
-            'ville' => 'required|string',
             'pays' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'site_web' => 'nullable|string',

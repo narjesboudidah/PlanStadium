@@ -22,9 +22,6 @@ return new class extends Migration
             $table->string('tel');
             $table->string('logo');
             $table->string('email');
-            $table->string('contact_nom')->nullable(); //nom du contact principal de la société de maintenance
-            $table->string('contact_telephone')->nullable(); //numéro de téléphone du contact principal de la société de maintenance
-            $table->string('contact_email')->nullable(); //adresse e-mail du contact principal de la société de maintenance
             $table->timestamps();
             $table->softDeletes();
         });

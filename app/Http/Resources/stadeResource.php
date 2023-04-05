@@ -17,7 +17,6 @@ class stadeResource extends JsonResource
         return [
             'id' => $this->id,
             'nom' => $this->nom,
-            'ville' => $this->ville,
             'pays' => $this->pays,
             'capacite' => $this->capacite,
             'surface' => $this->surface,

@@ -44,7 +44,7 @@ class permissionsController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
+            'titre' => 'required|max:255',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -70,7 +70,7 @@ class permissionsController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
+            'titre' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
