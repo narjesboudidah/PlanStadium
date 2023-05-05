@@ -19,11 +19,10 @@ class matchResource extends JsonResource
             'date' => $this->date,
             'heure' => $this->heure,
             'type match' => $this->type_match,
-            'user' => new UserResource($this->whenLoaded('user')),
             'competition' => new UserResource($this->whenLoaded('competitions')),
-            'stade' => new UserResource($this->whenLoaded('stades')),
-            'equipe1' => new UserResource($this->whenLoaded('equipes')),
-            'equipe2' => new UserResource($this->whenLoaded('equipes')),
+            'stade' => new stadeResource($this->whenLoaded('stades')),
+            'equipe1' => new equipeResource($this->whenLoaded('equipes')),
+            'equipe2' => new equipeResource($this->whenLoaded('equipes')),
         ];
     }
 }

@@ -16,12 +16,14 @@ class eventResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date debut' => $this->date_debut, //mouch bidharoura tsamih id badlou kima t7eb
+            'date debut' => $this->date_debut, 
+            'heure debut' => $this->heure_debut,
             'date fin' => $this->date_fin,
-            'type reservation' => $this->type_reservation,
+            'heure fin' => $this->heure_fin,
+            'type event' => $this->type_event,
             'user' => new UserResource($this->whenLoaded('user')),
-            'equipe' => new UserResource($this->whenLoaded('equipes')),
-            'stade' => new UserResource($this->whenLoaded('stades')),
+            'equipe' => new equipeResource($this->whenLoaded('equipes')),
+            'stade' => new stadeResource($this->whenLoaded('stades')),
         ];
     }
 }

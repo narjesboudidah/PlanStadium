@@ -15,8 +15,8 @@ class permission_roleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'Role' => new UserResource($this->whenLoaded('Role')),
-            'Permission' => new UserResource($this->whenLoaded('Permission')),
+            'Role' => new RoleResource($this->whenLoaded('Role')),
+            'Permission' => new PermissionResource($this->whenLoaded('Permission')),
         ];
     }
 }

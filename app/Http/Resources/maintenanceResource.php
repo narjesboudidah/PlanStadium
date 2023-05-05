@@ -16,13 +16,16 @@ class maintenanceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            //mouch bidharoura tsamih id badlou kima t7eb
             'date debut' => $this->date_debut,
+            'heure debut' => $this->heure_debut,
             'date fin' => $this->date_fin,
+            'heure fin' => $this->heure_fin,
+            'etat' => $this->etat,
             'statut' => $this->statut,
-            'user' => new UserResource($this->whenLoaded('user')),
-            'societe maintenances' => new UserResource($this->whenLoaded('societe_maintenances')),
-            'stade' => new UserResource($this->whenLoaded('stades')),
+            'description' => $this->description,
+            'admin_fed_id' => $this->admin_fed_id,
+            'admin_ste_id' => $this->admin_ste_id,
+            'stade' => $this->stade,
         ];
     }
 }

@@ -16,7 +16,7 @@ class permissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'titre' => $this->titre,
         ];
     }
 }

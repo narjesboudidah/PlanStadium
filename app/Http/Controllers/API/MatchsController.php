@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\matchResource;
 use App\Models\matchs;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class MatchsController extends Controller
 {
@@ -46,8 +48,7 @@ class MatchsController extends Controller
         $validator = Validator::make($request->all(), [
             'date' => 'required|date|date_format:Y-m-d',
             'heure' => 'required|date_format:H:i',
-            'type_match' => 'required|unique:matchs',
-            'user_id' => 'required|exists:users,id',
+            'type_match' => 'required|string|max:255',
             'competition_id' => 'required|exists:competitions,id',
             'stade_id' => 'required|exists:stades,id',
             'equipe1_id' => 'required|exists:equipes,id',
@@ -75,48 +76,45 @@ class MatchsController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-
         $validator = Validator::make($request->all(), [
             'date' => 'required|date|date_format:Y-m-d',
             'heure' => 'required|date_format:H:i',
-            'type_match' => 'required|unique:matchs',
-            'user_id' => 'required|exists:users,id',
+            'type_match' => 'required|string',
             'competition_id' => 'required|exists:competitions,id',
             'stade_id' => 'required|exists:stades,id',
             'equipe1_id' => 'required|exists:equipes,id',
-            'equipe2_id' => 'required|exists:equipes,id',
+            'equipe2_id' => [
+                'required',
+                'exists:equipes,id',
+                Rule::notIn([$request->get('equipe1_id')])
+            ],
         ]);
-
+    
         if ($validator->fails()) {
-            $array = [
+            return response([
                 'data' => null,
                 'message' => $validator->errors(),
                 'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
+            ]);
         }
-
+    
         $match = matchs::find($id);
         if (!$match) {
-            $array = [
+            return response([
                 'data' => null,
-                'message' => 'The matchs not Found',
+                'message' => 'The match not found',
                 'status' => 404,
-            ];
-            return $array;
+            ]);
         }
-
+    
         $match->update($request->all());
-        if ($match) {
-            $array = [
-                'data' => new matchResource($match),
-                'message' => 'The matchs update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+        return response([
+            'data' => new matchResource($match),
+            'message' => 'The match updated successfully',
+            'status' => 200,
+        ]);
     }
+    
 
 
     /* Remove the specified resource from storage.*/
@@ -141,5 +139,35 @@ class MatchsController extends Controller
             ];
             return response($array);
         }
+    }
+
+    public function matchFilter($date)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($date)) {
+            // Convertir la date de filtrage en objet Carbon pour une manipulation facile
+            $filterDate = Carbon::parse($date)->toDateString();
+
+            // Effectuer la requête pour filtrer les matchs en fonction de la date
+            $matchs = matchs::whereDate('date', $filterDate)->get();
+            $matchsResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchsResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les matchs
+            $matchs = matchs::all();
+            $matchsResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchsResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+
+        // Retourner les matchs filtrés à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
     }
 }

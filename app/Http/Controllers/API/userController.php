@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 
-class userControler extends Controller
+class userController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
@@ -50,7 +50,7 @@ class userControler extends Controller
             'telephone' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'adresse' => 'required',
-            'password' => 'required',/*|confirmed|string'.new isValidPassword()*/
+            'password' => 'required|string'/*.new isValidPassword()*/,
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -58,7 +58,14 @@ class userControler extends Controller
         }
 
 
-        $user = User::create($request->all());
+        $user =  User::create([
+            'nom' => $request["nom"],
+            'prenom' => $request["prenom"],
+            'telephone' => $request["telephone"],
+            'adresse' => $request["adresse"],
+            'email' => $request["email"],
+            'password' => bcrypt($request["password"]),
+        ]);
         if ($user) {
             $array = [
                 'data' => new userResource($user),
@@ -81,7 +88,7 @@ class userControler extends Controller
             'telephone' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'adresse' => 'required',
-            'password' => 'required|confirmed|string'/*.new isValidPassword() */,
+            'password' => 'required|string'/*.new isValidPassword() */,
         ]);
 
         if ($validator->fails()) {

@@ -2,6 +2,21 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\userController;
+use App\Http\Controllers\API\MatchsController;
+use App\Http\Controllers\API\EventsController;
+use App\Http\Controllers\API\historiquesController;
+use App\Http\Controllers\API\CompetitionsController;
+use App\Http\Controllers\API\MaintenancesController;
+use App\Http\Controllers\API\equipesController;
+use App\Http\Controllers\API\societeMaintenancesController;
+use App\Http\Controllers\API\stadesController;
+use App\Http\Controllers\API\permessionsController;
+use App\Http\Controllers\API\PermissionRolePivotController;
+use App\Http\Controllers\API\RoleUserPivotController;
+use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\ReservationsController;
+use App\Http\Controllers\Auth\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,102 +29,118 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+return $request->user();
 });
+Route::get('/users', [userController::class, 'index']);
 
-//Event
-Route::get('/events', [\App\Http\Controllers\API\eventsController::class, 'index']);
-Route::post('/events', [\App\Http\Controllers\API\eventsController::class, 'store']);
-Route::get('/event/{id}', [\App\Http\Controllers\API\eventsController::class, 'show']);
-Route::put('/event/{id}', [\App\Http\Controllers\API\eventsController::class, 'update']);
-Route::delete('/event/{id}', [\App\Http\Controllers\API\eventsController::class, 'destroy']);
+//Auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-//User
-Route::get('/users', [\App\Http\Controllers\API\userControler::class, 'index']);
-Route::post('/users', [\App\Http\Controllers\API\userControler::class, 'store']);
-Route::get('/user/{id}', [\App\Http\Controllers\API\userControler::class, 'show']);
-Route::put('/user/{id}', [\App\Http\Controllers\API\userControler::class, 'update']);
-Route::delete('/user/{id}', [\App\Http\Controllers\API\userControler::class, 'destroy']);
+//Route::middleware(['auth'])->group(function () {
 
-//Maintenances
-Route::get('/maintenances', [\App\Http\Controllers\API\MaintenancesController::class, 'index']);
-Route::post('/maintenances', [\App\Http\Controllers\API\MaintenancesController::class, 'store']);
-Route::get('/maintenance/{id}', [\App\Http\Controllers\API\MaintenancesController::class, 'show']);
-Route::put('/maintenance/{id}', [\App\Http\Controllers\API\MaintenancesController::class, 'update']);
-Route::delete('/maintenance/{id}', [\App\Http\Controllers\API\MaintenancesController::class, 'destroy']);
+    //Event
+    Route::get('/events', [EventsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
+    Route::post('/events', [EventsController::class, 'store']);//->middleware('superadmin');
+    Route::get('/event/{id}', [EventsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
+    Route::put('/event/{id}', [EventsController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/event/{id}', [EventsController::class, 'destroy']);//->middleware('superadmin', 'admin_equipe');
+    Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);//->middleware('superadmin', 'admin_equipe');
 
-//equipes
-Route::get('/equipes', [\App\Http\Controllers\API\equipesController::class, 'index']);
-Route::post('/equipes', [\App\Http\Controllers\API\equipesController::class, 'store']);
-Route::get('/equipe/{id}', [\App\Http\Controllers\API\equipesController::class, 'show']);
-Route::put('/equipe/{id}', [\App\Http\Controllers\API\equipesController::class, 'update']);
-Route::delete('/equipe/{id}', [\App\Http\Controllers\API\equipesController::class, 'destroy']);
+    //User
+    //Route::get('/users', [userController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::post('/users', [userController::class, 'store']);//->middleware('superadmin');
+    Route::get('/user/{id}', [userController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::put('/user/{id}', [userController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/user/{id}', [userController::class, 'destroy']);//->middleware('superadmin');
 
-//Matchs
-Route::get('/matchs', [\App\Http\Controllers\API\matchsController::class, 'index']);
-Route::post('/matchs', [\App\Http\Controllers\API\matchsController::class, 'store']);
-Route::get('/match/{id}', [\App\Http\Controllers\API\matchsController::class, 'show']);
-Route::put('/match/{id}', [\App\Http\Controllers\API\matchsController::class, 'update']);
-Route::delete('/match/{id}', [\App\Http\Controllers\API\matchsController::class, 'destroy']);
+    //Maintenances
+    Route::get('/maintenances', [MaintenancesController::class, 'index']);//->middleware('superadmin', 'admin_ste');
+    Route::post('/maintenances', [MaintenancesController::class, 'store']);//->middleware('superadmin', 'admin_ste');
+    Route::get('/maintenance/{id}', [MaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
+    Route::put('/maintenance/{id}', [MaintenancesController::class, 'update']);//->middleware('superadmin', 'admin_ste');
+    Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);//->middleware('superadmin', 'admin_ste');
 
-//historiques
-Route::get('/historiques', [\App\Http\Controllers\API\historiquesController::class, 'index']);
-Route::post('/historiques', [\App\Http\Controllers\API\historiquesController::class, 'store']);
-Route::get('/historique/{id}', [\App\Http\Controllers\API\historiquesController::class, 'show']);
+    //equipes
+    Route::get('/equipes', [EquipesController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
+    Route::post('/equipes', [EquipesController::class, 'store']);//->middleware('superadmin');
+    Route::get('/equipe/{id}', [EquipesController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
+    Route::put('/equipe/{id}', [EquipesController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/equipe/{id}', [EquipesController::class, 'destroy']);//->middleware('superadmin');
 
-//societe Maintenance
-Route::get('/societeMaintenances', [\App\Http\Controllers\API\societeMaintenancesController::class, 'index']);
-Route::post('/societeMaintenances', [\App\Http\Controllers\API\societeMaintenancesController::class, 'store']);
-Route::get('/societeMaintenance/{id}', [\App\Http\Controllers\API\societeMaintenancesController::class, 'show']);
-Route::put('/societeMaintenance/{id}', [\App\Http\Controllers\API\societeMaintenancesController::class, 'update']);
-Route::delete('/societeMaintenance/{id}', [\App\Http\Controllers\API\societeMaintenancesController::class, 'destroy']);
+    //Matchs
+    Route::get('/matchs', [MatchsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
+    Route::post('/matchs', [MatchsController::class, 'store']);//->middleware('superadmin');
+    Route::get('/match/{id}', [MatchsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
+    Route::put('/match/{id}', [MatchsController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/match/{id}', [MatchsController::class, 'destroy']);//->middleware('superadmin');
+    Route::get('matchs/filter/{date}', [MatchsController::class, 'matchFilter']);//->middleware('superadmin', 'admin_equipe');
 
-//Stades
-Route::get('/stades', [\App\Http\Controllers\API\stadesController::class, 'index']);
-Route::post('/stades', [\App\Http\Controllers\API\stadesController::class, 'store']);
-Route::get('/stade/{id}', [\App\Http\Controllers\API\stadesController::class, 'show']);
-Route::put('/stade/{id}', [\App\Http\Controllers\API\stadesController::class, 'update']);
-Route::delete('/stade/{id}', [\App\Http\Controllers\API\stadesController::class, 'destroy']);
+    //historiques
+    Route::get('/historiques', [HistoriquesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    //Route::post('/historiques', [HistoriquesController::class, 'store']);
+    Route::get('/historique/{id}', [HistoriquesController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::get('/historiques/filter/{date}', [historiquesController::class, 'historiqueFilter']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
 
-//Permissions
-Route::get('/permissions', [\App\Http\Controllers\API\permessionsController::class, 'index']);
-Route::post('/permissions', [\App\Http\Controllers\API\permessionsController::class, 'store']);
-Route::get('/permission/{id}', [\App\Http\Controllers\API\permessionsController::class, 'show']);
-Route::put('/permission/{id}', [\App\Http\Controllers\API\permessionsController::class, 'update']);
-Route::delete('/permission/{id}', [\App\Http\Controllers\API\permessionsController::class, 'destroy']);
 
-//permission role pivots
-Route::get('/PermissionRolePivots', [\App\Http\Controllers\API\PermissionRolePivotController::class, 'index']);
-Route::post('/PermissionRolePivots', [\App\Http\Controllers\API\PermissionRolePivotController::class, 'store']);
-Route::get('/PermissionRolePivot/{id}', [\App\Http\Controllers\API\PermissionRolePivotController::class, 'show']);
-Route::put('/PermissionRolePivot/{id}', [\App\Http\Controllers\API\PermissionRolePivotController::class, 'update']);
-Route::delete('/PermissionRolePivot/{id}', [\App\Http\Controllers\API\PermissionRolePivotController::class, 'destroy']);
+    //societe Maintenance
+    Route::get('/societeMaintenances', [SocieteMaintenancesController::class, 'index']);//->middleware('superadmin', 'admin_ste');
+    Route::post('/societeMaintenances', [SocieteMaintenancesController::class, 'store']);//->middleware('superadmin');
+    Route::get('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
+    Route::put('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);//->middleware('superadmin');
 
-//Role User Pivots
-Route::get('/RoleUserPivots', [\App\Http\Controllers\API\RoleUserPivotController::class, 'index']);
-Route::post('/RoleUserPivots', [\App\Http\Controllers\API\RoleUserPivotController::class, 'store']);
-Route::get('/RoleUserPivot/{id}', [\App\Http\Controllers\API\RoleUserPivotController::class, 'show']);
-Route::put('/RoleUserPivot/{id}', [\App\Http\Controllers\API\RoleUserPivotController::class, 'update']);
-Route::delete('/RoleUserPivot/{id}', [\App\Http\Controllers\API\RoleUserPivotController::class, 'destroy']);
+    //Stades
+    Route::get('/stades', [StadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::get('/stade/{id}', [StadesController::class, 'show']);//->middleware('superadmin');
+    Route::post('/stades', [StadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::put('/stade/{id}', [StadesController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/stade/{id}', [StadesController::class, 'destroy']);//->middleware('superadmin');
 
-//Role
-Route::get('/Roles', [\App\Http\Controllers\API\RoleController::class, 'index']); // ! better to keep urls in lowercase
-Route::post('/Roles', [\App\Http\Controllers\API\RoleController::class, 'store']);
-Route::get('/Role/{id}', [\App\Http\Controllers\API\RoleController::class, 'show']);
-Route::put('/Role/{id}', [\App\Http\Controllers\API\RoleController::class, 'update']);
-Route::delete('/Role/{id}', [\App\Http\Controllers\API\RoleController::class, 'destroy']);
+    //Route::middleware(['superadmin'])->group(function () {
+        //Permissions
+        Route::get('/permissions', [permessionsController::class, 'index']);
+        Route::post('/permissions', [permessionsController::class, 'store']);
+        Route::get('/permission/{id}', [permessionsController::class, 'show']);
+        Route::put('/permission/{id}', [permessionsController::class, 'update']);
+        Route::delete('/permission/{id}', [permessionsController::class, 'destroy']);
 
-//Competition
-Route::get('/Competitions', [\App\Http\Controllers\API\CompetitionsController::class, 'index']); // keep urls in lowercase
-Route::post('/Competitions', [\App\Http\Controllers\API\CompetitionsController::class, 'store']);
-Route::get('/Competition/{id}', [\App\Http\Controllers\API\CompetitionsController::class, 'show']);
-Route::put('/Competition/{id}', [\App\Http\Controllers\API\CompetitionsController::class, 'update']);
-Route::delete('/Competition/{id}', [\App\Http\Controllers\API\CompetitionsController::class, 'destroy']);
+        //permission role pivots 
+        Route::get('/PermissionRolePivots', [PermissionRolePivotController::class, 'index']);
+        Route::post('/PermissionRolePivots', [PermissionRolePivotController::class, 'store']);
+        Route::get('/PermissionRolePivot/{id}', [PermissionRolePivotController::class, 'show']);
+        Route::put('/PermissionRolePivot/{id}', [PermissionRolePivotController::class, 'update']);
+        Route::delete('/PermissionRolePivot/{id}', [PermissionRolePivotController::class, 'destroy']);
 
-//Reservation
-Route::get('/reservations', [\App\Http\Controllers\API\ReservationsController::class, 'index']);
-Route::post('/reservations', [\App\Http\Controllers\API\ReservationsController::class, 'store']);
-Route::get('/reservation/{id}', [\App\Http\Controllers\API\ReservationsController::class, 'show']);
-Route::put('/reservation/{id}', [\App\Http\Controllers\API\ReservationsController::class, 'update']);
-Route::delete('/reservation/{id}', [\App\Http\Controllers\API\ReservationsController::class, 'destroy']);
+        //Role User Pivots
+        Route::get('/RoleUserPivots', [RoleUserPivotController::class, 'index']);
+        Route::post('/RoleUserPivots', [RoleUserPivotController::class, 'store']);
+        Route::get('/RoleUserPivot/{id}', [RoleUserPivotController::class, 'show']);
+        Route::put('/RoleUserPivot/{id}', [RoleUserPivotController::class, 'update']);
+        Route::delete('/RoleUserPivot/{id}', [RoleUserPivotController::class, 'destroy']);
+
+        //Role
+        Route::get('/Roles', [RoleController::class, 'index']);
+        Route::post('/Roles', [RoleController::class, 'store']);
+        Route::get('/Role/{id}', [RoleController::class, 'show']);
+        Route::put('/Role/{id}', [RoleController::class, 'update']);
+        Route::delete('/Role/{id}', [RoleController::class, 'destroy']);
+    //});
+
+    //Competition
+    Route::get('/Competitions', [CompetitionsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
+    Route::post('/Competitions', [CompetitionsController::class, 'store']);//->middleware('superadmin');
+    Route::get('/Competition/{id}', [CompetitionsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
+    Route::put('/Competition/{id}', [CompetitionsController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']);//->middleware('superadmin');
+    Route::get('/competitions/filter/{annee}', [CompetitionsController::class, 'competitionFilter']);//->middleware('superadmin', 'admin_equipe');
+
+    //Reservation
+    Route::get('/reservations', [ReservationsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
+    Route::post('/reservations', [ReservationsController::class, 'store']);//->middleware('admin_equipe');
+    Route::get('/reservation/{id}', [ReservationsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
+    Route::put('/reservation/{id}', [ReservationsController::class, 'update']);//->middleware('admin_equipe');
+    Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']);//->middleware('admin_equipe');
+//});

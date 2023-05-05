@@ -15,17 +15,18 @@ return new class extends Migration
     {
         Schema::create('stades', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_4')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nom',30);
-            $table->string('adresse');
-            $table->string('ville',50);
-            $table->string('pays',50);
-            $table->text('description');
+            $table->string('nom')->unique();
+            $table->string('pays');
             $table->integer('capacite')->nullable();
+            $table->integer('surface')->nullable();
             $table->integer('longitude')->nullable();
-            $table->integer('altitude')->nullable();
-            $table->date('date_dernier_traveaux');
+            $table->integer('latitude')->nullable();
+            $table->string('proprietaire');
+            $table->string('telephone')->unique();
+            $table->string('adresse')->unique();
+            $table->string('image')->nullable();
+            $table->text('description')->nullable();
+            $table->date('date_dernier_travaux');
 
             $table->timestamps();
             $table->softDeletes();

@@ -16,20 +16,20 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_10')->references('id')->on('users')->onDelete('cascade');
-           
-            $table->unsignedInteger('equipe_id');
-            $table->foreign('equipe_id','equipe_id_fk_10')->references('id')->on('equipes')->onDelete('cascade');
-           
-            $table->unsignedInteger('stade_id');
-            $table->foreign('stade_id','stade_id_fk_10')->references('id')->on('stades')->onDelete('cascade');
+            $table->unsignedInteger('admin_equipe_id');
+            $table->foreign('admin_equipe_id','admin_equipe_id_fk_9')->references('id')->on('users')->onDelete('cascade');
 
+            $table->unsignedInteger('admin_fed_id');
+            $table->foreign('admin_fed_id','admin_fed_id_fk_9')->references('id')->on('users')->onDelete('cascade');
+
+            $table->string('note');
             $table->date('date_debut');
+            $table->time('heure_debut');
             $table->date('date_fin');
-            $table->string('type_reservation',50);
-            $table->string('statut',30);
-
+            $table->time('heure_fin');
+            $table->string('type_reservation')->default('match'); //type de réservation (entraînement, match, événement, etc.)
+            $table->string('statut')->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)
+            
             $table->softDeletes();
             $table->timestamps();
         });

@@ -43,13 +43,15 @@ class reservationsController extends Controller
     {
         $todayDate = date('m/d/Y');
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:'.$todayDate,
+            'note' => 'required|string|max:2023',
+            'date_debut' => 'required|date|date_format:Y-m-d',
+            'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            'type_reservation' => 'required',
-            'statut' => 'required|max:2023',
-            'user_id' => 'required|exists:users,id',
-            'equipe_id' => 'required|exists:equipes,id',
-            'stade_id' => 'required|exists:stades,id',
+            'heure_fin' => 'required|date_format:H:i',
+            'type_reservation' => 'required|string',
+            'statut' => 'required|string|max:2023',
+            'admin_equipe_id' => 'required|exists:users,id',
+            'admin_fed_id' => 'required|exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -73,27 +75,27 @@ class reservationsController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-        $todayDate = date('m/d/Y');
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:'.$todayDate,
+            'note' => 'required|string|max:2023',
+            'date_debut' => 'required|date|date_format:Y-m-d',
+            'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            'type_reservation' => 'required',
-            'statut' => 'required|max:2023',
-            'user_id' => 'required|exists:users,id',
-            'equipe_id' => 'required|exists:equipes,id',
-            'stade_id' => 'required|exists:stades,id',
+            'heure_fin' => 'required|date_format:H:i',
+            'type_reservation' => 'required|string',
+            'statut' => 'required|string|max:2023',
+            'admin_equipe_id' => 'required|exists:users,id',
+            'admin_fed_id' => 'required|exists:users,id',
         ]);
-
+    
         if ($validator->fails()) {
             $array = [
                 'data' => null,
                 'message' => $validator->errors(),
                 'status' => 400,
             ];
-            //return response(null,400,[$validator->errors()]);
             return $array;
         }
-
+    
         $reservation = reservations::find($id);
         if (!$reservation) {
             $array = [
@@ -103,17 +105,18 @@ class reservationsController extends Controller
             ];
             return $array;
         }
-
+    
         $reservation->update($request->all());
         if ($reservation) {
             $array = [
                 'data' => new reservationResource($reservation),
-                'message' => 'The user update',
+                'message' => 'The reservation update',
                 'status' => 201,
             ];
             return response($array);
         }
     }
+    
 
 
     /* Remove the specified resource from storage.*/
@@ -139,4 +142,44 @@ class reservationsController extends Controller
             return response($array);
         }
     }
+
+    public function confirmerReservation($id)
+    {
+        // Trouver la réservation en fonction de l'ID
+        $reservation = reservations::find($id);
+
+        // Vérifier si la réservation existe
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'La réservation n\'existe pas.');
+        }
+
+        // Confirmer la réservation (mettre à jour le statut par exemple)
+        $reservation->update([
+            'statut' => 'confirmée'
+        ]);
+
+        // Rediriger avec un message de succès
+        return redirect()->back()->with('success', 'Réservation confirmée avec succès.');
+    }
+
+    public function annulerReservation($id)
+    {
+        // Trouver la réservation en fonction de l'ID
+        $reservation = reservations::find($id);
+
+        // Vérifier si la réservation existe
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'La réservation n\'existe pas.');
+        }
+
+        // Annuler la réservation (mettre à jour le statut par exemple)
+        $reservation->update([
+            'statut' => 'annulée'
+        ]);
+
+        // Rediriger avec un message de succès
+        return redirect()->back()->with('success', 'Réservation annulée avec succès.');
+    }
+
+
 }

@@ -21,7 +21,9 @@ class competitionResource extends JsonResource
             'date debut' => $this->date_debut,
             'date fin' => $this->date_fin,
             'type competition' => $this->type_competition,
-            'user' => new userResource($this->whenLoaded('user')),
+            'categorie' => $this->categorie,
+            'organisateur' => $this->organisateur,
+            'description' => $this->description,
         ];
     }
 }

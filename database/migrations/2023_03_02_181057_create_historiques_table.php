@@ -17,10 +17,9 @@ return new class extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_12')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id','user_id_fk_11')->references('id')->on('users')->onDelete('cascade');
     
             $table->date('date');
-            $table->string('action',30);
             $table->softDeletes();
             $table->timestamps();
         });

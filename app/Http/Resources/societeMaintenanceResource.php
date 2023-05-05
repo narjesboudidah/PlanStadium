@@ -17,11 +17,11 @@ class societeMaintenanceResource extends JsonResource
         return [
             'id' => $this->id,
             'nom' => $this->nom,
-            'email' => $this->email,
             'adresse' => $this->adresse,
             'telephone' => $this->tel,
             'logo' => $this->logo,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'email' => $this->email,
+            'user_id' => $this->user_id,
         ];
     }
 }

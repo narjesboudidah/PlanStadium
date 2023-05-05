@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('societe_maintenances', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_5')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nom',30);
-            $table->string('email')->nullable();
-            $table->string('adresse');
-            $table->string('tel',25);
+            $table->foreign('user_id','user_id_fk_4')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nom')->unique();
+            $table->string('adresse')->unique();
+            $table->string('tel')->unique();
             $table->string('logo');
+            $table->string('email')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

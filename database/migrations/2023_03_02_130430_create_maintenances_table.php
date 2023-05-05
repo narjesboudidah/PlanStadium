@@ -15,17 +15,21 @@ return new class extends Migration
     {
         Schema::create('maintenances', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_6')->references('id')->on('users')->onDelete('cascade');
-           
-            $table->unsignedInteger('ste_id');
-            $table->foreign('ste_id','ste_id_fk_6')->references('id')->on('societe_maintenances')->onDelete('cascade');
-           
+            $table->unsignedInteger('admin_ste_id');
+            $table->foreign('admin_ste_id','admin_ste_id_fk_5')->references('id')->on('users')->onDelete('cascade');
+            
+            $table->unsignedInteger('admin_fed_id');
+            $table->foreign('admin_fed_id','admin_fed_id_fk_5')->references('id')->on('users')->onDelete('cascade');
+            
             $table->unsignedInteger('stade_id');
-            $table->foreign('stade_id','stade_id_fk_6')->references('id')->on('stades')->onDelete('cascade');
+            $table->foreign('stade_id','stade_id_fk_5')->references('id')->on('stades')->onDelete('cascade');
 
             $table->date('date_debut');
+            $table->time('heure_debut');
             $table->date('date_fin');
+            $table->time('heure_fin');
+            $table->string('description')->nullable(); //description de la nature de la maintenance
+            $table->string('etat');
             $table->string('statut');
 
             $table->softDeletes();

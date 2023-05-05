@@ -44,16 +44,18 @@ class stadesController extends Controller
     {
         $todayDate = date('m/d/Y');
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
-            'adresse' => 'required|max:255',
-            'ville' => 'required|max:255',
-            'pays' => 'required|max:255',
-            'description' => 'required',
-            'capacite' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'altitude' => 'required|numeric',
-            'date_dernier_traveaux' => 'required|date|date_format:Y-m-d|before_or_equal:'.$todayDate,
-            'user_id' => 'required|exists:users,id',
+            'nom' => 'required|string|max:255',
+            'pays' => 'required|string|max:255',
+            'capacite' => 'nullable|numeric',
+            'surface' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'latitude' => 'nullable|numeric',
+            'proprietaire' => 'required|string|max:255',
+            'telephone' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'nullable',
+            'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -77,50 +79,50 @@ class stadesController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-            $todayDate = date('m/d/Y');
-            $validator = Validator::make($request->all(), [
-                'nom' => 'required|max:255',
-                'adresse' => 'required|max:255',
-                'ville' => 'required|max:255',
-                'pays' => 'required|max:255',
-                'description' => 'required',
-                'capacite' => 'required|numeric',
-                'longitude' => 'required|numeric',
-                'altitude' => 'required|numeric',
-                'date_dernier_traveaux' => 'required|date|date_format:Y-m-d|before_or_equal:'.$todayDate,
-                'user_id' => 'required|exists:users,id',
+        $todayDate = date('m/d/Y');
+        $validator = Validator::make($request->all(), [
+            'nom' => 'string|max:255',
+            'pays' => 'string|max:255',
+            'capacite' => 'nullable|numeric',
+            'surface' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'latitude' => 'nullable|numeric',
+            'proprietaire' => 'string|max:255',
+            'telephone' => 'string|max:255',
+            'adresse' => 'string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'nullable',
+            'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
-
+    
         if ($validator->fails()) {
-            $array = [
+            return response()->json([
                 'data' => null,
                 'message' => $validator->errors(),
                 'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
+            ], 400);
         }
-
+    
         $stade = stades::find($id);
         if (!$stade) {
-            $array = [
+            return response()->json([
                 'data' => null,
-                'message' => 'The stade not Found',
+                'message' => 'Stade not found',
                 'status' => 404,
-            ];
-            return $array;
+            ], 404);
         }
-
-        $stade->update($request->all());
-        if ($stade) {
-            $array = [
-                'data' => new stadeResource($stade),
-                'message' => 'The stade update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+    
+        $validatedData = $validator->validated();
+    
+        $stade->update($validatedData);
+    
+        return response()->json([
+            'data' => new StadeResource($stade),
+            'message' => 'Stade updated successfully',
+            'status' => 201,
+        ], 201);
     }
+    
 
 
     /* Remove the specified resource from storage.*/

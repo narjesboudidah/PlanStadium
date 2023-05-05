@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class historiqueResource extends JsonResource
+class actionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,8 @@ class historiqueResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date' => $this->date,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'titre' => $this->titre,
+            'historique' => new historiqueResource($this->whenLoaded('historique')),
         ];
     }
 }

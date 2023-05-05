@@ -17,15 +17,17 @@ class stadeResource extends JsonResource
         return [
             'id' => $this->id,
             'nom' => $this->nom,
-            'adresse' => $this->adresse,
-            'ville' => $this->ville,
             'pays' => $this->pays,
-            'description' => $this->description,
             'capacite' => $this->capacite,
+            'surface' => $this->surface,
             'longitude' => $this->longitude,
-            'altitude' => $this->altitude,
-            'date dernier traveaux' => $this->date_dernier_traveaux,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'latitude' => $this->latitude,
+            'proprietaire' => $this->proprietaire,
+            'telephone' => $this->telephone,
+            'adresse' => $this->adresse,
+            'image' => $this->image,
+            'description' => $this->description,
+            'date dernier travaux' => $this->date_dernier_travaux,
         ];
     }
 }

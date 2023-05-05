@@ -7,6 +7,7 @@ use App\Http\Resources\societeMaintenanceResource;
 use App\Models\societe_maintenances;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
 class SocieteMaintenancesController extends Controller
@@ -44,11 +45,11 @@ class SocieteMaintenancesController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
-            'email' => 'required|email|unique:societe_maintenances',
-            'adresse' => 'required',
+            'nom' => 'required|string|max:255',
+            'adresse' => 'required|string',
             'tel' => 'required|unique:societe_maintenances',
-            'logo' => 'required',/*|image|mimes:jpeg,png,jpg,gif,svg|max:2048',*/
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048|unique:societe_maintenances',
+            'email' => 'required|email|unique:societe_maintenances',
             'user_id' => 'required|exists:users,id',
         ]);
 
@@ -72,47 +73,52 @@ class SocieteMaintenancesController extends Controller
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
-    {
+{
+    $validator = Validator::make($request->all(), [
+        'nom' => 'string|max:255',
+        'adresse' => 'string',
+        'tel' => [
+            Rule::unique('societe_maintenances')->ignore($id),
+        ],
+        'logo' => [
+            'image',
+            'mimes:jpeg,png,jpg,gif,svg',
+            'max:2048',
+            Rule::unique('societe_maintenances')->ignore($id),
+        ],
+        'email' => [
+            'email',
+            Rule::unique('societe_maintenances')->ignore($id),
+        ],
+        'user_id' => 'exists:users,id',
+    ]);
 
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
-            'email' => 'required|email|unique:societe_maintenances',
-            'adresse' => 'required',
-            'tel' => 'required|unique:societe_maintenances',
-            'logo' => 'required',/*|image|mimes:jpeg,png,jpg,gif,svg|max:2048',*/
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
-        $societeMaintenance = societe_maintenances::find($id);
-        if (!$societeMaintenance) {
-            $array = [
-                'data' => null,
-                'message' => 'The societeMaintenance not Found',
-                'status' => 404,
-            ];
-            return $array;
-        }
-
-        $societeMaintenance->update($request->all());
-        if ($societeMaintenance) {
-            $array = [
-                'data' => new societeMaintenanceResource($societeMaintenance),
-                'message' => 'The societe Maintenance update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+    if ($validator->fails()) {
+        return response()->json([
+            'data' => null,
+            'message' => $validator->errors(),
+            'status' => 400,
+        ], 400);
     }
+
+    $societeMaintenance = societe_maintenances::find($id);
+    if (!$societeMaintenance) {
+        return response()->json([
+            'data' => null,
+            'message' => 'SocieteMaintenance not found',
+            'status' => 404,
+        ], 404);
+    }
+
+    $societeMaintenance->update($validator->validated());
+
+    return response()->json([
+        'data' => new SocieteMaintenanceResource($societeMaintenance),
+        'message' => 'SocieteMaintenance updated successfully',
+        'status' => 201,
+    ], 201);
+}
+
 
 
     /* Remove the specified resource from storage.*/

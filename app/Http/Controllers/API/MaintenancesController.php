@@ -7,6 +7,8 @@ use App\Http\Resources\maintenanceResource;
 use App\Models\maintenances;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 
 class MaintenancesController extends Controller
 {
@@ -44,10 +46,14 @@ class MaintenancesController extends Controller
 
         $validator = Validator::make($request->all(), [
             'date_debut' => 'required|date|date_format:Y-m-d',
+            'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            'statut' => 'required|max:255',
-            'user_id' => 'required|exists:users,id',
-            'ste_id' => 'required|exists:societe_maintenances,id',
+            'heure_fin' => 'required|date_format:H:i',
+            'etat' => 'required|string|max:255',
+            'statut' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'admin_fed_id' => 'required|exists:users,id',
+            'admin_ste_id' => 'required|exists:users,id',
             'stade_id' => 'required|exists:stades,id',
         ]);
 
@@ -71,47 +77,38 @@ class MaintenancesController extends Controller
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d',
-            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            'statut' => 'required|max:255',
-            'user_id' => 'required|exists:users,id',
-            'ste_id' => 'required|exists:societe_maintenances,id',
-            'stade_id' => 'required|exists:stades,id',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
-        $maintenance = maintenances::find($id);
-        if (!$maintenance) {
-            $array = [
-                'data' => null,
-                'message' => 'The maintenance not Found',
-                'status' => 404,
-            ];
-            return $array;
-        }
-
-        $maintenance->update($request->all());
-        if ($maintenance) {
-            $array = [
-                'data' => new maintenanceResource($maintenance),
-                'message' => 'The user update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+{
+    $maintenance = maintenances::find($id);
+    if (!$maintenance) {
+        return response()->json([
+            'data' => null,
+            'message' => 'maintenance not found',
+            'status' => 404,
+        ], 404);
     }
+
+    $validatedData = $request->validate([
+        'date_debut' => 'date|date_format:Y-m-d',
+        'heure_debut' => 'date_format:H:i',
+        'date_fin' => 'date|date_format:Y-m-d|after:date_debut',
+        'heure_fin' => 'date_format:H:i',
+        'etat' => 'string|max:255',
+        'statut' => 'string|max:255',
+        'description' => 'string|max:255',
+        'admin_fed_id' => 'exists:users,id',
+        'admin_ste_id' => 'exists:users,id',
+        'stade_id' => 'exists:stades,id',
+    ]);
+
+    $maintenance->update($validatedData);
+
+    return response()->json([
+        'data' => new maintenanceResource($maintenance),
+        'message' => 'maintenance updated successfully',
+        'status' => 201,
+    ], 201);
+}
+    
 
 
     /* Remove the specified resource from storage.*/

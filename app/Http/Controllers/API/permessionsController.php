@@ -4,12 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\permissionResource;
-use App\Models\Permission;
+use App\Models\permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
-class permessionsController extends Controller
+class permissionsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
@@ -44,7 +45,7 @@ class permessionsController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
+            'titre' => 'required|max:255',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -68,41 +69,27 @@ class permessionsController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
         $permission = permission::find($id);
         if (!$permission) {
-            $array = [
+            return response()->json([
                 'data' => null,
-                'message' => 'The permission not Found',
+                'message' => 'Permission not found',
                 'status' => 404,
-            ];
-            return $array;
+            ], 404);
         }
 
-        $permission->update($request->all());
-        if ($permission) {
-            $array = [
-                'data' => new permissionResource($permission),
-                'message' => 'The permission update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+        $validatedData = $request->validate([
+            'titre' => Rule::unique('permissions')->ignore($id),
+        ]);
+        $permission->update($validatedData);
+
+        return response()->json([
+            'data' => new permissionResource($permission),
+            'message' => 'permission updated successfully',
+            'status' => 201,
+        ], 201);
     }
+
 
 
     /* Remove the specified resource from storage.*/

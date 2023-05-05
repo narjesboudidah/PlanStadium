@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,9 +21,11 @@ class User extends Authenticatable
         'nom',
         'prenom',
         'telephone',
-        'adresse',
         'email',
+        'adresse',
+        'email_verified_at',
         'password',
+        'remember_token',
     ];
 
     /**
@@ -54,20 +56,8 @@ class User extends Authenticatable
         return $this->hasMany(reservations::class);
     }
 
-    public function events(){
-        return $this->hasMany(events::class);
-    }
-
-    public function competitions(){
-        return $this->hasMany(competitions::class);
-    }
-
     public function equipes(){
-        return $this->hasMany(equipes::class);
-    }
-
-    public function stades(){
-        return $this->hasMany(stades::class);
+        return $this->hasOne(equipes::class);
     }
 
     public function maintenances(){
@@ -75,11 +65,7 @@ class User extends Authenticatable
     }
 
     public function societe_maintenances(){
-        return $this->hasMany(societe_maintenances::class);
-    }
-
-    public function matchs(){
-        return $this->hasMany(matchs::class);
+        return $this->hasOne(societe_maintenances::class);
     }
 
     public function historiques(){
@@ -90,5 +76,5 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-
+    
 }

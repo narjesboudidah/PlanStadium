@@ -44,70 +44,67 @@ class RoleUserPivotController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
             'role_id' => 'required|exists:roles,id',
-            'ste_id' => 'required|exists:societe_maintenances,id',
-            'equipe_id' => 'required|exists:equipes,id',
+            'ste_id' => 'nullable|exists:societe_maintenances,id',
+            'equipe_id' => 'nullable|exists:equipes,id',
         ]);
 
+        // Si la validation échoue, retourner une réponse avec les erreurs
         if ($validator->fails()) {
             return response(null, 400, [$validator->errors()]);
         }
-
-
+        // Création de l'objet RoleUserPivot avec les entrées validées
         $RoleUserPivot = role_user_pivot::create($request->all());
         if ($RoleUserPivot) {
             $array = [
                 'data' => new RoleUserPivotResource($RoleUserPivot),
-                'message' => 'The RoleUserPivots save',
+                'message' => 'RoleUserPivot created successfully',
                 'status' => 201,
             ];
             return response($array);
         }
-        return response(null, 400, ['The RoleUserPivots not save']);
+        return response(null, 400, ['Failed to create RoleUserPivot']);
     }
 
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
-    {
+{
+    $validator = Validator::make($request->all(), [
+        'user_id' => 'exists:users,id',
+        'role_id' => 'exists:roles,id',
+        'ste_id' => 'exists:societe_maintenances,id',
+        'equipe_id' => 'exists:equipes,id',
+    ]);
 
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-            'role_id' => 'required|exists:roles,id',
-            'ste_id' => 'required|exists:societe_maintenances,id',
-            'equipe_id' => 'required|exists:equipes,id',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
-        $RoleUserPivot = role_user_pivot::find($id);
-        if (!$RoleUserPivot) {
-            $array = [
-                'data' => null,
-                'message' => 'The RoleUserPivots not Found',
-                'status' => 404,
-            ];
-            return $array;
-        }
-
-        $RoleUserPivot->update($request->all());
-        if ($RoleUserPivot) {
-            $array = [
-                'data' => new RoleUserPivotResource($RoleUserPivot),
-                'message' => 'The RoleUserPivots update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+    if ($validator->fails()) {
+        $array = [
+            'data' => null,
+            'message' => $validator->errors(),
+            'status' => 400,
+        ];
+        return $array;
     }
 
+    $roleUserPivot = role_user_pivot::find($id);
+
+    if (!$roleUserPivot) {
+        $array = [
+            'data' => null,
+            'message' => 'RoleUserPivot not found',
+            'status' => 404,
+        ];
+        return $array;
+    }
+
+    $roleUserPivot->update($request->all());
+
+    $array = [
+        'data' => new RoleUserPivotResource($roleUserPivot),
+        'message' => 'RoleUserPivot updated successfully',
+        'status' => 201,
+    ];
+    return response($array);
+}
 
 
     /* Remove the specified resource from storage.*/

@@ -17,13 +17,15 @@ class reservationResource extends JsonResource
         return [
             'id' => $this->id,
             //mouch bidharoura tsamih id badlou kima t7eb
-            'date debut' => $this->date_debut,
+            'note' => $this->note,
+            'date debut' => $this->date_debut, 
+            'heure debut' => $this->heure_debut,
             'date fin' => $this->date_fin,
+            'heure fin' => $this->heure_fin,
             'type reservation' => $this->type_reservation,
             'statut' => $this->statut,
-            'user' => new UserResource($this->whenLoaded('user')),
-            'stade' => new UserResource($this->whenLoaded('stades')),
-            'equipe' => new UserResource($this->whenLoaded('equipes')),
+            'admin_equipe_id' => new UserResource($this->whenLoaded('user')),
+            'admin_fed_id' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

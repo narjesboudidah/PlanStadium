@@ -4,12 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\roleResource;
-use App\Models\Role;
+use App\Models\role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
-class RoleController extends Controller
+class rolesController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
@@ -45,7 +46,7 @@ class RoleController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
+            'titre' => 'required|max:255',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -69,42 +70,26 @@ class RoleController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
         $role = role::find($id);
         if (!$role) {
-            $array = [
+            return response()->json([
                 'data' => null,
-                'message' => 'The role not Found',
+                'message' => 'Role not found',
                 'status' => 404,
-            ];
-            return $array;
+            ], 404);
         }
 
-        $role->update($request->all());
-        if ($role) {
-            $array = [
-                'data' => new roleResource($role),
-                'message' => 'The role update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+        $validatedData = $request->validate([
+            'titre' => Rule::unique('roles')->ignore($id),
+        ]);
+        $role->update($validatedData);
+
+        return response()->json([
+            'data' => new roleResource($role),
+            'message' => 'Role updated successfully',
+            'status' => 201,
+        ], 201);
     }
-
 
     /* Remove the specified resource from storage.*/
     public function destroy($id)

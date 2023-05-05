@@ -9,12 +9,8 @@ class competitions extends Model
 {
     use HasFactory;
     protected $table='competitions';
-    protected $fillable=['nom','annee','date_debut','date_fin','type_competition','user_id'];
+    protected $fillable=['nom','annee','date_debut','date_fin','type_competition','categorie','organisateur','description'];
     protected $guarded = ['created_at', 'updated_at'];
-
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
     
     public function matchs(){
         return $this->hasMany(matchs::class);

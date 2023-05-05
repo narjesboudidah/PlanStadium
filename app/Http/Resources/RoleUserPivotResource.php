@@ -16,9 +16,9 @@ class RoleUserPivotResource extends JsonResource
     {
         return [
             'user' => new UserResource($this->whenLoaded('user')),
-            'role' => new UserResource($this->whenLoaded('Role')),
-            'societe maintenances' => new UserResource($this->whenLoaded('societe_maintenances')),
-            'equipe' => new UserResource($this->whenLoaded('equipes')),
+            'role' => new roleResource($this->whenLoaded('Role')),
+            'societe maintenances' => new societeMaintenanceResource($this->whenLoaded('societe_maintenances')),
+            'equipe' => new equipeResource($this->whenLoaded('equipes')),
         ];
     }
 }

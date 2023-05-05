@@ -7,6 +7,7 @@ use App\Http\Resources\equipeResource;
 use App\Models\equipes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class EquipesController extends Controller
 {
@@ -43,11 +44,12 @@ class EquipesController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nom_equipe' => 'required|max:255|unique:equipes',
-            'adresse' => 'required|max:255',
-            'pays' => 'required',
-            'logo' => 'required',/*|image|mimes:jpeg,png,jpg,gif,svg|max:2048'*/
-            'type_equipe' => 'required',
-            'description' => 'required',
+            'adresse' => 'required|string|max:255',
+            'pays' => 'required|string',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'site_web' => 'nullable|string',
+            'type_equipe' => 'nullable|string',
+            'description' => 'nullable|string',
             'user_id' => 'required|exists:users,id',
         ]);
 
@@ -70,47 +72,36 @@ class EquipesController extends Controller
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'nom_equipe' => 'required|max:255|unique:equipes',
-            'adresse' => 'required|max:255',
-            'pays' => 'required',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'type_equipe' => 'required',
-            'description' => 'required',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            return $array;
-        }
-
-        $equipe = equipes::find($id);
-        if (!$equipe) {
-            $array = [
-                'data' => null,
-                'message' => 'The equipes not Found',
-                'status' => 404,
-            ];
-            return $array;
-        }
-
-        $equipe->update($request->all());
-        if ($equipe) {
-            $array = [
-                'data' => new equipeResource($equipe),
-                'message' => 'The equipes update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+{
+    $equipe = equipes::find($id);
+    if (!$equipe) {
+        return response()->json([
+            'data' => null,
+            'message' => 'equipe not found',
+            'status' => 404,
+        ], 404);
     }
+
+    $validatedData = $request->validate([
+        'nom_equipe' => Rule::unique('equipes')->ignore($id),
+            'adresse' => 'max:255',
+            'pays' => 'string',
+            'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'site_web' => 'string',
+            'type_equipe' => 'string',
+            'description' => 'string',
+            'user_id' => 'exists:users,id',
+    ]);
+
+    $equipe->update($validatedData);
+
+    return response()->json([
+        'data' => new equipeResource($equipe),
+        'message' => 'equipe updated successfully',
+        'status' => 201,
+    ], 201);
+}
+    
 
 
     /* Remove the specified resource from storage.*/

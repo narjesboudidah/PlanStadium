@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Permission extends Model
+class action extends Model
 {
     use HasFactory;
-    protected $table='permissions';
-    protected $fillable=['titre'];
+    protected $table='action';
+    protected $fillable=['titre','historique_id'];
     protected $guarded = ['created_at', 'updated_at'];
 
-    public function permission_role(){
-        return $this->hasMany(permission_role::class);
+    public function historiques(){
+        return $this->belongsTo(historiques::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\competitionResource;
 use App\Models\competitions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +20,7 @@ class CompetitionsController extends Controller
             'message' => 'ok',
             'status' => 200,
         ];
-        return response($array);
+        return response()->json($array);
     }
 
 
@@ -33,9 +34,9 @@ class CompetitionsController extends Controller
                 'message' => 'ok',
                 'status' => 200,
             ];
-            return response($array);
+            return response()->json($array);
         }
-        return response(null, 401, ['The competitions not found']);
+        return response()->json(['The competitions not found'],404);
     }
 
 
@@ -43,17 +44,18 @@ class CompetitionsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
+            'nom' => 'required|string|max:255',
             'annee' => 'required|digits:4|integer|min:1900|max:2024',
             'date_debut' => 'required|date|date_format:Y-m-d',
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            //lazem tben fl vue  
-            'type_competition' => 'required|max:255',
-            'user_id' => 'required|exists:users,id',
+            'type_competition' => 'required|string|max:255',
+            'categorie' => 'required|string|max:255',
+            'organisateur' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response(null, 400, [$validator->errors()]);
+            return response()->json(['message'=>$validator->errors()],400);
         }
 
 
@@ -61,81 +63,93 @@ class CompetitionsController extends Controller
         if ($competition) {
             $array = [
                 'data' => new competitionResource($competition),
-                'message' => 'The competitions save',
+                'message' => 'The competition has been saved',
                 'status' => 201,
             ];
-            return response($array);
+            return response()->json($array);
         }
-        return response(null, 400, ['The competitions not save']);
+        return response()->json(['message' => 'The competition could not be saved'], 400);
     }
 
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
-            'annee' => 'required|digits:4|integer|min:1900|max:2024',
-            'date_debut' => 'required|date|date_format:Y-m-d',
-            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            //lazem tben fl vue  
-            'type_competition' => 'required|max:255',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
-                'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
         $competition = competitions::find($id);
         if (!$competition) {
-            $array = [
+            return response()->json([
                 'data' => null,
-                'message' => 'The competitions not Found',
+                'message' => 'Competition not found',
                 'status' => 404,
-            ];
-            return $array;
+            ], 404);
         }
-
+    
+        $validator = Validator::make($request->all(), [
+            'nom' => 'max:255',
+            'annee' => 'integer|max:2024',
+            'date_debut' => 'date_format:Y-m-d',
+            'date_fin' => 'date_format:Y-m-d|after:date_debut',
+            'type_competition' => 'max:255',
+            'categorie' => 'max:255',
+            'organisateur' => 'max:255',
+            'description' => 'max:255',
+            'user_id' => 'required|exists:users,id',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 400);
+        }
+    
         $competition->update($request->all());
-        if ($competition) {
-            $array = [
-                'data' => new competitionResource($competition),
-                'message' => 'The competitions update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
-    }
-
+        return response()->json([
+            'message' => 'The competition was updated',
+            'status' => 201,
+        ], 201);
+    }    
 
     /* Remove the specified resource from storage.*/
     public function destroy($id)
     {
 
         $competition = competitions::find($id);
+        // Vérifier si la compétition existe
         if (!$competition) {
-            $array = [
-                'data' => null,
-                'message' => 'The competitions not Found',
-                'status' => 404,
-            ];
-            return response($array);
+            return response()->json(['message' => 'The competition was not found'], 404);
         }
+        
+        // Supprimer la compétition
         $competition->delete($id);
         if ($competition) {
-            $array = [
-                'data' => null,
-                'message' => 'The competitions delete',
-                'status' => 200,
-            ];
-            return response($array);
+            return response()->json(['message' => 'The competition was deleted'], 200);
         }
     }
+
+    public function competitionFilter($annee)
+    {
+        // Vérifier si une année de filtrage a été spécifiée
+        if ($annee) {
+
+            // Effectuer la requête pour filtrer les compétitions en fonction de l'année
+            $competitions = competitions::where('annee', $annee)->get();
+            $competitionsResource = competitionResource::collection($competitions);
+            $array = [
+                'data' => $competitionsResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune année de filtrage n'est spécifiée, récupérer toutes les compétitions
+            $competitions = competitions::all();
+            $competitionsResource = competitionResource::collection($competitions);
+            $array = [
+                'data' => $competitionsResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+
+        // Retourner les compétitions filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+
 }
