@@ -37,6 +37,7 @@ use App\Http\Controllers\Auth\AuthController;
 //Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/Competitions', [CompetitionsController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -129,8 +130,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //});
 
     //Competition
-    Route::get('/Competitions', [CompetitionsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    Route::post('/Competitions', [CompetitionsController::class, 'store']);//->middleware('superadmin');
+        Route::get('/Competitions', [CompetitionsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
+    //Route::post('/Competitions', [CompetitionsController::class, 'store']);//->middleware('superadmin');
     Route::get('/Competition/{id}', [CompetitionsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
     Route::put('/Competition/{id}', [CompetitionsController::class, 'update']);//->middleware('superadmin');
     Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']);//->middleware('superadmin');
