@@ -19,7 +19,7 @@ class CompetitionsController extends Controller
             'message' => 'ok',
             'status' => 200,
         ];
-        return response()->json($array);
+        return response($array);
     }
 
 
