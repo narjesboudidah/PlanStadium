@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('prenom')->default('Balghouthi');
             $table->string('telephone')->unique(); 
             $table->string('email')->unique();
-            $table->string('adresse');
+            $table->string('adresse')->nullable();
             $table->datetime('email_verified_at')->nullable();
             $table->string('password');
             $table->string('remember_token')->nullable();

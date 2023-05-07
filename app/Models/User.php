@@ -48,9 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
     protected $guarded = ['created_at', 'updated_at'];
 
-    public function role_user_pivot(){
-        return $this->hasMany(role_user_pivot::class);
-    }
 
     public function reservations(){
         return $this->hasMany(reservations::class);
@@ -73,7 +70,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function Role(){
-        return $this->belongsTo(Role::class);
+        return $this->belongsToMany(Role::class,'role_user_pivots');
     }
 
     

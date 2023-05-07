@@ -49,7 +49,7 @@ class EventsController extends Controller
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
             'heure_fin' => 'required|date_format:H:i',
             'type_event' => 'required|string|max:255',
-            'equipe_id' => 'nullable|exists:equipes,id',
+            'nom_event' => 'nullable|string|max:255',
             'stade_id' => 'required|exists:stades,id',
         ]);
 
@@ -78,8 +78,8 @@ class EventsController extends Controller
         'heure_debut' => 'date_format:H:i',
         'date_fin' => 'date_format:Y-m-d|after:date_debut',
         'heure_fin' => 'date_format:H:i',
-        'type_event' => 'max:255',
-        'equipe_id' => 'exists:equipes,id',
+        'type_event' => 'string|max:255',
+        'nom_event' => 'string|max:255',
         'stade_id' => 'exists:stades,id',
     ]);
 

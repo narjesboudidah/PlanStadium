@@ -26,6 +26,7 @@ class stadeResource extends JsonResource
             'telephone' => $this->telephone,
             'adresse' => $this->adresse,
             'image' => $this->image,
+            'etat' => $this->etat,
             'description' => $this->description,
             'date dernier travaux' => $this->date_dernier_travaux,
         ];

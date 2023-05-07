@@ -12,8 +12,13 @@ class role_user_pivot extends Model
     protected $primaryKey = ['role_id', 'user_id'];
     protected $guarded = ['created_at', 'updated_at'];
     
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function role()
+    {
+        return $this->belongsTo(Role::class,"role_id");
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,"user_id");
     }
 
     public function equipes(){

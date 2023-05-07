@@ -23,7 +23,7 @@ class equipeResource extends JsonResource
             'site web' => $this->site_web,
             'type equipe' => $this->type_equipe,
             'description' => $this->description,
-            'user_id' => $this->user_id,
+            'admin_equipe' => new historiqueResource($this->whenLoaded('user')),
 
         ];
     }

@@ -21,7 +21,6 @@ class eventResource extends JsonResource
             'date fin' => $this->date_fin,
             'heure fin' => $this->heure_fin,
             'type event' => $this->type_event,
-            'user' => new UserResource($this->whenLoaded('user')),
             'equipe' => new equipeResource($this->whenLoaded('equipes')),
             'stade' => new stadeResource($this->whenLoaded('stades')),
         ];

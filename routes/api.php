@@ -11,10 +11,10 @@ use App\Http\Controllers\API\MaintenancesController;
 use App\Http\Controllers\API\equipesController;
 use App\Http\Controllers\API\societeMaintenancesController;
 use App\Http\Controllers\API\stadesController;
-use App\Http\Controllers\API\permessionsController;
-use App\Http\Controllers\API\PermissionRolePivotController;
+use App\Http\Controllers\API\permissionsController;
+use App\Http\Controllers\API\permission_rolesController;
 use App\Http\Controllers\API\RoleUserPivotController;
-use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\RolesController;
 use App\Http\Controllers\API\ReservationsController;
 use App\Http\Controllers\Auth\AuthController;
 
@@ -80,7 +80,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //historiques
     Route::get('/historiques', [HistoriquesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    //Route::post('/historiques', [HistoriquesController::class, 'store']);
+    Route::post('/historiques', [HistoriquesController::class, 'store']);
     Route::get('/historique/{id}', [HistoriquesController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::get('/historiques/filter/{date}', [historiquesController::class, 'historiqueFilter']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
 
@@ -101,32 +101,32 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Route::middleware(['superadmin'])->group(function () {
         //Permissions
-        Route::get('/permissions', [permessionsController::class, 'index']);
-        Route::post('/permissions', [permessionsController::class, 'store']);
-        Route::get('/permission/{id}', [permessionsController::class, 'show']);
-        Route::put('/permission/{id}', [permessionsController::class, 'update']);
-        Route::delete('/permission/{id}', [permessionsController::class, 'destroy']);
+        Route::get('/permissions', [permissionsController::class, 'index']);
+        Route::post('/permissions', [permissionsController::class, 'store']);
+        Route::get('/permission/{id}', [permissionsController::class, 'show']);
+        Route::put('/permission/{id}', [permissionsController::class, 'update']);
+        Route::delete('/permission/{id}', [permissionsController::class, 'destroy']);
 
         //permission role pivots 
-        Route::get('/PermissionRolePivots', [PermissionRolePivotController::class, 'index']);
-        Route::post('/PermissionRolePivots', [PermissionRolePivotController::class, 'store']);
-        Route::get('/PermissionRolePivot/{id}', [PermissionRolePivotController::class, 'show']);
-        Route::put('/PermissionRolePivot/{id}', [PermissionRolePivotController::class, 'update']);
-        Route::delete('/PermissionRolePivot/{id}', [PermissionRolePivotController::class, 'destroy']);
+        Route::get('/PermissionRolePivots', [permission_rolesController::class, 'index']);
+        Route::post('/PermissionRolePivots', [permission_rolesController::class, 'store']);
+        Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
+        Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
+        Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
 
         //Role User Pivots
         Route::get('/RoleUserPivots', [RoleUserPivotController::class, 'index']);
         Route::post('/RoleUserPivots', [RoleUserPivotController::class, 'store']);
-        Route::get('/RoleUserPivot/{id}', [RoleUserPivotController::class, 'show']);
-        Route::put('/RoleUserPivot/{id}', [RoleUserPivotController::class, 'update']);
-        Route::delete('/RoleUserPivot/{id}', [RoleUserPivotController::class, 'destroy']);
+        Route::get('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'show']);
+        Route::put('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'update']);
+        Route::delete('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'destroy']);
 
         //Role
-        Route::get('/Roles', [RoleController::class, 'index']);
-        Route::post('/Roles', [RoleController::class, 'store']);
-        Route::get('/Role/{id}', [RoleController::class, 'show']);
-        Route::put('/Role/{id}', [RoleController::class, 'update']);
-        Route::delete('/Role/{id}', [RoleController::class, 'destroy']);
+        Route::get('/Roles', [RolesController::class, 'index']);
+        Route::post('/Roles', [RolesController::class, 'store']);
+        Route::get('/Role/{id}', [RolesController::class, 'show']);
+        Route::put('/Role/{id}', [RolesController::class, 'update']);
+        Route::delete('/Role/{id}', [RolesController::class, 'destroy']);
     //});
 
     //Competition

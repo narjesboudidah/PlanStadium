@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\competitionResource;
 use App\Models\competitions;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -93,7 +92,7 @@ class CompetitionsController extends Controller
             'categorie' => 'max:255',
             'organisateur' => 'max:255',
             'description' => 'max:255',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'exists:users,id',
         ]);
     
         if ($validator->fails()) {

@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('historiques', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_11')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('admin_fed_id');
+            $table->foreign('admin_fed_id','admin_fed_id_fk_11')->references('id')->on('users')->onDelete('cascade');
     
             $table->date('date');
             $table->softDeletes();

@@ -76,15 +76,15 @@ class reservationsController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'note' => 'required|string|max:2023',
-            'date_debut' => 'required|date|date_format:Y-m-d',
-            'heure_debut' => 'required|date_format:H:i',
-            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            'heure_fin' => 'required|date_format:H:i',
-            'type_reservation' => 'required|string',
-            'statut' => 'required|string|max:2023',
-            'admin_equipe_id' => 'required|exists:users,id',
-            'admin_fed_id' => 'required|exists:users,id',
+            'note' => 'string|max:2023',
+            'date_debut' => 'date|date_format:Y-m-d',
+            'heure_debut' => 'date_format:H:i',
+            'date_fin' => 'date|date_format:Y-m-d|after:date_debut',
+            'heure_fin' => 'date_format:H:i',
+            'type_reservation' => 'string',
+            'statut' => 'string|max:2023',
+            'admin_equipe_id' => 'exists:users,id',
+            'admin_fed_id' => 'exists:users,id',
         ]);
     
         if ($validator->fails()) {
