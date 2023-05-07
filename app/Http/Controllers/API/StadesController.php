@@ -42,21 +42,19 @@ class stadesController extends Controller
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
-        $todayDate = date('m/d/Y');
+        $todayDate = date('m-d-Y');
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'pays' => 'required|string|max:255',
             'capacite' => 'nullable|numeric',
             'surface' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'latitude' => 'nullable|numeric',
             'proprietaire' => 'required|string|max:255',
             'telephone' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'etat' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
+            'date_dernier_travaux' => 'nullable|date|date_format:m--Y|before_or_equal:' . $todayDate,
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -71,7 +69,7 @@ class stadesController extends Controller
                 'message' => 'The stade save',
                 'status' => 201,
             ];
-            return response($array);
+            return response($array, 201);
         }
         return response(null, 400, ['The stade not save']);
     }
@@ -96,7 +94,7 @@ class stadesController extends Controller
             'description' => 'nullable|string',
             'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'data' => null,
@@ -104,7 +102,7 @@ class stadesController extends Controller
                 'status' => 400,
             ], 400);
         }
-    
+
         $stade = stades::find($id);
         if (!$stade) {
             return response()->json([
@@ -113,18 +111,18 @@ class stadesController extends Controller
                 'status' => 404,
             ], 404);
         }
-    
+
         $validatedData = $validator->validated();
-    
+
         $stade->update($validatedData);
-    
+
         return response()->json([
             'data' => new StadeResource($stade),
             'message' => 'Stade updated successfully',
             'status' => 201,
         ], 201);
     }
-    
+
 
 
     /* Remove the specified resource from storage.*/
