@@ -10,7 +10,7 @@ use App\Http\Controllers\API\CompetitionsController;
 use App\Http\Controllers\API\MaintenancesController;
 use App\Http\Controllers\API\equipesController;
 use App\Http\Controllers\API\societeMaintenancesController;
-use App\Http\Controllers\API\stadesController;
+use App\Http\Controllers\API\StadesController;
 use App\Http\Controllers\API\permissionsController;
 use App\Http\Controllers\API\permission_rolesController;
 use App\Http\Controllers\API\RoleUserPivotController;
@@ -93,11 +93,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);//->middleware('superadmin');
 
     //Stades
-    Route::get('/stades', [StadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::get('/stade/{id}', [StadesController::class, 'show']);//->middleware('superadmin');
-    Route::post('/stades', [StadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::put('/stade/{id}', [StadesController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/stade/{id}', [StadesController::class, 'destroy']);//->middleware('superadmin');
+    Route::get('/stades', [stadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::get('/stade/{id}', [stadesController::class, 'show']);//->middleware('superadmin');
+    Route::post('/stades', [stadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::put('/stade/{id}', [stadesController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/stade/{id}', [stadesController::class, 'destroy']);//->middleware('superadmin');
 
     //Route::middleware(['superadmin'])->group(function () {
         //Permissions
@@ -107,7 +107,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/permission/{id}', [permissionsController::class, 'update']);
         Route::delete('/permission/{id}', [permissionsController::class, 'destroy']);
 
-        //permission role pivots 
+        //permission role pivots
         Route::get('/PermissionRolePivots', [permission_rolesController::class, 'index']);
         Route::post('/PermissionRolePivots', [permission_rolesController::class, 'store']);
         Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
