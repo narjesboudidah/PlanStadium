@@ -33,7 +33,6 @@ use App\Http\Controllers\Auth\AuthController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // return $request->user();
 // });
-Route::get('/users', [userController::class, 'index']);
 
 //Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -50,7 +49,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);//->middleware('superadmin', 'admin_equipe');
 
     //User
-    //Route::get('/users', [userController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::get('/users', [userController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::post('/users', [userController::class, 'store']);//->middleware('superadmin');
     Route::get('/user/{id}', [userController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::put('/user/{id}', [userController::class, 'update']);//->middleware('superadmin');
