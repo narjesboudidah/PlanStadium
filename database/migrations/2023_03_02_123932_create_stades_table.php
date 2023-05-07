@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('telephone')->unique();
             $table->string('adresse')->unique();
             $table->string('image')->nullable();
-            $table->enum('etat',['en cours','refuser','accepter'])->default('en cours');
+            $table->enum('etat',['disponible','reserver','en maintenance'])->default('disponible');
             $table->text('description')->nullable();
             $table->date('date_dernier_travaux');
 
