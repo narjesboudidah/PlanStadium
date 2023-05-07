@@ -18,7 +18,7 @@ class societeMaintenanceResource extends JsonResource
             'id' => $this->id,
             'nom' => $this->nom,
             'adresse' => $this->adresse,
-            'telephone' => $this->tel,
+            'tel' => $this->tel,
             'logo' => $this->logo,
             'email' => $this->email,
             'description' => $this->description,
