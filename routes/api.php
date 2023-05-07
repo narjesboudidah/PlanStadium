@@ -30,16 +30,16 @@ use App\Http\Controllers\Auth\AuthController;
 */
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// return $request->user();
+// });
 Route::get('/users', [userController::class, 'index']);
 
 //Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-//Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
 
     //Event
     Route::get('/events', [EventsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
@@ -143,4 +143,4 @@ Route::post('/login', [AuthController::class, 'login']);
     Route::get('/reservation/{id}', [ReservationsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
     Route::put('/reservation/{id}', [ReservationsController::class, 'update']);//->middleware('admin_equipe');
     Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']);//->middleware('admin_equipe');
-//});
+});
