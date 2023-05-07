@@ -18,6 +18,30 @@ class ActionController extends Controller
         ];
         return response($array);
     }
+    public function store(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'titre' => 'required|max:255',
+            'historique_id' => 'required|exists:historiques,id',
+        ]);
+
+        if ($validator->fails()) { //ken fama mochkil
+            return response(null, 400, [$validator->errors()]);
+        }
+
+
+        $action = action::create($request->all());
+        if ($action) {
+            $array = [
+                'data' => new actionResource($action),
+                'message' => 'The actions save',
+                'status' => 201,
+            ];
+            return response($array);
+        }
+        return response(null, 400, ['The actions not save']);
+    }
 
 
     /*Display the specified resource.*/

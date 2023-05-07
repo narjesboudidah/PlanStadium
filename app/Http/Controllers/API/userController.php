@@ -53,7 +53,7 @@ class userController extends Controller
             'password' => 'required|string'/*.new isValidPassword()*/,
         ]);
 
-        if ($validator->fails()) { //ken fama mochkil
+        if ($validator->fails()) { 
             return response(null, 400, [$validator->errors()]);
         }
 
@@ -81,45 +81,31 @@ class userController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
-            'prenom' => 'required|max:255',
-            'telephone' => 'required|unique:users',
-            'email' => 'required|email|unique:users',
-            'adresse' => 'required',
-            'password' => 'required|string'/*.new isValidPassword() */,
-        ]);
-
-        if ($validator->fails()) {
-            $array = [
+        $User = User::find($id);
+        if (!$User) {
+            return response()->json([
                 'data' => null,
-                'message' => $validator->errors(),
-                'status' => 400,
-            ];
-            //return response(null,400,[$validator->errors()]);
-            return $array;
-        }
-
-        $user = User::find($id);
-        if (!$user) {
-            $array = [
-                'data' => null,
-                'message' => 'The user not Found',
+                'message' => 'User not found',
                 'status' => 404,
-            ];
-            return $array;
+            ], 404);
         }
-
-        $user->update($request->all());
-        if ($user) {
-            $array = [
-                'data' => new userResource($user),
-                'message' => 'The user update',
-                'status' => 201,
-            ];
-            return response($array);
-        }
+    
+        $validatedData = $request->validate([
+            'nom' => 'max:255',
+            'prenom' => 'max:255',
+            'telephone' => 'unique:users',
+            'email' => 'email|unique:users',
+            'adresse' => 'string',
+            'password' => 'string',
+        ]);
+    
+        $User->update($validatedData);
+    
+        return response()->json([
+            'data' => new userResource($User),
+            'message' => 'User updated successfully',
+            'status' => 201,
+        ], 201);
     }
 
 

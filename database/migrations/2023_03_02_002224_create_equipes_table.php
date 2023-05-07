@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('equipes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_2')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('admin_equipe_id');
+            $table->foreign('admin_equipe_id','admin_equipe_id_fk_2')->references('id')->on('users')->onDelete('cascade');
             $table->string('nom_equipe')->unique();
             $table->string('adresse')->unique();
             $table->string('pays');
-            $table->string('logo');
+            $table->string('logo')->unique();
             $table->string('site_web')->nullable()->unique();
-            $table->string('type_equipe')->nullable();
+            $table->string('type_equipe');
             $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();

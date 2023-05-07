@@ -50,7 +50,8 @@ class SocieteMaintenancesController extends Controller
             'tel' => 'required|unique:societe_maintenances',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048|unique:societe_maintenances',
             'email' => 'required|email|unique:societe_maintenances',
-            'user_id' => 'required|exists:users,id',
+            'description' => 'nullable|string',
+            'admin_ste_id' => 'required|exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -90,7 +91,8 @@ class SocieteMaintenancesController extends Controller
             'email',
             Rule::unique('societe_maintenances')->ignore($id),
         ],
-        'user_id' => 'exists:users,id',
+        'description' => 'nullable|string',
+        'admin_ste_id' => 'exists:users,id',
     ]);
 
     if ($validator->fails()) {

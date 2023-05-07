@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('societe_maintenances', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_4')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('admin_ste_id');
+            $table->foreign('admin_ste_id','admin_ste_id_fk_4')->references('id')->on('users')->onDelete('cascade');
             $table->string('nom')->unique();
             $table->string('adresse')->unique();
             $table->string('tel')->unique();
             $table->string('logo');
             $table->string('email')->unique();
+            $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

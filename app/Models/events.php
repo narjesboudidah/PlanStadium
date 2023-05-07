@@ -9,17 +9,12 @@ class events extends Model
 {
     use HasFactory;
     protected $table='events';
-    protected $fillable=['date_debut','heure_debut','date_fin','heure_fin','type_event','stade_id','equipe_id'];
+    protected $fillable=['date_debut','heure_debut','date_fin','heure_fin','type_event','stade_id'];
     protected $guarded = ['created_at', 'updated_at'];
     
     public function reservations(){
         return $this->belongsTo(reservations::class);
     }
-
-    public function equipes(){
-        return $this->belongsTo(equipes::class);
-    }
-
 
     public function stades(){
         return $this->belongsTo(stades::class);

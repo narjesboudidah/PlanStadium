@@ -21,7 +21,8 @@ class societeMaintenanceResource extends JsonResource
             'telephone' => $this->tel,
             'logo' => $this->logo,
             'email' => $this->email,
-            'user_id' => $this->user_id,
+            'description' => $this->description,
+            'admin_ste' => new historiqueResource($this->whenLoaded('user')),
         ];
     }
 }

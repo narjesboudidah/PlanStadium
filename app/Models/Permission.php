@@ -12,7 +12,7 @@ class Permission extends Model
     protected $fillable=['titre'];
     protected $guarded = ['created_at', 'updated_at'];
 
-    public function permission_role(){
-        return $this->hasMany(permission_role::class);
+    public function Role(){
+        return $this->belongsToMany(Role::class,'permission_role_pivot');
     }
 }

@@ -17,7 +17,8 @@ class matchResource extends JsonResource
         return [
             'id' => $this->id,
             'date' => $this->date,
-            'heure' => $this->heure,
+            'heure_debut' => $this->heure_debut,
+            'heure_fin' => $this->heure_fin,
             'type match' => $this->type_match,
             'competition' => new UserResource($this->whenLoaded('competitions')),
             'stade' => new stadeResource($this->whenLoaded('stades')),

@@ -54,7 +54,8 @@ class stadesController extends Controller
             'telephone' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'nullable',
+            'etat' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
 
@@ -91,7 +92,8 @@ class stadesController extends Controller
             'telephone' => 'string|max:255',
             'adresse' => 'string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'nullable',
+            'etat' => 'string|max:255',
+            'description' => 'nullable|string',
             'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
     

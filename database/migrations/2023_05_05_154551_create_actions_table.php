@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('historique_id');
             $table->foreign('historique_id','historique_id_fk_12')->references('id')->on('historiques')->onDelete('cascade');
     
-            $table->enum('titre', ['edit','store', 'delete'])->default('edit');
+            $table->string('titre');
             $table->softDeletes();
             $table->timestamps();
         });

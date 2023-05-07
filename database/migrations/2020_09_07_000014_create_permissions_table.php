@@ -10,7 +10,7 @@ class CreatePermissionsTable extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titre')->nullable();
+            $table->enum('titre',['Ajout permission','Modifier permission','Supprimer permission','Ajout role','Modifier role','Supprimer role','Consulter historique'])->default('Ajout permission');
             $table->timestamps();
             $table->softDeletes();
         });

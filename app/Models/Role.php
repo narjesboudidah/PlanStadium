@@ -12,10 +12,10 @@ class Role extends Model
     protected $table='roles';
     protected $fillable = ['titre'];
      
-    public function role_user_pivot(){
-        return $this->hasMany(role_user_pivot::class);
+    public function User(){
+        return $this->belongsToMany(User::class,'role_user_pivots');
     }
-    public function permission_role(){
-        return $this->hasMany(permission_role::class);
+    public function Permission(){
+        return $this->belongsToMany(Permission::class,'permission_role_pivot');
     }
 }

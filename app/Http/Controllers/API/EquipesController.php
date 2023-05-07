@@ -48,9 +48,9 @@ class EquipesController extends Controller
             'pays' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'site_web' => 'nullable|string',
-            'type_equipe' => 'nullable|string',
+            'type_equipe' => 'required|string',
             'description' => 'nullable|string',
-            'user_id' => 'required|exists:users,id',
+            'admin_equipe_id' => 'required|exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -90,7 +90,7 @@ class EquipesController extends Controller
             'site_web' => 'string',
             'type_equipe' => 'string',
             'description' => 'string',
-            'user_id' => 'exists:users,id',
+            'admin_equipe_id' => 'exists:users,id',
     ]);
 
     $equipe->update($validatedData);
