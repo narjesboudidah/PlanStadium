@@ -8,7 +8,7 @@ use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\historiquesController;
 use App\Http\Controllers\API\CompetitionsController;
 use App\Http\Controllers\API\MaintenancesController;
-use App\Http\Controllers\API\equipesController;
+use App\Http\Controllers\API\EquipesController;
 use App\Http\Controllers\API\societeMaintenancesController;
 use App\Http\Controllers\API\StadesController;
 use App\Http\Controllers\API\permissionsController;
