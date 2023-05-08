@@ -110,16 +110,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //permission role pivots
         Route::get('/PermissionRolePivots', [permission_rolesController::class, 'index']);
         Route::post('/PermissionRolePivots', [permission_rolesController::class, 'store']);
-        Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
-        Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
-        Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
+        // Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
+        // Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
+        // Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
 
         //Role User Pivots
         Route::get('/RoleUserPivots', [RoleUserPivotController::class, 'index']);
         Route::post('/RoleUserPivots', [RoleUserPivotController::class, 'store']);
-        Route::get('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'show']);
-        Route::put('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'update']);
-        Route::delete('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'destroy']);
+        // Route::get('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'show']);
+        // Route::put('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'update']);
+        // Route::delete('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'destroy']);
 
         //Role
         Route::get('/Roles', [RolesController::class, 'index']);
