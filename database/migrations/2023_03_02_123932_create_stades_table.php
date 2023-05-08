@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->enum('etat',['disponible','reserver','en maintenance'])->default('disponible');
             $table->text('description')->nullable();
-            $table->date('date_dernier_travaux')->format('m-d-Y')->nullable();
+            $table->date('date_dernier_travaux')->format('Y-m-d')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

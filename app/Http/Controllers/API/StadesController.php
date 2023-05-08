@@ -54,7 +54,7 @@ class stadesController extends Controller
             // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'etat' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date_dernier_travaux' => 'nullable|date|date_format:m--Y|before_or_equal:' . $todayDate,
+            'date_dernier_travaux' => 'nullable|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
