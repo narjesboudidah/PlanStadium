@@ -78,7 +78,7 @@ class stadesController extends Controller
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
     {
-        $todayDate = date('m/d/Y');
+        $todayDate = date('Y-m-d');
         $validator = Validator::make($request->all(), [
             'nom' => 'string|max:255',
             'pays' => 'string|max:255',
