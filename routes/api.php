@@ -36,11 +36,9 @@ use App\Http\Controllers\Auth\AuthController;
 
 //Auth
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/Competitions', [CompetitionsController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-
+    
     //Event
     Route::get('/events', [EventsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
     Route::post('/events', [EventsController::class, 'store']);//->middleware('superadmin');
@@ -48,21 +46,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/event/{id}', [EventsController::class, 'update']);//->middleware('superadmin');
     Route::delete('/event/{id}', [EventsController::class, 'destroy']);//->middleware('superadmin', 'admin_equipe');
     Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);//->middleware('superadmin', 'admin_equipe');
-
+    
     //User
     Route::get('/users', [userController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::post('/users', [userController::class, 'store']);//->middleware('superadmin');
     Route::get('/user/{id}', [userController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::put('/user/{id}', [userController::class, 'update']);//->middleware('superadmin');
     Route::delete('/user/{id}', [userController::class, 'destroy']);//->middleware('superadmin');
-
+    
     //Maintenances
     Route::get('/maintenances', [MaintenancesController::class, 'index']);//->middleware('superadmin', 'admin_ste');
     Route::post('/maintenances', [MaintenancesController::class, 'store']);//->middleware('superadmin', 'admin_ste');
     Route::get('/maintenance/{id}', [MaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
     Route::put('/maintenance/{id}', [MaintenancesController::class, 'update']);//->middleware('superadmin', 'admin_ste');
     Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);//->middleware('superadmin', 'admin_ste');
-
+    
     //equipes
     Route::get('/equipes', [EquipesController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
     Route::post('/equipes', [EquipesController::class, 'store']);//->middleware('superadmin');
@@ -77,28 +75,28 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/match/{id}', [MatchsController::class, 'update']);//->middleware('superadmin');
     Route::delete('/match/{id}', [MatchsController::class, 'destroy']);//->middleware('superadmin');
     Route::get('matchs/filter/{date}', [MatchsController::class, 'matchFilter']);//->middleware('superadmin', 'admin_equipe');
-
+    
     //historiques
     Route::get('/historiques', [HistoriquesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::post('/historiques', [HistoriquesController::class, 'store']);
     Route::get('/historique/{id}', [HistoriquesController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::get('/historiques/filter/{date}', [historiquesController::class, 'historiqueFilter']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-
-
+    
+    
     //societe Maintenance
     Route::get('/societeMaintenances', [SocieteMaintenancesController::class, 'index']);//->middleware('superadmin', 'admin_ste');
     Route::post('/societeMaintenances', [SocieteMaintenancesController::class, 'store']);//->middleware('superadmin');
     Route::get('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
     Route::put('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'update']);//->middleware('superadmin');
     Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);//->middleware('superadmin');
-
+    
     //Stades
     Route::get('/stades', [stadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::get('/stade/{id}', [stadesController::class, 'show']);//->middleware('superadmin');
     Route::post('/stades', [stadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::put('/stade/{id}', [stadesController::class, 'update']);//->middleware('superadmin');
     Route::delete('/stade/{id}', [stadesController::class, 'destroy']);//->middleware('superadmin');
-
+    
     //Route::middleware(['superadmin'])->group(function () {
         //Permissions
         Route::get('/permissions', [permissionsController::class, 'index']);
@@ -106,14 +104,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/permission/{id}', [permissionsController::class, 'show']);
         Route::put('/permission/{id}', [permissionsController::class, 'update']);
         Route::delete('/permission/{id}', [permissionsController::class, 'destroy']);
-
+        
         //permission role pivots
         Route::get('/PermissionRolePivots', [permission_rolesController::class, 'index']);
         Route::post('/PermissionRolePivots', [permission_rolesController::class, 'store']);
         // Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
         // Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
         // Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
-
+        
         //Role User Pivots
         Route::get('/RoleUserPivots', [RoleUserPivotController::class, 'index']);
         Route::post('/RoleUserPivots', [RoleUserPivotController::class, 'store']);
@@ -127,16 +125,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/Role/{id}', [RolesController::class, 'show']);
         Route::put('/Role/{id}', [RolesController::class, 'update']);
         Route::delete('/Role/{id}', [RolesController::class, 'destroy']);
-    //});
-
-    //Competition
+        //});
+        
+        //Competition
         Route::get('/Competitions', [CompetitionsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    //Route::post('/Competitions', [CompetitionsController::class, 'store']);//->middleware('superadmin');
-    Route::get('/Competition/{id}', [CompetitionsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
-    Route::put('/Competition/{id}', [CompetitionsController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']);//->middleware('superadmin');
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/Competitions', [CompetitionsController::class, 'store']);
+        //Route::post('/Competitions', [CompetitionsController::class, 'store']);//->middleware('superadmin');
+        Route::get('/Competition/{id}', [CompetitionsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
+        Route::put('/Competition/{id}', [CompetitionsController::class, 'update']);//->middleware('superadmin');
+        Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']);//->middleware('superadmin');
     Route::get('/competitions/filter/{annee}', [CompetitionsController::class, 'competitionFilter']);//->middleware('superadmin', 'admin_equipe');
-
+    
     //Reservation
     Route::get('/reservations', [ReservationsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
     Route::post('/reservations', [ReservationsController::class, 'store']);//->middleware('admin_equipe');
