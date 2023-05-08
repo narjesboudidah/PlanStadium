@@ -46,9 +46,9 @@ class MatchsController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
+            'nom' => 'nullable|string|max:255',
             'date' => 'required|date|date_format:Y-m-d',
-            'heure_debut' => 'required|date_format:H:i',
-            'heure_fin' => 'required|date_format:H:i',
+            'heure' => 'required|date_format:H:i',
             'type_match' => 'required|string|max:255',
             'competition_id' => 'required|exists:competitions,id',
             'stade_id' => 'required|exists:stades,id',
@@ -78,9 +78,9 @@ class MatchsController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'nom' => 'string',
             'date' => 'date|date_format:Y-m-d',
-            'heure_debut' => 'date_format:H:i',
-            'heure_fin' => 'date_format:H:i',
+            'heure' => 'date_format:H:i',
             'type_match' => 'string',
             'competition_id' => 'exists:competitions,id',
             'stade_id' => 'exists:stades,id',

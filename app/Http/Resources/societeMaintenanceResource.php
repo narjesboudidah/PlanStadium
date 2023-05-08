@@ -22,7 +22,6 @@ class societeMaintenanceResource extends JsonResource
             'logo' => $this->logo,
             'email' => $this->email,
             'description' => $this->description,
-            'admin_ste' => new historiqueResource($this->whenLoaded('user')),
         ];
     }
 }

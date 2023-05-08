@@ -15,8 +15,6 @@ return new class extends Migration
     {
         Schema::create('equipes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('admin_equipe_id');
-            $table->foreign('admin_equipe_id','admin_equipe_id_fk_2')->references('id')->on('users')->onDelete('cascade');
             $table->string('nom_equipe')->unique();
             $table->string('adresse')->unique();
             $table->string('pays');

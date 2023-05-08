@@ -50,6 +50,8 @@ class EventsController extends Controller
             'heure_fin' => 'required|date_format:H:i',
             'type_event' => 'required|string|max:255',
             'nom_event' => 'nullable|string|max:255',
+            'type_match' => 'nullable|string|max:255',
+            'nom_equipe_adversaire' => 'nullable|string|max:255',
             'stade_id' => 'required|exists:stades,id',
         ]);
 
@@ -80,6 +82,8 @@ class EventsController extends Controller
         'heure_fin' => 'date_format:H:i',
         'type_event' => 'string|max:255',
         'nom_event' => 'string|max:255',
+        'type_match' => 'string|max:255',
+        'nom_equipe_adversaire' => 'string|max:255',
         'stade_id' => 'exists:stades,id',
     ]);
 

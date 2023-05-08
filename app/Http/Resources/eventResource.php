@@ -16,12 +16,14 @@ class eventResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date debut' => $this->date_debut, 
-            'heure debut' => $this->heure_debut,
-            'date fin' => $this->date_fin,
-            'heure fin' => $this->heure_fin,
-            'type event' => $this->type_event,
-            'equipe' => new equipeResource($this->whenLoaded('equipes')),
+            'date_debut' => $this->date_debut, 
+            'heure_debut' => $this->heure_debut,
+            'date_fin' => $this->date_fin,
+            'heure_fin' => $this->heure_fin,
+            'type_event' => $this->type_event,
+            'nom_event' => $this->nom_event,
+            'type_match' => $this->type_match,
+            'nom_equipe_adversaire' => $this->nom_equipe_adversaire,
             'stade' => new stadeResource($this->whenLoaded('stades')),
         ];
     }

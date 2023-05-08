@@ -50,7 +50,6 @@ class EquipesController extends Controller
             'site_web' => 'nullable|string',
             'type_equipe' => 'required|string',
             'description' => 'nullable|string',
-            'admin_equipe_id' => 'required|exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -90,7 +89,6 @@ class EquipesController extends Controller
             'site_web' => 'string',
             'type_equipe' => 'string',
             'description' => 'string',
-            'admin_equipe_id' => 'exists:users,id',
     ]);
 
     $equipe->update($validatedData);

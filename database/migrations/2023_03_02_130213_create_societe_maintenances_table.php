@@ -15,8 +15,6 @@ return new class extends Migration
     {
         Schema::create('societe_maintenances', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('admin_ste_id');
-            $table->foreign('admin_ste_id','admin_ste_id_fk_4')->references('id')->on('users')->onDelete('cascade');
             $table->string('nom')->unique();
             $table->string('adresse')->unique();
             $table->string('tel')->unique();

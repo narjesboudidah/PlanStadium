@@ -28,9 +28,10 @@ return new class extends Migration
             $table->unsignedInteger('equipe2_id');
             $table->foreign('equipe2_id','equipe2_id_fk_8')->references('id')->on('equipes')->onDelete('cascade');
 
-            $table->date('date')->format('Y-m-d')->nullable();
-            $table->time('heure_debut');
-            $table->time('heure_fin');
+            
+            $table->string('nom')->nullable();
+            $table->date('date')->format('Y-m-d');
+            $table->time('heure');
             $table->string('type_match');
             $table->timestamps();
             $table->softDeletes();

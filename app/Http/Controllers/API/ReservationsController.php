@@ -41,7 +41,7 @@ class reservationsController extends Controller
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
-        $todayDate = date('m/d/Y');
+        //$todayDate = date('Y/m/d');
         $validator = Validator::make($request->all(), [
             'note' => 'required|string|max:2023',
             'date_debut' => 'required|date|date_format:Y-m-d',
@@ -50,6 +50,9 @@ class reservationsController extends Controller
             'heure_fin' => 'required|date_format:H:i',
             'type_reservation' => 'required|string',
             'statut' => 'required|string|max:2023',
+            'nom_match' => 'nullable|string|max:2023',
+            'type_match' => 'nullable|string|max:2023',
+            'nom_equipe_adversaire' => 'nullable|string|max:2023',
             'admin_equipe_id' => 'required|exists:users,id',
             'admin_fed_id' => 'required|exists:users,id',
         ]);
@@ -83,6 +86,9 @@ class reservationsController extends Controller
             'heure_fin' => 'date_format:H:i',
             'type_reservation' => 'string',
             'statut' => 'string|max:2023',
+            'nom_match' => 'string|max:2023',
+            'type_match' => 'string|max:2023',
+            'nom_equipe_adversaire' => 'string|max:2023',
             'admin_equipe_id' => 'exists:users,id',
             'admin_fed_id' => 'exists:users,id',
         ]);

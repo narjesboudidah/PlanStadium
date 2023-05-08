@@ -24,6 +24,9 @@ class reservationResource extends JsonResource
             'heure fin' => $this->heure_fin,
             'type reservation' => $this->type_reservation,
             'statut' => $this->statut,
+            'nom_match' => $this->nom_match,
+            'type_match' => $this->type_match,
+            'nom_equipe_adversaire' => $this->Nom_equipe_adversaire,
             'admin_equipe_id' => new UserResource($this->whenLoaded('user')),
             'admin_fed_id' => new UserResource($this->whenLoaded('user')),
         ];

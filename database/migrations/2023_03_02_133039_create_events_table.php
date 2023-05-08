@@ -25,6 +25,8 @@ return new class extends Migration
             $table->time('heure_fin');
             $table->string('type_event')->default('compétition'); //(concert, conférence, compétition, etc.)
             $table->string('nom_event')->nullable(); //(concert, conférence, compétition, etc.)
+            $table->enum('type_match',['National','International'])->default('National')->nullable();
+            $table->time('nom_equipe_adversaire')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

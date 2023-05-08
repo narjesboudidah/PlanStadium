@@ -9,7 +9,7 @@ class equipes extends Model
 {
     use HasFactory;
     protected $table='equipes';
-    protected $fillable=['nom_equipe','adresse','pays','logo','site_web','type_equipe','description','admin_equipe_id'];
+    protected $fillable=['nom_equipe','adresse','pays','logo','site_web','type_equipe','description'];
     protected $guarded = ['created_at', 'updated_at'];
 
     public function user(){
