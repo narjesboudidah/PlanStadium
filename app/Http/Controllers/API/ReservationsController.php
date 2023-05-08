@@ -8,7 +8,7 @@ use App\Models\reservations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class reservationsController extends Controller
+class ReservationsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
@@ -61,7 +61,6 @@ class reservationsController extends Controller
             return response(null, 400, [$validator->errors()]);
         }
 
-
         $reservation = reservations::create($request->all());
         if ($reservation) {
             $array = [
@@ -92,7 +91,7 @@ class reservationsController extends Controller
             'admin_equipe_id' => 'exists:users,id',
             'admin_fed_id' => 'exists:users,id',
         ]);
-    
+
         if ($validator->fails()) {
             $array = [
                 'data' => null,
@@ -101,7 +100,7 @@ class reservationsController extends Controller
             ];
             return $array;
         }
-    
+
         $reservation = reservations::find($id);
         if (!$reservation) {
             $array = [
@@ -111,7 +110,7 @@ class reservationsController extends Controller
             ];
             return $array;
         }
-    
+
         $reservation->update($request->all());
         if ($reservation) {
             $array = [
@@ -122,7 +121,7 @@ class reservationsController extends Controller
             return response($array);
         }
     }
-    
+
 
 
     /* Remove the specified resource from storage.*/
@@ -156,16 +155,26 @@ class reservationsController extends Controller
 
         // Vérifier si la réservation existe
         if (!$reservation) {
-            return redirect()->back()->with('error', 'La réservation n\'existe pas.');
+            $array = [
+                'data' => null,
+                'message' => 'échec operation',
+                'status' => 501,
+            ];
+            return response($array);
         }
 
         // Confirmer la réservation (mettre à jour le statut par exemple)
         $reservation->update([
-            'statut' => 'confirmée'
+            'statut' => 'accepté'
         ]);
 
         // Rediriger avec un message de succès
-        return redirect()->back()->with('success', 'Réservation confirmée avec succès.');
+        $array = [
+            'data' => null,
+            'message' => 'accepté avec success',
+            'status' => 501,
+        ];
+        return response($array);
     }
 
     public function annulerReservation($id)
@@ -175,16 +184,26 @@ class reservationsController extends Controller
 
         // Vérifier si la réservation existe
         if (!$reservation) {
-            return redirect()->back()->with('error', 'La réservation n\'existe pas.');
+            $array = [
+                'data' => null,
+                'message' => 'échec operation',
+                'status' => 501,
+            ];
+            return response($array);
         }
 
         // Annuler la réservation (mettre à jour le statut par exemple)
         $reservation->update([
-            'statut' => 'annulée'
+            'statut' => 'refusé'
         ]);
 
         // Rediriger avec un message de succès
-        return redirect()->back()->with('success', 'Réservation annulée avec succès.');
+        $array = [
+            'data' => null,
+            'message' => 'refusé avec success',
+            'status' => 501,
+        ];
+        return response($array);
     }
 
 

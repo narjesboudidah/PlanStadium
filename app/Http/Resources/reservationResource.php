@@ -18,17 +18,17 @@ class reservationResource extends JsonResource
             'id' => $this->id,
             //mouch bidharoura tsamih id badlou kima t7eb
             'note' => $this->note,
-            'date debut' => $this->date_debut, 
-            'heure debut' => $this->heure_debut,
-            'date fin' => $this->date_fin,
-            'heure fin' => $this->heure_fin,
-            'type reservation' => $this->type_reservation,
+            'date_debut' => $this->date_debut,
+            'heure_debut' => $this->heure_debut,
+            'date_fin' => $this->date_fin,
+            'heure_fin' => $this->heure_fin,
+            'type_reservation' => $this->type_reservation,
             'statut' => $this->statut,
             'nom_match' => $this->nom_match,
             'type_match' => $this->type_match,
-            'nom_equipe_adversaire' => $this->Nom_equipe_adversaire,
-            'admin_equipe_id' => new UserResource($this->whenLoaded('user')),
-            'admin_fed_id' => new UserResource($this->whenLoaded('user')),
+            'nom_equipe_adversaire' => $this->nom_equipe_adversaire,
+            // 'admin_equipe_id' => new UserResource($this->whenLoaded('user')),
+            // 'admin_fed_id' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }
