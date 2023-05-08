@@ -23,9 +23,9 @@ return new class extends Migration
             $table->foreign('admin_fed_id','admin_fed_id_fk_9')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('note');
-            $table->date('date_debut');
+            $table->date('date_debut')->format('Y-m-d')->nullable();
             $table->time('heure_debut');
-            $table->date('date_fin');
+            $table->date('date_fin')->format('Y-m-d')->nullable();
             $table->time('heure_fin');
             $table->string('type_reservation')->default('match'); //type de réservation (entraînement, match, événement, etc.)
             $table->string('statut')->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)

@@ -42,7 +42,7 @@ class stadesController extends Controller
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
-        $todayDate = date('m-d-Y');
+        $todayDate = date('Y-m-d');
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'pays' => 'required|string|max:255',

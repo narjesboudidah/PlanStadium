@@ -24,9 +24,9 @@ return new class extends Migration
             $table->unsignedInteger('stade_id');
             $table->foreign('stade_id','stade_id_fk_5')->references('id')->on('stades')->onDelete('cascade');
 
-            $table->date('date_debut');
+            $table->date('date_debut')->format('Y-m-d')->nullable();
             $table->time('heure_debut');
-            $table->date('date_fin');
+            $table->date('date_fin')->format('Y-m-d')->nullable();
             $table->time('heure_fin');
             $table->string('description')->nullable(); //description de la nature de la maintenance
             $table->string('etat');

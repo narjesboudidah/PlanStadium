@@ -92,11 +92,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);//->middleware('superadmin');
     
     //Stades
-    Route::get('/stades', [stadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::get('/stade/{id}', [stadesController::class, 'show']);//->middleware('superadmin');
-    Route::post('/stades', [stadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::put('/stade/{id}', [stadesController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/stade/{id}', [stadesController::class, 'destroy']);//->middleware('superadmin');
+    Route::get('/stades', [StadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::get('/stade/{id}', [StadesController::class, 'show']);//->middleware('superadmin');
+    Route::post('/stades', [StadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::put('/stade/{id}', [StadesController::class, 'update']);//->middleware('superadmin');
+    Route::delete('/stade/{id}', [StadesController::class, 'destroy']);//->middleware('superadmin');
     
     //Route::middleware(['superadmin'])->group(function () {
         //Permissions

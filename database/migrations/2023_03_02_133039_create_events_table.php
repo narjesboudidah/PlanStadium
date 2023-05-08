@@ -19,9 +19,9 @@ return new class extends Migration
             $table->unsignedInteger('stade_id');
             $table->foreign('stade_id','stade_id_fk_10')->references('id')->on('stades')->onDelete('cascade');
 
-            $table->date('date_debut');
+            $table->date('date_debut')->format('Y-m-d')->nullable();
             $table->time('heure_debut');
-            $table->date('date_fin');
+            $table->date('date_fin')->format('Y-m-d')->nullable();
             $table->time('heure_fin');
             $table->string('type_event')->default('compétition'); //(concert, conférence, compétition, etc.)
             $table->string('nom_event')->nullable(); //(concert, conférence, compétition, etc.)
