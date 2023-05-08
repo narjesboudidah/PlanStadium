@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nom');
-            $table->string('annee');
+            $table->integer('annee');
             $table->date('date_debut');
             $table->date('date_fin');
             $table->string('type_competition')->default('championnat'); //championnat, coupe, tournoi, etc
