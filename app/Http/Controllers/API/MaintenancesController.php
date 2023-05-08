@@ -134,6 +134,63 @@ class MaintenancesController extends Controller
             return response($array);
         }
     }
+    public function confirmerMaintenance($id)
+    {
+        // Trouver la réservation en fonction de l'ID
+        $maintenance = maintenances::find($id);
+
+        // Vérifier si la réservation existe
+        if (!$maintenance) {
+            $array = [
+                'data' => null,
+                'message' => 'échec operation',
+                'status' => 501,
+            ];
+            return response($array);
+        }
+
+        // Confirmer la réservation (mettre à jour le statut par exemple)
+        $maintenance->update([
+            'statut' => 'accepté'
+        ]);
+
+        // Rediriger avec un message de succès
+        $array = [
+            'data' => null,
+            'message' => 'accepté avec success',
+            'status' => 501,
+        ];
+        return response($array);
+    }
+
+    public function annulerMaintenance($id)
+    {
+        // Trouver la réservation en fonction de l'ID
+        $maintenance = maintenances::find($id);
+
+        // Vérifier si la réservation existe
+        if (!$maintenance) {
+            $array = [
+                'data' => null,
+                'message' => 'échec operation',
+                'status' => 501,
+            ];
+            return response($array);
+        }
+
+        // Annuler la réservation (mettre à jour le statut par exemple)
+        $maintenance->update([
+            'statut' => 'refusé'
+        ]);
+
+        // Rediriger avec un message de succès
+        $array = [
+            'data' => null,
+            'message' => 'refusé avec success',
+            'status' => 501,
+        ];
+        return response($array);
+    }
 
 
 }

@@ -61,6 +61,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/maintenance/{id}', [MaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
     Route::put('/maintenance/{id}', [MaintenancesController::class, 'update']);//->middleware('superadmin', 'admin_ste');
     Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);//->middleware('superadmin', 'admin_ste');
+    
+    Route::get('/maintenance/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
+    Route::get('/maintenance/accepter/{id}', [ReservationsController::class, 'confirmerReservation']);
 
     //equipes
     Route::get('/equipes', [EquipesController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
