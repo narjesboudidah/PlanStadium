@@ -37,9 +37,6 @@ use App\Http\Controllers\Auth\AuthController;
 //Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/matchs', [MatchsController::class, 'store']);
-Route::get('/stades', [stadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-Route::post('/stades', [stadesController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -74,7 +71,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Matchs
     Route::get('/matchs', [MatchsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    //Route::post('/matchs', [MatchsController::class, 'store']);//->middleware('superadmin');
+    Route::post('/matchs', [MatchsController::class, 'store']);//->middleware('superadmin');
     Route::get('/match/{id}', [MatchsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
     Route::put('/match/{id}', [MatchsController::class, 'update']);//->middleware('superadmin');
     Route::delete('/match/{id}', [MatchsController::class, 'destroy']);//->middleware('superadmin');
@@ -95,9 +92,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);//->middleware('superadmin');
 
     //Stades
-    //Route::get('/stades', [stadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::get('/stades', [stadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::get('/stade/{id}', [stadesController::class, 'show']);//->middleware('superadmin');
-    //Route::post('/stades', [stadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::post('/stades', [stadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
     Route::put('/stade/{id}', [stadesController::class, 'update']);//->middleware('superadmin');
     Route::delete('/stade/{id}', [stadesController::class, 'destroy']);//->middleware('superadmin');
 
