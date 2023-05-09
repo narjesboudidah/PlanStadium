@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run()
     {
        // societe_maintenances::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
-        
+
         User::create([
             'nom'=>'sirine',
             'prenom'=>'balghouthi',
@@ -31,6 +31,14 @@ class UserSeeder extends Seeder
             'email'=>'narjes@gmail.com',
             'adresse'=>'xxxxxxxx',
             'password'=>bcrypt('321'),
+        ]);
+        User::create([
+            'nom'=>'narjes',
+            'prenom'=>'boudidah',
+            'telephone'=>'11111111',
+            'email'=>'hamza@gmail.com',
+            'adresse'=>'xxxxxxxx',
+            'password'=>bcrypt('123'),
         ]);
     }
 }
