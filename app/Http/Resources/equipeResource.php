@@ -16,7 +16,7 @@ class equipeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nom equipe' => $this->nom_equipe, //mouch bidharoura tsamih id badlou kima t7eb
+            'nom_equipe' => $this->nom_equipe, //mouch bidharoura tsamih id badlou kima t7eb
             'adresse' => $this->adresse,
             'pays' => $this->pays,
             'logo' => $this->logo,
