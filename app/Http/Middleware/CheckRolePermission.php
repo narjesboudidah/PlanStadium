@@ -9,7 +9,7 @@ class CheckRolePermission
 {
     public function handle($request, Closure $next)
     {
-        /*if (Auth::check() && Auth::user()->hasPermissionsTo('gerer_roles')) {
+        /*if (Auth::check() && Auth::user()->hasPermissionsTo('Gérer Rôles')) {
             return $next($request);
         }
 

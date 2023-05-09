@@ -17,7 +17,7 @@ class CheckPermission
      */
     public function handle($request, Closure $next)
     {
-       /* if (Auth::check() && Auth::user()->hasPermissionsTo('gerer_permissions')) {
+       /* if (Auth::check() && Auth::user()->hasPermissionsTo('Gérer permissions')) {
             return $next($request);
         }
 

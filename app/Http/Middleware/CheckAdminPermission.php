@@ -10,7 +10,7 @@ class CheckAdminPermission
 {
     public function handle(Request $request, Closure $next)
     {
-       /* if (Auth::check() && Auth::user()->hasPermissionsTo('consulter_historique')) {
+       /* if (Auth::check() && Auth::user()->hasPermissionsTo('Consulter historique')) {
             return $next($request);
         }
 
