@@ -29,7 +29,7 @@ return new class extends Migration
             $table->date('date_fin')->format('Y-m-d');
             $table->time('heure_fin');
             $table->string('description')->nullable(); //description de la nature de la maintenance
-            $table->enum('etat',['urgent', "moyen"])->default('normal');
+            $table->enum('etat',['urgent', 'moyen'])->default('urgent');
             $table->enum('statut',['en attente', "refusé", "accepté"])->default('en attente');
 
             $table->softDeletes();
