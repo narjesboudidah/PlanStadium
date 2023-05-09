@@ -40,12 +40,11 @@ class RoleUserPivotController extends Controller
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
             'role_id' => 'required|exists:roles,id',
-            'ste_id' => 'nullable|exists:societe_maintenances,id',
-            'equipe_id' => 'nullable|exists:equipes,id',
+            // 'ste_id' => 'nullable|exists:societe_maintenances,id',
+            // 'equipe_id' => 'nullable|exists:equipes,id',
         ]);
 
         // Si la validation échoue, retourner une réponse avec les erreurs

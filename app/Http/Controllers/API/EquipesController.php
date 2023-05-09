@@ -12,13 +12,14 @@ use Illuminate\Validation\Rule;
 class EquipesController extends Controller
 {
     /*Display a listing of the resource.*/
-    public function index()
+    public function index(Request $request)
     {
         $equipes = equipeResource::collection(equipes::get()); //ki tabda bech trajaa akther min 7aja
         $array = [
             'data' => $equipes,
             'message' => 'ok',
             'status' => 200,
+            'user' => $request->user(),
         ];
         return response($array);
     }
