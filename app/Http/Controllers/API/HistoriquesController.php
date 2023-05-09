@@ -44,7 +44,7 @@ class historiquesController extends Controller
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
-        $todayDate = date('m/d/Y');
+        $todayDate = date('Y/m/d');
         $validator = Validator::make($request->all(), [
             'date' => 'required|date|date_format:Y-m-d|before_or_equal:'.$todayDate,
             'user_id' => 'required|exists:users,id',

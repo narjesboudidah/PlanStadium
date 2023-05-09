@@ -17,8 +17,8 @@ return new class extends Migration
             $table->increments('id');
             $table->string('nom');
             $table->integer('annee');
-            $table->date('date_debut')->format('Y-m-d')->nullable();
-            $table->date('date_fin')->format('Y-m-d')->nullable();
+            $table->date('date_debut')->format('Y-m-d');
+            $table->date('date_fin')->format('Y-m-d');
             $table->string('type_competition')->default('championnat'); //championnat, coupe, tournoi, etc
             $table->string('categorie'); //jeunes, amateurs, professionnels, etc
             $table->string('organisateur'); //nom de l'organisateur de la compétition

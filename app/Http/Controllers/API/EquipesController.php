@@ -44,12 +44,12 @@ class EquipesController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nom_equipe' => 'required|max:255|unique:equipes',
-            'adresse' => 'required|string|max:255',
+            'adresse' => 'required|unique:equipes|string|max:255',
             'pays' => 'required|string',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'site_web' => 'nullable|string',
+            'logo' => 'required|unique:equipes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'site_web' => 'nullable|unique:equipes|string',
             'type_equipe' => 'required|string',
-            'description' => 'nullable|string',
+            'description' => 'nullable|unique:equipes|string',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil

@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('nom')->nullable();
             $table->date('date')->format('Y-m-d');
             $table->time('heure');
-            $table->string('type_match');
+            $table->enum('type_match',['National','International'])->default('National');
             $table->timestamps();
             $table->softDeletes();
 
