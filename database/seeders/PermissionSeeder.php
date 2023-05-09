@@ -180,27 +180,6 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'titre'=>'Supprimer Réservation',
         ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        Permission::create([
-            'titre'=>'Gérer Rôles',
-        ]);
-        Permission::create([
-            'titre'=>'Gérer permissions',
-        ]);
         Permission::create([
             'titre'=>'Consulter historique',
         ]);
