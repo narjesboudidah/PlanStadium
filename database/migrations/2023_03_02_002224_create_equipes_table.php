@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('pays');
             $table->string('logo')->unique();
             $table->string('site_web')->nullable()->unique();
-            $table->string('type_equipe');
+            $table->enum('type_equipe',["national","international"]) -> default('national');
             $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
