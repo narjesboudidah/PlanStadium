@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             MatchSeeder::class,
             ReservationSeeder::class,
         ]);
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->create();
+       // \App\Models\stades::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

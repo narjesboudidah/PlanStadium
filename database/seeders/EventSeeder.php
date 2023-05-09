@@ -37,7 +37,7 @@ class EventSeeder extends Seeder
             'nom_event'=>'match',
             'type_match'=>'National',
             'nom_equipe_adversaire'=>'Esperance Tunis',
-            'stade_id'=>2,
+            'stade_id'=>1,
         ]);
         
     }
