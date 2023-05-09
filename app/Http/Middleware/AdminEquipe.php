@@ -18,7 +18,7 @@ class AdminEquipe
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Récupérer l'utilisateur connecté
+       /* // Récupérer l'utilisateur connecté
         $user = Auth::user();
 
        if (! $user) {
@@ -47,6 +47,12 @@ class AdminEquipe
             return $next($request);
         } else {
             // L'utilisateur n'a pas le rôle nécessaire, il est redirigé vers une autre page
+            return response('Unauthorized', 403);
+        }*/
+        $roles_arr=$request->user()->Role()->get()->toArray();
+        if($roles_arr[0]['titre'] == 'Admin équipe') {
+            return $next($request);
+        } else {
             return response('Unauthorized', 403);
         }
     }
