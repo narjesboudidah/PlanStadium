@@ -22,7 +22,7 @@ class EquipeSeeder extends Seeder
             'adresse'=>' Parc Hassèn Belkhodja, Av. Mohamed V, Tunis B.P. 700, Tunis RP 1000 Tunis',
             'pays'=>'Tunis',
             'logo'=>asset('images/Espérance.png'),
-            'site_web'=>'www.site.com',
+            'site_web'=>'e-s-tunis.com',
             'type_equipe'=>'national',
             'description'=>'est un club omnisports tunisien basé à Tunis et fondé en 1919 dans le quartier de Bab Souika. Il est principalement reconnu pour sa section de football.',
         ]);
@@ -32,7 +32,7 @@ class EquipeSeeder extends Seeder
             'adresse'=>'AVENUE MED KAROUI, BP68. 4121 SOUSSE SOUSSE.',
             'pays'=>'Tunis',
             'logo'=>asset('images/Etoile.png'),
-            'site_web'=>'www.site2.com',
+            'site_web'=>'etoile-du-sahel.com',
             'type_equipe'=>'national',
             'description'=>'est un club omnisports tunisien fondé le 11 mai 1925 et basé à Sousse. Il compte un total de huit sections actives en football, handball, volley-ball, basket-ball, lutte, judo, gymnastique et boxe.',
         ]);

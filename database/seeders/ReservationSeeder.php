@@ -28,7 +28,7 @@ class ReservationSeeder extends Seeder
             'nom_match'=>'xxxxxx',
             'type_match'=>'National',
             'nom_equipe_adversaire'=>'CSS',
-            'admin_equipe_id'=>1,
+            'admin_equipe_id'=>2,
             'admin_fed_id'=>1,
         ]);
     }

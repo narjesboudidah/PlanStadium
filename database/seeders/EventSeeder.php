@@ -22,10 +22,10 @@ class EventSeeder extends Seeder
             'heure_debut'=>'10:00',
             'date_fin'=>'2023-02-02',
             'heure_fin'=>'12:00',
-            'type_event'=>'Match',
-            'nom_event'=>'match',
-            'type_match'=>'National',
-            'nom_equipe_adversaire'=>'CSS',
+            'type_event'=>'Entraînement',
+            'nom_event'=>'Entraînement',
+            'type_match'=>NULL,
+            'nom_equipe_adversaire'=>NULL,
             'stade_id'=>1,
         ]);
         events::create([

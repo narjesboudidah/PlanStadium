@@ -18,7 +18,7 @@ class SteSeeder extends Seeder
        // societe_maintenances::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
         
         societe_maintenances::create([
-            'nom'=>'STADE OLYMPIQUE RADES',
+            'nom'=>'Sociéte des Travaux',
             'adresse'=>'Parc Hassèn Belkhodja, Av. Mohamed V, Tunis B.P. 700, Tunis RP 1000 Tunis',
             'tel'=>'71 468 477',
             'logo'=>asset('images/ste1.png'),
