@@ -15,13 +15,16 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            //PermissionsTableSeeder::class,
-          //  RolesTableSeeder::class,
-            //PermissionRoleTableSeeder::class,
-           // UsersTableSeeder::class,
-           // RoleUserTableSeeder::class,
-
-        ]); 
+            UserSeeder::class,
+            StadeSeeder::class,
+            EquipeSeeder::class,
+            SteSeeder::class,
+            CompetitionSeeder::class,
+            EventSeeder::class,
+            MaintenanceSeeder::class,
+            MatchSeeder::class,
+            ReservationSeeder::class,
+        ]);
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

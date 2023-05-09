@@ -28,7 +28,7 @@ return new class extends Migration
             $table->date('date_fin')->format('Y-m-d')->nullable();
             $table->time('heure_fin');
             $table->enum('type_reservation',['Match','Entraînement','Evénements spéciaux'])->default('Evénements spéciaux');
-            $table->enum('statut',['en attente', "refusé", "accepté"])->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)
+            $table->enum('statut',['en attente', 'refusé', "accepté"])->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)
             $table->string('nom_match')->nullable();
             $table->enum('type_match',['National','International'])->default('National')->nullable();
             $table->string('nom_equipe_adversaire')->nullable();
