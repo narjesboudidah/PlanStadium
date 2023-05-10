@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             'telephone'=>'77777777',
             'email'=>'narjes@gmail.com',
             'adresse'=>'xxxxxxxx',
-            'password'=>bcrypt('123'),
+            'password'=>bcrypt('321'),
         ]);
         User::create([
             'nom'=>'narjes',

@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\userResource;
+use App\Http\Resources\roleResource;
 
 class RoleUserPivotResource extends JsonResource
 {
@@ -15,7 +17,7 @@ class RoleUserPivotResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new userResource($this->whenLoaded('user')),
             'role' => new roleResource($this->whenLoaded('Role')),
             // 'societe maintenances' => new societeMaintenanceResource($this->whenLoaded('societe_maintenances')),
             // 'equipe' => new equipeResource($this->whenLoaded('equipes')),

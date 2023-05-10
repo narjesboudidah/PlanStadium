@@ -48,10 +48,10 @@ class SuperAdminMiddleware
         //     return response('Unauthorized', 403);
         // }
         $roles_arr=$request->user()->Role()->get()->toArray();
-        if($roles_arr[0]['titre'] == 'Admin fédération') {
+        if(count($roles_arr) > 0 || $roles_arr[0]['titre'] == 'Admin fédération') {
             return $next($request);
         } else {
-            return response('Unauthorized', 403);
+            return response([]);
         }
     }
 }

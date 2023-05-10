@@ -100,7 +100,7 @@ class EquipesController extends Controller
         'status' => 201,
     ], 201);
 }
-    
+
 
 
     /* Remove the specified resource from storage.*/

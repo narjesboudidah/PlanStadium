@@ -52,7 +52,7 @@ class AdminSte
         if($roles_arr[0]['titre'] == 'Admin ste') {
             return $next($request);
         } else {
-            return response('Unauthorized', 403);
+            return response([]);
         }
     }
 }
