@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Role;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,48 +19,17 @@ class SuperAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        /*if (! $request->user() || ! $request->user()->isSuperAdmin()) {
-        abort(403, 'Unauthorized action.');
+        $user = $request->user();
+        if($user->HasRole('Admin Federation')){
+            return response($user->getAllPermissions(), 201);
         }
-        return $next($request);*/
-
-        // Récupérer l'utilisateur connecté
-        // $user = Auth::user();
-
-        // // Récupérer l'utilisateur connecté et le mettre en cache
-        // $user = Cache::remember('user_' . Auth::id(), 300, function () use ($user) {
-        //     return $user;
-        // });
-
-        // // Récupérer les rôles de l'utilisateur et les mettre en cache
-        // $roles = Cache::remember('roles_' . $user->id, 300, function () {
-        //     return DB::table('roles')
-        //         ->join('role_user_pivots', 'roles.id', '=', 'role_user_pivots.role_id')
-        //         ->where('role_user_pivots.user_id', Auth::id())
-        //         ->pluck('roles.type');
-        // });
-
-        // // Vérifier si l'utilisateur a le rôle nécessaire pour accéder à la page
-        // if ($roles->contains('superadmin')) {
-        //     // L'utilisateur a le rôle admin, il peut accéder à la page
+        else {
+            return response("no", 203);
+        }
+        // if ($request->user()->HasRole("Admin Federation")) {
         //     return $next($request);
         // } else {
-        //     // L'utilisateur n'a pas le rôle nécessaire, il est redirigé vers une autre page
-        //     return response('Unauthorized', 403);
-        // }
-
-        $roles=$request->user()->Role()->get()[0];
-        $permissions_arr = $roles->Permission()->get();
-        $permissions = [];
-        $role = $roles["titre"];
-        foreach($permissions_arr as $permission){
-           array_push($permissions, $permission["titre"]);
-        }
-        return response($role);
-        // if(count($roles_arr) > 0 || $roles_arr[0]['titre'] == 'Admin fédération') {
-        //     return $next($request);
-        // } else {
-        //     return response([]);
+        //     return response([],403);
         // }
     }
 }

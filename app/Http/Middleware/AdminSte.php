@@ -18,41 +18,10 @@ class AdminSte
      */
     public function handle(Request $request, Closure $next): Response
     {
-        /*// Récupérer l'utilisateur connecté
-        $user = Auth::user();
-
-        if (! $user) {
-            // L'utilisateur n'est pas connecté, il est redirigé vers une autre page
-            return response('Unauthorized', 403);
-        }
-
-        // Récupérer l'utilisateur connecté et le mettre en cache
-        $user = Cache::remember('user_' . Auth::id(), 300, function () use ($user) {
-            return $user;
-        });
-
-        // Récupérer les rôles de l'utilisateur et les mettre en cache
-        $roles = Cache::remember('roles_' . $user->id, 300, function () {
-            return DB::table('roles')
-                ->join('role_user_pivots', 'roles.id', '=', 'role_user_pivots.role_id')
-                ->join('users', 'role_user_pivots.user_id', '=', 'users.id')
-                ->where('role_user_pivots.user_id', Auth::id())
-                ->pluck('roles.type');
-        });
-
-        // Vérifier si l'utilisateur a le rôle nécessaire pour accéder à la page
-        if ($roles->contains('admin_ste')) {
-            // L'utilisateur a le rôle admin, il peut accéder à la page
+        if ($request->user()->HasRole("Admin Ste")) {
             return $next($request);
         } else {
-            // L'utilisateur n'a pas le rôle nécessaire, il est redirigé vers une autre page
-            return response('Unauthorized', 403);
-        }*/
-        $roles_arr=$request->user()->Role()->get()->toArray();
-        if($roles_arr[0]['titre'] == 'Admin ste') {
-            return $next($request);
-        } else {
-            return response([]);
+            return response([],403);
         }
     }
 }

@@ -15,12 +15,11 @@ class CheckPermission
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $permission)
     {
-       /* if (Auth::check() && Auth::user()->hasPermissionsTo('Gérer permissions')) {
+        if ($request->user()->hasPermissionTo($permission)) {
             return $next($request);
         }
-
-        abort(403, 'Vous n\'avez pas la permission de gérer les permissions.');*/
+        abort(403, 'Vous n\'avez pas la permission de gérer les permissions.');
     }
 }

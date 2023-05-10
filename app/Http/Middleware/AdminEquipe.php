@@ -49,12 +49,10 @@ class AdminEquipe
             // L'utilisateur n'a pas le rôle nécessaire, il est redirigé vers une autre page
             return response('Unauthorized', 403);
         }*/
-        $user = Auth::user();
-        $roles_arr=$request->user()->Role()->get()->toArray();
-        if($roles_arr[0]['titre'] == 'Admin équipe') {
+        if ($request->user()->HasRole("Admin Equipe")) {
             return $next($request);
         } else {
-            return response([]);
+            return response([],403);
         }
     }
 }

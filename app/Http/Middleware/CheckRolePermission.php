@@ -3,16 +3,17 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CheckRolePermission
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next, $role)
     {
-        /*if (Auth::check() && Auth::user()->hasPermissionsTo('Gérer Rôles')) {
+        if ($request->user()->hasRole($role)) {
             return $next($request);
         }
 
-        abort(403, 'Vous n\'avez pas la permission de gérer les rôles.');*/
+        abort(403, 'Vous n\'avez pas la permission de gérer les rôles.');
     }
 }
