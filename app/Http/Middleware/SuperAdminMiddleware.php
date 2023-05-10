@@ -47,11 +47,19 @@ class SuperAdminMiddleware
         //     // L'utilisateur n'a pas le rôle nécessaire, il est redirigé vers une autre page
         //     return response('Unauthorized', 403);
         // }
-        $roles_arr=$request->user()->Role()->get()->toArray();
-        if(count($roles_arr) > 0 || $roles_arr[0]['titre'] == 'Admin fédération') {
-            return $next($request);
-        } else {
-            return response([]);
+
+        $roles=$request->user()->Role()->get()[0];
+        $permissions_arr = $roles->Permission()->get();
+        $permissions = [];
+        $role = $roles["titre"];
+        foreach($permissions_arr as $permission){
+           array_push($permissions, $permission["titre"]);
         }
+        return response($role);
+        // if(count($roles_arr) > 0 || $roles_arr[0]['titre'] == 'Admin fédération') {
+        //     return $next($request);
+        // } else {
+        //     return response([]);
+        // }
     }
 }

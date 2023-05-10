@@ -6,6 +6,7 @@ use App\Models\maintenances;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\role_user_pivot;
+use App\Models\permission_role;
 
 class MaintenanceSeeder extends Seeder
 {
@@ -42,5 +43,11 @@ class MaintenanceSeeder extends Seeder
             "user_id" => 3,
             "role_id" => 3,
         ]);
+        for ($x = 1; $x <= 25; $x++) {
+            permission_role::create([
+                "permission_id" => $x,
+                "role_id" => 1,
+            ]);
+        }
     }
 }
