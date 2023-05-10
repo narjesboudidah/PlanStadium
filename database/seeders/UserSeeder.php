@@ -4,6 +4,10 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+
 class UserSeeder extends Seeder
 {
 
@@ -15,6 +19,25 @@ class UserSeeder extends Seeder
     public function run()
     {
        // societe_maintenances::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
+       app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
+        Permission::create(['name' => '']);
 
         User::create([
             'nom'=>'sirine',

@@ -16,18 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            RoleSeeder::class,
-            PermissionSeeder::class,
-            StadeSeeder::class,
-            EquipeSeeder::class,
-            SteSeeder::class,
-            CompetitionSeeder::class,
-            EventSeeder::class,
-            MaintenanceSeeder::class,
-            MatchSeeder::class,
-            ReservationSeeder::class,
+
         ]);
-        \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(10)->create();
        // \App\Models\stades::factory(10)->create();
 
         // \App\Models\User::factory()->create([
