@@ -20,8 +20,8 @@ class equipeResource extends JsonResource
             'adresse' => $this->adresse,
             'pays' => $this->pays,
             'logo' => $this->logo,
-            'site web' => $this->site_web,
-            'type equipe' => $this->type_equipe,
+            'site_web' => $this->site_web,
+            'type_equipe' => $this->type_equipe,
             'description' => $this->description,
 
         ];
