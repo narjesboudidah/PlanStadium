@@ -41,114 +41,263 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     //Event
-    Route::get('/events', [EventsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    Route::post('/events', [EventsController::class, 'store']);//->middleware('superadmin');
-    Route::get('/event/{id}', [EventsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
-    Route::put('/event/{id}', [EventsController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/event/{id}', [EventsController::class, 'destroy']);//->middleware('superadmin', 'admin_equipe');
-    Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);//->middleware('superadmin', 'admin_equipe');
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Events']], function () {
+        Route::get('/events', [EventsController::class, 'index']); //->middleware('superadmin', 'admin_equipe');
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Event']], function () {
+        Route::post('/events', [EventsController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Event']], function () {
+        Route::get('/event/{id}', [EventsController::class, 'show']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Event']], function () {
+        Route::put('/event/{id}', [EventsController::class, 'update']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Event']], function () {
+        Route::delete('/event/{id}', [EventsController::class, 'destroy']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe']], function () {
+        Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']); 
+    });
+
 
     //User
-    Route::get('/users', [userController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::post('/users', [userController::class, 'store']);//->middleware('superadmin');
-    Route::get('/user/{id}', [userController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::put('/user/{id}', [userController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/user/{id}', [userController::class, 'destroy']);//->middleware('superadmin');
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Consulter Users']], function () {
+        Route::get('/users', [userController::class, 'index']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Ajout User']], function () {
+        Route::post('/users', [userController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Consulter User']], function () {
+        Route::get('/user/{id}', [userController::class, 'show']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier User']], function () {
+        Route::put('/user/{id}', [userController::class, 'update']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Supprimer User']], function () {
+        Route::delete('/user/{id}', [userController::class, 'destroy']); 
+    });
+
+
 
     //Maintenances
-    Route::get('/maintenances', [MaintenancesController::class, 'index']);//->middleware('superadmin', 'admin_ste');
-    Route::post('/maintenances', [MaintenancesController::class, 'store']);//->middleware('superadmin', 'admin_ste');
-    Route::get('/maintenance/{id}', [MaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
-    Route::put('/maintenance/{id}', [MaintenancesController::class, 'update']);//->middleware('superadmin', 'admin_ste');
-    Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);//->middleware('superadmin', 'admin_ste');
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Maintenances']], function () {
+        Route::get('/maintenances', [MaintenancesController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Ajout Maintenance']], function () {
+        Route::post('/maintenances', [MaintenancesController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste','permission:Consulter Maintenance']], function () {
+        Route::get('/maintenance/{id}', [MaintenancesController::class, 'show']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste','permission:Modifier Maintenance']], function () {
+        Route::put('/maintenance/{id}', [MaintenancesController::class, 'update']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste','permission:Supprimer Maintenance']], function () {
+        Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+        Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'Annuler Maintenance']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Maintenance']], function () {
+        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmerMaintenance']);
+    });
 
-    Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'annulerMaintenance']);
-    Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmerMaintenance']);
+
 
     //equipes
-    Route::group(['middleware' => ['role:Admin Federation','permission:Consulter Equipes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','permission:Consulter Equipes']], function () {
         Route::get('/equipes', [EquipesController::class, 'index']);
-        //
     });
-    Route::post('/equipes', [EquipesController::class, 'store']);//->middleware('superadmin');
-    Route::get('/equipe/{id}', [EquipesController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
-    Route::put('/equipe/{id}', [EquipesController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/equipe/{id}', [EquipesController::class, 'destroy']);//->middleware('superadmin');
+    Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Equipe']], function () {
+        Route::post('/equipes', [EquipesController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Equipe']], function () {
+        Route::get('/equipe/{id}', [EquipesController::class, 'show']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Equipe']], function () {
+        Route::put('/equipe/{id}', [EquipesController::class, 'update']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Supprimer Equipe']], function () {
+        Route::delete('/equipe/{id}', [EquipesController::class, 'destroy']);
+    });
+
 
     //Matchs
-    Route::get('/matchs', [MatchsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    Route::post('/matchs', [MatchsController::class, 'store']);//->middleware('superadmin');
-    Route::get('/match/{id}', [MatchsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
-    Route::put('/match/{id}', [MatchsController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/match/{id}', [MatchsController::class, 'destroy']);//->middleware('superadmin');
-    Route::get('matchs/filter/{date}', [MatchsController::class, 'matchFilter']);//->middleware('superadmin', 'admin_equipe');
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Matchs']], function () {
+        Route::get('/matchs', [MatchsController::class, 'index']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Ajout Match']], function () {
+        Route::post('/matchs', [MatchsController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Match']], function () {
+        Route::get('/match/{id}', [MatchsController::class, 'show']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Match']], function () {
+        Route::put('/match/{id}', [MatchsController::class, 'update']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Match']], function () {
+        Route::delete('/match/{id}', [MatchsController::class, 'destroy']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe']], function () {
+        Route::get('matchs/filter/{date}', [MatchsController::class, 'matchFilter']); //->middleware('superadmin', 'admin_equipe');
+    });
 
     //historiques
-    Route::get('/historiques', [HistoriquesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::post('/historiques', [HistoriquesController::class, 'store']);
-    Route::get('/historique/{id}', [HistoriquesController::class, 'show']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::get('/historiques/filter/{date}', [historiquesController::class, 'historiqueFilter']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    Route::group(['middleware' => ['role:Admin Federation','permission:Consulter Historiques']], function () {
+        Route::get('/historiques', [HistoriquesController::class, 'index']); 
+    });
+    /*
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+        Route::post('/historiques', [HistoriquesController::class, 'store']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+        Route::get('/historique/{id}', [HistoriquesController::class, 'show']); //->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+        Route::get('/historiques/filter/{date}', [historiquesController::class, 'historiqueFilter']); //->middleware('superadmin', 'admin_equipe', 'admin_ste');
+    });*/
 
 
     //societe Maintenance
-    Route::get('/societeMaintenances', [SocieteMaintenancesController::class, 'index']);//->middleware('superadmin', 'admin_ste');
-    Route::post('/societeMaintenances', [SocieteMaintenancesController::class, 'store']);//->middleware('superadmin');
-    Route::get('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'show']);//->middleware('superadmin', 'admin_ste');
-    Route::put('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);//->middleware('superadmin');
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Stes']], function () {
+        Route::get('/societeMaintenances', [SocieteMaintenancesController::class, 'index']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation',  'permission:Ajout Ste']], function () {
+        Route::post('/societeMaintenances', [SocieteMaintenancesController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Ste']], function () {
+        Route::get('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'show']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Modifier Ste']], function () {
+        Route::put('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'update']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Ste']], function () {
+        Route::delete('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'destroy']);
+    });
+
+
 
     //Stades
-    Route::get('/stades', [StadesController::class, 'index']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::get('/stade/{id}', [StadesController::class, 'show']);//->middleware('superadmin');
-    Route::post('/stades', [StadesController::class, 'store']);//->middleware('superadmin', 'admin_equipe', 'admin_ste');
-    Route::put('/stade/{id}', [StadesController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/stade/{id}', [StadesController::class, 'destroy']);//->middleware('superadmin');
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Stades']], function () {
+        Route::get('/stades', [StadesController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Stade']], function () {
+        Route::get('/stade/{id}', [StadesController::class, 'show']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Ajout Stade']], function () {
+        Route::post('/stades', [StadesController::class, 'store']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Modifier Stade']], function () {
+        Route::put('/stade/{id}', [StadesController::class, 'update']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Supprimer Stade']], function () {
+        Route::delete('/stade/{id}', [StadesController::class, 'destroy']); 
+    });
 
-    //Route::middleware(['superadmin'])->group(function () {
-        //Permissions
+    
+    //Permissions
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Consulter Permissions']], function () {
         Route::get('/permissions', [permissionsController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Ajout Permission']], function () {
         Route::post('/permissions', [permissionsController::class, 'store']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Consulter Permission']], function () {
         Route::get('/permission/{id}', [permissionsController::class, 'show']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Permission']], function () {
         Route::put('/permission/{id}', [permissionsController::class, 'update']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Permission']], function () {
         Route::delete('/permission/{id}', [permissionsController::class, 'destroy']);
+    });
 
-        //permission role pivots
+
+
+    /*permission role pivots
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::get('/PermissionRolePivots', [permission_rolesController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::post('/PermissionRolePivots', [permission_rolesController::class, 'store']);
-        // Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
-        // Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
-        // Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
+    });
+    // Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
+    // Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
+    // Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
 
-        //Role User Pivots
+    //Role User Pivots
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::get('/RoleUserPivots', [RoleUserPivotController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::post('/RoleUserPivots', [RoleUserPivotController::class, 'store']);
-        // Route::get('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'show']);
-        // Route::put('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'update']);
-        // Route::delete('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'destroy']);
+    });
+    // Route::get('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'show']);
+    // Route::put('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'update']);
+    // Route::delete('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'destroy']);
+*/
 
-        //Role
+
+    //Role
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Consulter Roles']], function () {
         Route::get('/Roles', [RolesController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Ajout Role']], function () {
         Route::post('/Roles', [RolesController::class, 'store']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Consulter Role']], function () {
         Route::get('/Role/{id}', [RolesController::class, 'show']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Role']], function () {
         Route::put('/Role/{id}', [RolesController::class, 'update']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Role']], function () {
         Route::delete('/Role/{id}', [RolesController::class, 'destroy']);
-        //});
+    });
+    //});
 
-        //Competition
-        Route::get('/Competitions', [CompetitionsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    Route::post('/Competitions', [CompetitionsController::class, 'store']);//->middleware('superadmin');
-    Route::get('/Competition/{id}', [CompetitionsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
-    Route::put('/Competition/{id}', [CompetitionsController::class, 'update']);//->middleware('superadmin');
-    Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']);//->middleware('superadmin');
-    Route::get('/competitions/filter/{annee}', [CompetitionsController::class, 'competitionFilter']);//->middleware('superadmin', 'admin_equipe');
+
+    //Competition
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Competitions']], function () {
+        Route::get('/Competitions', [CompetitionsController::class, 'index']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Competition']], function () {
+        Route::post('/Competitions', [CompetitionsController::class, 'store']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Competition']], function () {
+        Route::get('/Competition/{id}', [CompetitionsController::class, 'show']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Modifier Competition']], function () {
+        Route::put('/Competition/{id}', [CompetitionsController::class, 'update']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','permission:Supprimer Competition']], function () {
+        Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']); 
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe']], function () {
+        Route::get('/competitions/filter/{annee}', [CompetitionsController::class, 'competitionFilter']);
+    });
 
     //Reservation
-    Route::get('/reservations', [ReservationsController::class, 'index']);//->middleware('superadmin', 'admin_equipe');
-    Route::post('/reservations', [ReservationsController::class, 'store']);//->middleware('admin_equipe');
-    Route::get('/reservation/{id}', [ReservationsController::class, 'show']);//->middleware('superadmin', 'admin_equipe');
-    Route::put('/reservation/{id}', [ReservationsController::class, 'update']);//->middleware('admin_equipe');
-    Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']);//->middleware('admin_equipe');
-
-    Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
-    Route::get('/reservation/accepter/{id}', [ReservationsController::class, 'confirmerReservation']);
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Reservations']], function () {
+        Route::get('/reservations', [ReservationsController::class, 'index']); 
+    });
+    Route::group(['middleware' => ['role:Admin Equipe', 'permission:Ajout Reservation']], function () {
+        Route::post('/reservations', [ReservationsController::class, 'store']); //->middleware('admin_equipe');
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Reservation']], function () {
+        Route::get('/reservation/{id}', [ReservationsController::class, 'show']); //->middleware('superadmin', 'admin_equipe');
+    });
+    Route::group(['middleware' => ['role:Admin Equipe', 'permission:Modifier Reservation']], function () {
+        Route::put('/reservation/{id}', [ReservationsController::class, 'update']); //->middleware('admin_equipe');
+    });
+    Route::group(['middleware' => ['role:Admin Equipe', 'permission:Supprimer Reservation']], function () {
+        Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']); //->middleware('admin_equipe');
+    });
+    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Annuler Reservation']], function () {
+        Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
+        Route::get('/reservation/accepter/{id}', [ReservationsController::class, 'confirmerReservation']);
+    });
 });

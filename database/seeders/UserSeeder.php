@@ -36,6 +36,8 @@ class UserSeeder extends Seeder
         "Ajout Maintenance",
         "Modifier Maintenance",
         "Supprimer Maintenance",
+        "Confirmer Maintenance",
+        "Annuler Maintenance",
         "Consulter Equipes",
         "Consulter Equipe",
         "Ajout Equipe",
@@ -45,7 +47,40 @@ class UserSeeder extends Seeder
         "Consulter Match",
         "Ajout Match",
         "Modifier Match",
-        "Supprimer Match"
+        "Supprimer Match",
+        "Consulter Stes",
+        "Consulter Ste",
+        "Ajout Ste",
+        "Modifier Ste",
+        "Supprimer Ste",
+        "Consulter Stades",
+        "Consulter Stade",
+        "Ajout Stade",
+        "Modifier Stade",
+        "Supprimer Stade",
+        "Consulter Permissions",
+        "Consulter Permission",
+        "Ajout Permission",
+        "Modifier Permission",
+        "Supprimer Permission",
+        "Consulter Roles",
+        "Consulter Role",
+        "Ajout Role",
+        "Modifier Role",
+        "Supprimer Role",
+        "Consulter Competitions",
+        "Consulter Competition",
+        "Ajout Competition",
+        "Modifier Competition",
+        "Supprimer Competition",
+        "Consulter Reservations",
+        "Consulter Reservation",
+        "Ajout Reservation",
+        "Modifier Reservation",
+        "Supprimer Reservation",
+        "Confirmer Reservation",
+        "Annuler Reservation",
+        "Consulter Historiques"
     ];
     for ($i = 0 ; $i < count($permissions); $i++){
         Permission::create(['name' => $permissions[$i]]);
@@ -66,22 +101,5 @@ class UserSeeder extends Seeder
             'password'=>bcrypt('123'),
         ]);
         $user->assignRole('Admin Federation');
-
-        User::create([
-            'nom'=>'narjes',
-            'prenom'=>'boudidah',
-            'telephone'=>'77777777',
-            'email'=>'narjes@gmail.com',
-            'adresse'=>'xxxxxxxx',
-            'password'=>bcrypt('321'),
-        ]);
-        User::create([
-            'nom'=>'narjes',
-            'prenom'=>'boudidah',
-            'telephone'=>'11111111',
-            'email'=>'hamza@gmail.com',
-            'adresse'=>'xxxxxxxx',
-            'password'=>bcrypt('123'),
-        ]);
     }
 }
