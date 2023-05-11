@@ -99,7 +99,7 @@ class UserSeeder extends Seeder
     ]);
     $user->assignRole('Admin Federation');
     for ($i = 0 ; $i < count($permissions); $i++){
-        $role1->givePermissionTo($permissions[$i]);
+        $user->givePermissionTo($permissions[$i]);
     }
 
 
