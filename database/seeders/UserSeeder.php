@@ -88,18 +88,48 @@ class UserSeeder extends Seeder
     $role1 = Role::create(['name' => 'Admin Federation']);
     $role2 = Role::create(['name' => 'Admin Equipe']);
     $role3 = Role::create(['name' => 'Admin Ste']);
+
+    $user = User::create([
+        'nom'=>'sirine',
+        'prenom'=>'balghouthi',
+        'telephone'=>'29701966',
+        'email'=>'sirine@gmail.com',
+        'adresse'=>'xxxxxx',
+        'password'=>bcrypt('123'),
+    ]);
+    $user->assignRole('Admin Federation');
     for ($i = 0 ; $i < count($permissions); $i++){
-        $role1->givePermissionTo($permissions[$i]);
+        $user->givePermissionTo($permissions[$i]);
     }
 
-        $user = User::create([
-            'nom'=>'sirine',
-            'prenom'=>'balghouthi',
-            'telephone'=>'29701966',
-            'email'=>'sirine@gmail.com',
-            'adresse'=>'xxxxxx',
-            'password'=>bcrypt('123'),
-        ]);
-        $user->assignRole('Admin Federation');
+
+    $user = User::create([
+        'nom'=>'narjes',
+        'prenom'=>'boudidah',
+        'telephone'=>'29701566',
+        'email'=>'narjes@gmail.com',
+        'adresse'=>'xxxsxxx',
+        'password'=>bcrypt('123'),
+    ]);
+    $user->assignRole('Admin Federation');
+    for ($i = 7 ; $i < count($permissions); $i++){
+        $user->givePermissionTo($permissions[$i]);
     }
+
+
+
+    $user = User::create([
+        'nom'=>'Hamza',
+        'prenom'=>'boudidah',
+        'telephone'=>'29801566',
+        'email'=>'hamza@gmail.com',
+        'adresse'=>'xxxuxxx',
+        'password'=>bcrypt('123'),
+    ]);
+    $user->assignRole('Admin Federation');
+    for ($i = 7 ; $i < count($permissions); $i++){
+        $user->givePermissionTo($permissions[$i]);
+    }
+    
+}
 }
