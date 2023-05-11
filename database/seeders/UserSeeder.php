@@ -99,11 +99,11 @@ class UserSeeder extends Seeder
     ]);
     $user->assignRole('Admin Federation');
     for ($i = 0 ; $i < count($permissions); $i++){
-        $user->givePermissionTo($permissions[$i]);
+        $role1->givePermissionTo($permissions[$i]);
     }
 
 
-    $user = User::create([
+    $user1 = User::create([
         'nom'=>'narjes',
         'prenom'=>'boudidah',
         'telephone'=>'29701566',
@@ -111,14 +111,12 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxsxxx',
         'password'=>bcrypt('123'),
     ]);
-    $user->assignRole('Admin Federation');
-    for ($i = 7 ; $i < count($permissions); $i++){
-        $user->givePermissionTo($permissions[$i]);
-    }
+    $user1->assignRole('Admin Federation');
+    // $user1->givePermissionTo('Consulter Equipes');
 
 
 
-    $user = User::create([
+    User::create([
         'nom'=>'Hamza',
         'prenom'=>'boudidah',
         'telephone'=>'29801566',
@@ -126,10 +124,6 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxuxxx',
         'password'=>bcrypt('123'),
     ]);
-    $user->assignRole('Admin Federation');
-    for ($i = 7 ; $i < count($permissions); $i++){
-        $user->givePermissionTo($permissions[$i]);
-    }
-    
+
 }
 }

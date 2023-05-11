@@ -50,9 +50,9 @@ class userController extends Controller
             'email' => 'required|email|unique:users',
             'adresse' => 'required',
             'password' => 'required|string',
-            'Role' => 'required|string|max:255',
-            'Permissions' => 'required|array',
-            'Permissions.*' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'permissions' => 'required|array',
+            'permissions.*' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -68,9 +68,9 @@ class userController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
 
-        $user->assignRole($request->input('Role'));
+        $user->assignRole($request->input('role'));
 
-        foreach ($request->input('Permissions') as $permission) {
+        foreach ($request->input('permissions') as $permission) {
             $user->givePermissionTo($permission);
         }
 
