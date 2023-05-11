@@ -122,7 +122,6 @@ class userController extends Controller
     /* Remove the specified resource from storage.*/
     public function destroy($id)
     {
-
         $user = User::find($id);
         if (!$user) {
             $array = [
@@ -141,5 +140,10 @@ class userController extends Controller
             ];
             return response($array);
         }
+    }
+
+    public function getUser (Request $request)
+    {
+        return response($request->user()->Roles()->get());
     }
 }
