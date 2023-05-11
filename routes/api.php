@@ -17,6 +17,7 @@ use App\Http\Controllers\API\RoleUserPivotController;
 use App\Http\Controllers\API\RolesController;
 use App\Http\Controllers\API\ReservationsController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\StatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
+    Route::get('/stats', [StatsController::class, 'getCountStats']);
     //Event
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Events']], function () {
         Route::get('/events', [EventsController::class, 'index']); //->middleware('superadmin', 'admin_equipe');
@@ -54,7 +56,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/event/{id}', [EventsController::class, 'update']); 
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Event']], function () {
-        Route::delete('/event/{id}', [EventsController::class, 'destroy']); 
+        Route::delete('/event/{id}', [EventsController::class, 'destroy']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
         Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']); 
