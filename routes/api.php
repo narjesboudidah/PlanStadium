@@ -41,13 +41,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     //Event
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Events']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Events']], function () {
         Route::get('/events', [EventsController::class, 'index']); //->middleware('superadmin', 'admin_equipe');
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Event']], function () {
         Route::post('/events', [EventsController::class, 'store']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Event']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Event']], function () {
         Route::get('/event/{id}', [EventsController::class, 'show']); 
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Event']], function () {
@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Event']], function () {
         Route::delete('/event/{id}', [EventsController::class, 'destroy']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
         Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']); 
     });
 
@@ -81,22 +81,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     //Maintenances
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Maintenances']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Maintenances']], function () {
         Route::get('/maintenances', [MaintenancesController::class, 'index']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Ajout Maintenance']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Ajout Maintenance']], function () {
         Route::post('/maintenances', [MaintenancesController::class, 'store']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste','permission:Consulter Maintenance']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste','permission:Consulter Maintenance']], function () {
         Route::get('/maintenance/{id}', [MaintenancesController::class, 'show']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste','permission:Modifier Maintenance']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste','permission:Modifier Maintenance']], function () {
         Route::put('/maintenance/{id}', [MaintenancesController::class, 'update']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste','permission:Supprimer Maintenance']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste','permission:Supprimer Maintenance']], function () {
         Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'Annuler Maintenance']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Maintenance']], function () {
@@ -106,13 +106,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     //equipes
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','permission:Consulter Equipes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe','permission:Consulter Equipes']], function () {
         Route::get('/equipes', [EquipesController::class, 'index']);
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Equipe']], function () {
         Route::post('/equipes', [EquipesController::class, 'store']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Equipe']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Equipe']], function () {
         Route::get('/equipe/{id}', [EquipesController::class, 'show']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Equipe']], function () {
@@ -124,13 +124,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     //Matchs
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Matchs']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Matchs']], function () {
         Route::get('/matchs', [MatchsController::class, 'index']); 
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Ajout Match']], function () {
         Route::post('/matchs', [MatchsController::class, 'store']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Match']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Match']], function () {
         Route::get('/match/{id}', [MatchsController::class, 'show']); 
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Match']], function () {
@@ -139,7 +139,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Match']], function () {
         Route::delete('/match/{id}', [MatchsController::class, 'destroy']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
         Route::get('matchs/filter/{date}', [MatchsController::class, 'matchFilter']); //->middleware('superadmin', 'admin_equipe');
     });
 
@@ -148,25 +148,25 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/historiques', [HistoriquesController::class, 'index']); 
     });
     /*
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::post('/historiques', [HistoriquesController::class, 'store']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::get('/historique/{id}', [HistoriquesController::class, 'show']); //->middleware('superadmin', 'admin_equipe', 'admin_ste');
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Equipes']], function () {
         Route::get('/historiques/filter/{date}', [historiquesController::class, 'historiqueFilter']); //->middleware('superadmin', 'admin_equipe', 'admin_ste');
     });*/
 
 
     //societe Maintenance
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Stes']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Stes']], function () {
         Route::get('/societeMaintenances', [SocieteMaintenancesController::class, 'index']); 
     });
     Route::group(['middleware' => ['role:Admin Federation',  'permission:Ajout Ste']], function () {
         Route::post('/societeMaintenances', [SocieteMaintenancesController::class, 'store']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Ste', 'permission:Consulter Ste']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Ste']], function () {
         Route::get('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'show']); 
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Modifier Ste']], function () {
@@ -179,19 +179,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     //Stades
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Stades']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Stades']], function () {
         Route::get('/stades', [StadesController::class, 'index']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Stade']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Stade']], function () {
         Route::get('/stade/{id}', [StadesController::class, 'show']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Ajout Stade']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Ajout Stade']], function () {
         Route::post('/stades', [StadesController::class, 'store']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Modifier Stade']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Modifier Stade']], function () {
         Route::put('/stade/{id}', [StadesController::class, 'update']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Supprimer Stade']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Supprimer Stade']], function () {
         Route::delete('/stade/{id}', [StadesController::class, 'destroy']); 
     });
 
@@ -215,29 +215,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-    /*permission role pivots
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
-        Route::get('/PermissionRolePivots', [permission_rolesController::class, 'index']);
-    });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
-        Route::post('/PermissionRolePivots', [permission_rolesController::class, 'store']);
-    });
-    // Route::get('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'show']);
-    // Route::put('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'update']);
-    // Route::delete('/PermissionRolePivot/{id}/{id}', [permission_rolesController::class, 'destroy']);
-
-    //Role User Pivots
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
-        Route::get('/RoleUserPivots', [RoleUserPivotController::class, 'index']);
-    });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe','role:Admin Ste', 'permission:Consulter Equipes']], function () {
-        Route::post('/RoleUserPivots', [RoleUserPivotController::class, 'store']);
-    });
-    // Route::get('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'show']);
-    // Route::put('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'update']);
-    // Route::delete('/RoleUserPivot/{id}/{id}', [RoleUserPivotController::class, 'destroy']);
-*/
-
 
     //Role
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Consulter Roles']], function () {
@@ -259,13 +236,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     //Competition
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Competitions']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Competitions']], function () {
         Route::get('/Competitions', [CompetitionsController::class, 'index']); 
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Competition']], function () {
         Route::post('/Competitions', [CompetitionsController::class, 'store']);
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Competition']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Competition']], function () {
         Route::get('/Competition/{id}', [CompetitionsController::class, 'show']); 
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Modifier Competition']], function () {
@@ -274,18 +251,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation','permission:Supprimer Competition']], function () {
         Route::delete('/Competition/{id}', [CompetitionsController::class, 'destroy']); 
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
         Route::get('/competitions/filter/{annee}', [CompetitionsController::class, 'competitionFilter']);
     });
 
     //Reservation
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Reservations']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Reservations']], function () {
         Route::get('/reservations', [ReservationsController::class, 'index']); 
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Ajout Reservation']], function () {
         Route::post('/reservations', [ReservationsController::class, 'store']); //->middleware('admin_equipe');
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Consulter Reservation']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Reservation']], function () {
         Route::get('/reservation/{id}', [ReservationsController::class, 'show']); //->middleware('superadmin', 'admin_equipe');
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Modifier Reservation']], function () {
@@ -294,7 +271,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Supprimer Reservation']], function () {
         Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']); //->middleware('admin_equipe');
     });
-    Route::group(['middleware' => ['role:Admin Federation','role:Admin Equipe', 'permission:Annuler Reservation']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Annuler Reservation']], function () {
         Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
