@@ -144,6 +144,12 @@ class userController extends Controller
 
     public function getUser (Request $request)
     {
-        return response($request->user()->Roles()->get());
+        return response([
+            'user' => $request->user(),
+            'role' => $request->user()->Roles()->get()[0]["name"],
+            'permissions' => $request->user()->Permissions()->get()->map(function($permission){
+                return $permission->name;
+            }),
+        ]);
     }
 }
