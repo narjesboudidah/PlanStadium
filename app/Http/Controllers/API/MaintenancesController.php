@@ -13,15 +13,24 @@ use Illuminate\Validation\Rule;
 class MaintenancesController extends Controller
 {
     /*Display a listing of the resource.*/
-    public function index()
+    public function index(Request $request)
     {
-        $maintenances = maintenanceResource::collection(maintenances::get()); //ki tabda bech trajaa akther min 7aja
-        $array = [
-            'data' => $maintenances,
-            'message' => 'ok',
-            'status' => 200,
-        ];
-        return response($array);
+        if($request->user()->Roles()->get()[0]["name"] == "Admin Federation"){
+            $maintenances = maintenanceResource::collection(maintenances::get());//ki tabda bech trajaa akther min 7aja
+            return response([
+                'data' => $maintenances,
+                'message' => 'ok',
+                'status' => 200,
+            ]);
+        } else if ($request->user()->Roles()->get()[0]["name"] == "Admin Ste"){
+            return response([
+                "data" => $request->user()->maintenances()->get(),
+            ]);
+        } else {
+            return response([
+                "data" => [],
+            ],403);
+        }
     }
 
     /*Display the specified resource.*/
@@ -108,7 +117,7 @@ class MaintenancesController extends Controller
         'status' => 201,
     ], 201);
 }
-    
+
 
 
     /* Remove the specified resource from storage.*/

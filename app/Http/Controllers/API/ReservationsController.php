@@ -11,15 +11,25 @@ use Illuminate\Support\Facades\Validator;
 class ReservationsController extends Controller
 {
     /*Display a listing of the resource.*/
-    public function index()
+    public function index(Request $request)
     {
+        if($request->user()->Roles()->get()[0]["name"] == "Admin Federation"){
         $reservations = reservationResource::collection(reservations::get()); //ki tabda bech trajaa akther min 7aja
-        $array = [
+        return response([
             'data' => $reservations,
             'message' => 'ok',
             'status' => 200,
-        ];
-        return response($array);
+        ]);
+    } else if ($request->user()->Roles()->get()[0]["name"] == "Admin Equipe"){
+        return response([
+            "data" => $request->user()->reservations()->get(),
+        ]);
+    } else {
+        return response([
+            "data" => [],
+        ],403);
+    }
+
     }
 
     /*Display the specified resource.*/

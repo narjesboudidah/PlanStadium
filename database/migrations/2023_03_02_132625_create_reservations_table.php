@@ -30,6 +30,8 @@ return new class extends Migration
             $table->enum('type_reservation',['Match','Entraînement','Evénements spéciaux'])->default('Evénements spéciaux');
             $table->enum('statut',['en attente', 'refusé', "accepté"])->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)
             $table->string('nom_match')->nullable();
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id','user_id_fk')->references('id')->on('users')->²onDelete('cascade');
             $table->enum('type_match',['National','International'])->default('National')->nullable();
             $table->string('nom_equipe_adversaire')->nullable();
             $table->softDeletes();

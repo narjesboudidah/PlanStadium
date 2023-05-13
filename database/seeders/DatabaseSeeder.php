@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+<<<<<<< HEAD
             StadeSeeder::class
+=======
+            ReservationSeeder::class,
+>>>>>>> 673a559cb3fdc19be4bc1b897ce95f1b10c5789d
 
         ]);
         // \App\Models\User::factory(10)->create();

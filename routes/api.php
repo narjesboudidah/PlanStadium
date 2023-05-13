@@ -58,8 +58,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Event']], function () {
         Route::delete('/event/{id}', [EventsController::class, 'destroy']);
     });
+<<<<<<< HEAD
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);
+=======
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
+        Route::get('events/filter/{date_debut}/{stade_id}', [EventsController::class, 'eventFilter']);
+>>>>>>> 673a559cb3fdc19be4bc1b897ce95f1b10c5789d
     });
 
 

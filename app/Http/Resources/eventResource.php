@@ -24,7 +24,7 @@ class eventResource extends JsonResource
             'nom_event' => $this->nom_event,
             'type_match' => $this->type_match,
             'nom_equipe_adversaire' => $this->nom_equipe_adversaire,
-            'stade' => new stadeResource($this->whenLoaded('stades')),
+            'stade_id' => $this->stade_id,
         ];
     }
 }
