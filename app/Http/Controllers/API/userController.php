@@ -51,8 +51,8 @@ class userController extends Controller
             'adresse' => 'required',
             'password' => 'required|string',
             'role' => 'required|string|max:255',
-            'permissions' => 'required|array',
-            'permissions.*' => 'required|string|max:255',
+            'permissions' => 'array',
+            'permissions.*' => 'string|max:255',
         ]);
 
         if ($validator->fails()) {
