@@ -123,7 +123,7 @@ class UserSeeder extends Seeder
     for ($i = 0 ; $i < count($admin_federation_permissions); $i++){
         $user->givePermissionTo($admin_federation_permissions[$i]);
     }
-    // $user->assignRole('Admin Federation');
+    $user->assignRole('Admin Federation');
 
 
     $user1 = User::create([
