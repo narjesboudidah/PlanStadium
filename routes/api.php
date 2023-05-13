@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [userController::class, 'getUser']);
     Route::get('/stats', [StatsController::class, 'getCountStats']);
     //Event
-    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Events']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Events']], function () {
         Route::get('/events', [EventsController::class, 'index']);
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Event']], function () {
@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Event']], function () {
         Route::delete('/event/{id}', [EventsController::class, 'destroy']);
     });
-    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);
     });
 
@@ -102,7 +102,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'Annuler Maintenance']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Maintenance']], function () {
-        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmerMaintenance']);
+        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmer Maintenance']);
     });
 
 

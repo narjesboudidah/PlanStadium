@@ -21,7 +21,18 @@ class UserSeeder extends Seeder
        // societe_maintenances::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
        app()[PermissionRegistrar::class]->forgetCachedPermissions();
        $admin_ste_permissions = [
-
+        "Consulter Events",
+        "Consulter Event",
+        "Consulter Maintenances",
+        "Consulter Maintenance",
+        "Ajout Maintenance",
+        "Modifier Maintenance",
+        "Supprimer Maintenance",
+        "Annuler Maintenance",
+        "Consulter Stes",
+        "Consulter Ste",
+        "Consulter Stades",
+        "Consulter Stade",
        ];
        $admin_equipe_permissions = [
         "Consulter Events",
@@ -111,6 +122,9 @@ class UserSeeder extends Seeder
     $role3 = Role::create(['name' => 'Admin Ste']);
     for ($i = 0 ; $i < count($admin_equipe_permissions); $i++){
         $role2->givePermissionTo($admin_equipe_permissions[$i]);
+    }
+    for ($i = 0 ; $i < count($admin_ste_permissions); $i++){
+        $role3->givePermissionTo($admin_ste_permissions[$i]);
     }
     $user = User::create([
         'nom'=>'sirine',
