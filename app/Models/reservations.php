@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class reservations extends Model
-{
+{ 
     use HasFactory;
     protected $table='reservations';
     protected $fillable=['note','date_debut','heure_debut','date_fin','heure_fin','type_reservation','nom_match','type_match','nom_equipe_adversaire','statut','admin_equipe_id','admin_fed_id'];

@@ -28,7 +28,7 @@ class stadeResource extends JsonResource
             'image' => $this->image,
             'etat' => $this->etat,
             'description' => $this->description,
-            'date dernier travaux' => $this->date_dernier_travaux,
+            'date_dernier_travaux' => $this->date_dernier_travaux,
         ];
     }
 }
