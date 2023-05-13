@@ -16,7 +16,7 @@ class ReservationSeeder extends Seeder
     public function run()
     {
         //role_user_pivot::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
-        
+
         reservations::create([
             'note'=>'xxxxxxxxxxx',
             'date_debut'=>'2023-01-01',
@@ -27,6 +27,7 @@ class ReservationSeeder extends Seeder
             'statut'=>'refusé',
             'nom_match'=>'xxxxxx',
             'type_match'=>'National',
+            'user_id' => 1,
             'nom_equipe_adversaire'=>'CSS',
             'admin_equipe_id'=>2,
             'admin_fed_id'=>1,
