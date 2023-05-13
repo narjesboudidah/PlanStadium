@@ -74,45 +74,45 @@ class EventsController extends Controller
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'date_debut' => 'date_format:Y-m-d',
-        'heure_debut' => 'date_format:H:i',
-        'date_fin' => 'date_format:Y-m-d|after:date_debut',
-        'heure_fin' => 'date_format:H:i',
-        'type_event' => 'string|max:255',
-        'nom_event' => 'string|max:255',
-        'type_match' => 'string|max:255',
-        'nom_equipe_adversaire' => 'string|max:255',
-        'stade_id' => 'exists:stades,id',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'date_debut' => 'date_format:Y-m-d',
+            'heure_debut' => 'date_format:H:i',
+            'date_fin' => 'date_format:Y-m-d|after:date_debut',
+            'heure_fin' => 'date_format:H:i',
+            'type_event' => 'string|max:255',
+            'nom_event' => 'string|max:255',
+            'type_match' => 'string|max:255',
+            'nom_equipe_adversaire' => 'string|max:255',
+            'stade_id' => 'exists:stades,id',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json([
-            'data' => null,
-            'message' => $validator->errors(),
-            'status' => 400,
-        ], 400);
-    }
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => null,
+                'message' => $validator->errors(),
+                'status' => 400,
+            ], 400);
+        }
 
-    $event = events::find($id);
-    if (!$event) {
-        return response()->json([
-            'data' => null,
-            'message' => 'The event not Found',
-            'status' => 404,
-        ], 404);
-    }
+        $event = events::find($id);
+        if (!$event) {
+            return response()->json([
+                'data' => null,
+                'message' => 'The event not Found',
+                'status' => 404,
+            ], 404);
+        }
 
-    $event->update($request->all());
-    if ($event) {
-        return response()->json([
-            'data' => new eventResource($event),
-            'message' => 'The event update',
-            'status' => 201,
-        ], 201);
+        $event->update($request->all());
+        if ($event) {
+            return response()->json([
+                'data' => new eventResource($event),
+                'message' => 'The event update',
+                'status' => 201,
+            ], 201);
+        }
     }
-}
 
 
 
@@ -140,33 +140,40 @@ class EventsController extends Controller
         }
     }
 
-    public function eventFilter($date_debut)
+    public function eventFilter($date_debut, $stade_id)
     {
-        // Vérifier si une date_debut de filtrage a été spécifiée
-        if ($date_debut) {
-            // Convertir la date_debut de filtrage en objet Carbon pour une manipulation facile
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($date_debut)) {
+            // Supprimer les caractères indésirables de la chaîne de date
+            $date_debut = str_replace(['{', '}'], '', $date_debut);
+    
+            // Convertir la date de début de filtrage en objet Carbon pour une manipulation facile
             $filterDate = Carbon::parse($date_debut)->toDateString();
-
-            // Effectuer la requête pour filtrer les events en fonction de la date_debut
-            $events = events::whereDate('date_debut', $filterDate)->get();
-            $EventResource = EventResource::collection($events);
+    
+            // Effectuer la requête pour filtrer les événements en fonction de l'ID du stade et de la date de début
+            $events = events::where('stade_id', $stade_id)
+                ->whereDate('date_debut', '=', $filterDate)
+                ->get();
+    
+            $eventResource = eventResource::collection($events);
             $array = [
-                'data' => $EventResource,
+                'data' => $events,
                 'message' => 'OK',
                 'status' => 200,
             ];
         } else {
-            // Si aucune date de filtrage n'est spécifiée, récupérer tous les events
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les événements
             $events = events::all();
-            $EventResource = EventResource::collection($events);
+            $eventResource = eventResource::collection($events);
             $array = [
-                'data' => $EventResource,
+                'data' => $eventResource,
                 'message' => 'OK',
                 'status' => 200,
             ];
         }
-
-        // Retourner les events filtrés à la vue ou effectuer d'autres actions nécessaires
+    
+        // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
-    }
+    }    
+
 }
