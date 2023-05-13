@@ -20,8 +20,29 @@ class UserSeeder extends Seeder
     {
        // societe_maintenances::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+       $admin_ste_permissions = [
 
-        $permissions = ["Consulter Events",
+       ];
+       $admin_equipe_permissions = [
+        "Consulter Events",
+        "Consulter Equipes",
+        "Consulter Equipe",
+        "Consulter Event",
+        "Consulter Matchs",
+        "Consulter Match",
+        "Consulter Stades",
+        "Consulter Competitions",
+        "Consulter Competition",
+        "Consulter Stade",
+        "Consulter Reservations",
+        "Consulter Reservation",
+        "Ajout Reservation",
+        "Modifier Reservation",
+        "Supprimer Reservation",
+        "Annuler Reservation",
+       ];
+        $admin_federation_permissions = [
+        "Consulter Events",
         "Consulter Event",
         "Ajout Event",
         "Modifier Event",
@@ -78,17 +99,19 @@ class UserSeeder extends Seeder
         "Ajout Reservation",
         "Modifier Reservation",
         "Supprimer Reservation",
-        "Confirmer Reservation",
         "Annuler Reservation",
+        "Confirmer Reservation",
         "Consulter Historiques"
     ];
-    for ($i = 0 ; $i < count($permissions); $i++){
-        Permission::create(['name' => $permissions[$i]]);
+    for ($i = 0 ; $i < count($admin_federation_permissions); $i++){
+        Permission::create(['name' => $admin_federation_permissions[$i]]);
     }
     $role1 = Role::create(['name' => 'Admin Federation']);
     $role2 = Role::create(['name' => 'Admin Equipe']);
     $role3 = Role::create(['name' => 'Admin Ste']);
-
+    for ($i = 0 ; $i < count($admin_equipe_permissions); $i++){
+        $role2->givePermissionTo($admin_equipe_permissions[$i]);
+    }
     $user = User::create([
         'nom'=>'sirine',
         'prenom'=>'balghouthi',
@@ -97,10 +120,10 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxxxx',
         'password'=>bcrypt('123'),
     ]);
-    $user->assignRole('Admin Federation');
-    for ($i = 0 ; $i < count($permissions); $i++){
-        $user->givePermissionTo($permissions[$i]);
+    for ($i = 0 ; $i < count($admin_federation_permissions); $i++){
+        $user->givePermissionTo($admin_federation_permissions[$i]);
     }
+    // $user->assignRole('Admin Federation');
 
 
     $user1 = User::create([
@@ -111,7 +134,7 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxsxxx',
         'password'=>bcrypt('123'),
     ]);
-    $user1->assignRole('Admin Federation');
+    // $user1->assignRole('Admin Federation');
     // $user1->givePermissionTo('Consulter Equipes');
 
 
