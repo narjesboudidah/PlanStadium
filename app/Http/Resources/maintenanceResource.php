@@ -16,10 +16,10 @@ class maintenanceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date debut' => $this->date_debut,
-            'heure debut' => $this->heure_debut,
-            'date fin' => $this->date_fin,
-            'heure fin' => $this->heure_fin,
+            'date_debut' => $this->date_debut,
+            'heure_debut' => $this->heure_debut,
+            'date_fin' => $this->date_fin,
+            'heure_fin' => $this->heure_fin,
             'etat' => $this->etat,
             'statut' => $this->statut,
             'description' => $this->description,

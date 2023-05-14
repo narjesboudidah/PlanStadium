@@ -98,11 +98,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Ste','permission:Supprimer Maintenance']], function () {
         Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);
     });
-    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Equipes']], function () {
-        Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'Annuler Maintenance']);
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Annuler Maintenance']], function () {
+        Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'annulerMaintenance']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Maintenance']], function () {
-        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmer Maintenance']);
+        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmerMaintenance']);
     });
 
 

@@ -19,7 +19,7 @@ class matchResource extends JsonResource
             'nom' => $this->nom,
             'date' => $this->date,
             'heure' => $this->heure,
-            'type match' => $this->type_match,
+            'type_match' => $this->type_match,
             'competition' => new UserResource($this->whenLoaded('competitions')),
             'stade' => new stadeResource($this->whenLoaded('stades')),
             'equipe1' => new equipeResource($this->whenLoaded('equipes')),
