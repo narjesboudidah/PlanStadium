@@ -12,8 +12,6 @@ use App\Http\Controllers\API\EquipesController;
 use App\Http\Controllers\API\societeMaintenancesController;
 use App\Http\Controllers\API\StadesController;
 use App\Http\Controllers\API\permissionsController;
-use App\Http\Controllers\API\permission_rolesController;
-use App\Http\Controllers\API\RoleUserPivotController;
 use App\Http\Controllers\API\RolesController;
 use App\Http\Controllers\API\ReservationsController;
 use App\Http\Controllers\Auth\AuthController;
@@ -42,6 +40,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [userController::class, 'getUser']);
     Route::get('/stats', [StatsController::class, 'getCountStats']);
+
     //Event
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Events']], function () {
         Route::get('/events', [EventsController::class, 'index']);
@@ -59,7 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/event/{id}', [EventsController::class, 'destroy']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('events/filter/{date_debut}/{stade_id}', [EventsController::class, 'eventFilter']);
+        Route::get('/events/filter/{date_debut}/{stade_id}', [EventsController::class, 'eventFilter']);
     });
 
 
@@ -98,11 +97,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Ste','permission:Supprimer Maintenance']], function () {
         Route::delete('/maintenance/{id}', [MaintenancesController::class, 'destroy']);
     });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Maintenance']], function () {
+        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmerMaintenance']);
+    });
     Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Annuler Maintenance']], function () {
         Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'annulerMaintenance']);
     });
-    Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Maintenance']], function () {
-        Route::get('/maintenance/accepter/{id}', [MaintenancesController::class, 'confirmerMaintenance']);
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/maintenances/filter/{date}', [MaintenancesController::class, 'MaintenanceFilter']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/maintenances/filter/{date_debut}/{stade_id}/{statut}', [MaintenancesController::class, 'MaintenanceFilterStade']);
     });
 
 
@@ -142,7 +147,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/match/{id}', [MatchsController::class, 'destroy']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('matchs/filter/{date}/{stade_id}', [MatchsController::class, 'matchFilter']);
+        Route::get('/matchs/filter/{date}/{stade_id}', [MatchsController::class, 'matchFilter']);
     });
 
     //historiques
@@ -278,5 +283,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
         Route::get('/reservation/accepter/{id}', [ReservationsController::class, 'confirmerReservation']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/reservations/filter/{date}', [ReservationsController::class, 'MaintenanceFilter']);
     });
 });

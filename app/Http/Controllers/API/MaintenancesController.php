@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\maintenanceResource;
 use App\Models\maintenances;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -200,6 +201,72 @@ class MaintenancesController extends Controller
         ];
         return response($array);
     }
+
+    public function MaintenanceFilter($date)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($date)) {
+            // Convertir la date de filtrage en objet Carbon pour une manipulation facile
+            $filterDate = Carbon::parse($date)->toDateString();
+
+            // Effectuer la requête pour filtrer les maintenances en fonction de la date
+            $maintenances = maintenances::whereDate('date', $filterDate)->get();
+            $maintenancesResource = maintenanceResource::collection($maintenances);
+            $array = [
+                'data' => $maintenancesResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les maintenances
+            $maintenances = maintenances::all();
+            $maintenancesResource = maintenanceResource::collection($maintenances);
+            $array = [
+                'data' => $maintenancesResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+
+        // Retourner les maintenances filtrés à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+    public function MaintenanceFilterStade ($date_debut, $stade_id, $statut)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($date_debut)) {
+            // Supprimer les caractères indésirables de la chaîne de date
+            $date_debut = str_replace(['{', '}'], '', $date_debut);
+    
+            // Convertir la date de début de filtrage en objet Carbon pour une manipulation facile
+            $filterDate = Carbon::parse($date_debut)->toDateString();
+    
+            // Effectuer la requête pour filtrer les événements en fonction de l'ID du stade et de la date de début
+            $maintenances = maintenances::where('stade_id', $stade_id)
+                ->whereDate('date_debut', '=', $filterDate)
+                ->where('statut', $statut)
+                ->get();
+    
+            $maintenanceResource = maintenanceResource::collection($maintenances);
+            $array = [
+                'data' => $maintenances,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les événements
+            $maintenances = maintenances::all();
+            $maintenanceResource = maintenanceResource::collection($maintenances);
+            $array = [
+                'data' => $maintenanceResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+    
+        // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }   
 
 
 }

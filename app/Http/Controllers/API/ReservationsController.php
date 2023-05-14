@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\reservationResource;
 use App\Models\reservations;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -213,6 +214,36 @@ class ReservationsController extends Controller
             'message' => 'refusé avec success',
             'status' => 501,
         ];
+        return response($array);
+    }
+
+    public function MaintenanceFilter($date)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($date)) {
+            // Convertir la date de filtrage en objet Carbon pour une manipulation facile
+            $filterDate = Carbon::parse($date)->toDateString();
+
+            // Effectuer la requête pour filtrer les reservations en fonction de la date
+            $reservations = reservations::whereDate('date', $filterDate)->get();
+            $reservationsResource = reservationResource::collection($reservations);
+            $array = [
+                'data' => $reservationsResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les reservations
+            $reservations = reservations::all();
+            $reservationsResource = reservationResource::collection($reservations);
+            $array = [
+                'data' => $reservationsResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+
+        // Retourner les reservations filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
 
