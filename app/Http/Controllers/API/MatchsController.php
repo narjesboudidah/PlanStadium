@@ -142,7 +142,7 @@ class MatchsController extends Controller
         }
     }
 
-    public function matchFilter($date)
+   /* public function matchFilter($date)
     {
         // Vérifier si une date de filtrage a été spécifiée
         if (isset($date)) {
@@ -170,5 +170,42 @@ class MatchsController extends Controller
 
         // Retourner les matchs filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
-    }
+    }*/
+
+    public function matchFilter($date, $stade_id)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($date)) {
+            // Supprimer les caractères indésirables de la chaîne de date
+            $date = str_replace(['{', '}'], '', $date);
+    
+            // Convertir la date de début de filtrage en objet Carbon pour une manipulation facile
+            $filterDate = Carbon::parse($date)->toDateString();
+    
+            // Effectuer la requête pour filtrer les événements en fonction de l'ID du stade et de la date de début
+            $matchs = matchs::where('stade_id', $stade_id)
+                ->whereDate('date', '=', $filterDate)
+                ->get();
+    
+            $matchResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchs,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les événements
+            $matchs = matchs::all();
+            $matchResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+    
+        // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }    
+
 }

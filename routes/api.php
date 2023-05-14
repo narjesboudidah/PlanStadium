@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/event/{id}', [EventsController::class, 'destroy']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('events/filter/{date_debut}', [EventsController::class, 'eventFilter']);
+        Route::get('events/filter/{date_debut}/{stade_id}', [EventsController::class, 'eventFilter']);
     });
 
 
@@ -141,8 +141,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Match']], function () {
         Route::delete('/match/{id}', [MatchsController::class, 'destroy']);
     });
-    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
-        Route::get('matchs/filter/{date}', [MatchsController::class, 'matchFilter']); //->middleware('superadmin', 'admin_equipe');
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('matchs/filter/{date}/{stade_id}', [MatchsController::class, 'matchFilter']);
     });
 
     //historiques
