@@ -60,10 +60,10 @@ class MaintenancesController extends Controller
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
             'heure_fin' => 'required|date_format:H:i',
             'etat' => 'required|string|max:255',
-            'statut' => 'required|string|max:255',
+            // 'statut' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'admin_fed_id' => 'required|exists:users,id',
-            'admin_ste_id' => 'required|exists:users,id',
+            // 'admin_fed_id' => 'required|exists:users,id',
+            // 'admin_ste_id' => 'required|exists:users,id',
             'stade_id' => 'required|exists:stades,id',
         ]);
 

@@ -31,10 +31,7 @@ return new class extends Migration
             $table->string('description')->nullable(); //description de la nature de la maintenance
             $table->enum('etat',['urgent', 'moyen'])->default('urgent');
             $table->enum('statut',['en attente', "refusé", "accepté"])->default('en attente');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk_2')->references('id')->on('users')->²onDelete('cascade');
             $table->softDeletes();
-
             $table->timestamps();
         });
     }
