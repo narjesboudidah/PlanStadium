@@ -267,16 +267,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/reservations', [ReservationsController::class, 'index']);
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Ajout Reservation']], function () {
-        Route::post('/reservations', [ReservationsController::class, 'store']); //->middleware('admin_equipe');
+        Route::post('/reservations', [ReservationsController::class, 'store']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Reservation']], function () {
-        Route::get('/reservation/{id}', [ReservationsController::class, 'show']); //->middleware('superadmin', 'admin_equipe');
+        Route::get('/reservation/{id}', [ReservationsController::class, 'show']); 
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Modifier Reservation']], function () {
-        Route::put('/reservation/{id}', [ReservationsController::class, 'update']); //->middleware('admin_equipe');
+        Route::put('/reservation/{id}', [ReservationsController::class, 'update']);
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Supprimer Reservation']], function () {
-        Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']); //->middleware('admin_equipe');
+        Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Annuler Reservation']], function () {
         Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
