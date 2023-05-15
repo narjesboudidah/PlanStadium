@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 
 class MaintenancesController extends Controller
@@ -51,38 +52,41 @@ class MaintenancesController extends Controller
 
 
     /*Store a newly created resource in storage.*/
-    public function store(Request $request)
-    {
 
-        $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d',
-            'heure_debut' => 'required|date_format:H:i',
-            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-            'heure_fin' => 'required|date_format:H:i',
-            'etat' => 'required|string|max:255',
-            'statut' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'admin_fed_id' => 'required|exists:users,id',
-            'admin_ste_id' => 'required|exists:users,id',
-            'stade_id' => 'required|exists:stades,id',
-        ]);
+public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'date_debut' => 'required|date|date_format:Y-m-d',
+        'heure_debut' => 'required|date_format:H:i',
+        'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
+        'heure_fin' => 'required|date_format:H:i',
+        'etat' => 'required|string|max:255',
+        'description' => 'nullable|string|max:255',
+        'admin_fed_id' => 'nullable|exists:users,id',
+        'admin_ste_id' => 'exists:users,id',
+        'stade_id' => 'required|exists:stades,id',
+    ]);
 
-        if ($validator->fails()) { //ken fama mochkil
-            return response(null, 400, [$validator->errors()]);
-        }
-
-
-        $maintenance = maintenances::create($request->all());
-        if ($maintenance) {
-            $array = [
-                'data' => new maintenanceResource($maintenance),
-                'message' => 'The user save',
-                'status' => 201,
-            ];
-            return response($array);
-        }
-        return response(null, 400, ['The maintenance not save']);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
     }
+
+    $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+
+    $maintenance = maintenances::create(array_merge($request->all(), ['admin_ste_id' => $admin_ste_id,'admin_fed_id' => $admin_ste_id]));
+
+    if ($maintenance) {
+        $array = [
+            'data' => new MaintenanceResource($maintenance),
+            'message' => 'The maintenance saved',
+            'status' => 201,
+        ];
+        return response()->json($array);
+    }
+
+    return response()->json(['message' => 'The maintenance could not be saved'], 400);
+}
+
 
 
     /*Update the specified resource in storage.*/

@@ -23,9 +23,9 @@ class maintenanceResource extends JsonResource
             'etat' => $this->etat,
             'statut' => $this->statut,
             'description' => $this->description,
-            //'admin_fed' => new historiqueResource($this->whenLoaded('user')),
-            //'admin_ste' => new historiqueResource($this->whenLoaded('user')),
-            'stade' => $this->stade,
+            'stade_id' => $this->stade_id,
+            'admin_fed_id' => $this->admin_fed_id,
+            'admin_ste_id' => $this->admin_ste_id,
         ];
     }
 }

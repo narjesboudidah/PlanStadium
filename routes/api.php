@@ -129,7 +129,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/equipe/{id}', [EquipesController::class, 'destroy']);
     });
 
-
+ 
     //Matchs
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Matchs']], function () {
         Route::get('/matchs', [MatchsController::class, 'index']);
@@ -284,10 +284,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Annuler Reservation']], function () {
         Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
     });
-    Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
+    /*Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
         Route::get('/reservation/accepter/{id}', [ReservationsController::class, 'confirmerReservation']);
-    });
+    });*/
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/reservations/filter/{date}', [ReservationsController::class, 'MaintenanceFilter']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
+        Route::post('/reservations/accept/{id}', [ReservationsController::class, 'acceptReservation']);
     });
 });

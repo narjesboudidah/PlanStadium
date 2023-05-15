@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\reservationResource;
+use App\Models\events;
 use App\Models\reservations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -245,6 +246,31 @@ class ReservationsController extends Controller
 
         // Retourner les reservations filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
+    }
+
+    public function acceptReservation($reservationId)
+    {
+        $reservation = reservations::findOrFail($reservationId);
+
+        // Créez un nouvel événement à partir des informations de la réservation
+        $event = new events();
+        $event->stade_id = $reservation->stade_id;
+        $event->date_debut = $reservation->date_debut;
+        $event->heure_debut = $reservation->heure_debut;
+        $event->date_fin = $reservation->date_fin;
+        $event->heure_fin = $reservation->heure_fin;
+        $event->type_event = $reservation->type_reservation;
+        $event->nom_event = $reservation->nom_match;
+        $event->type_match = $reservation->type_match;
+        $event->nom_equipe_adversaire = $reservation->nom_equipe_adversaire;
+
+        // Enregistrez l'événement
+        $event->save();
+
+        // Supprimez la réservation
+        $reservation->delete();
+
+        return response()->json(['message' => 'Réservation acceptée et ajoutée à l\'événement.']);
     }
 
 
