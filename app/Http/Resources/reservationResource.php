@@ -16,8 +16,6 @@ class reservationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            //mouch bidharoura tsamih id badlou kima t7eb
-            'note' => $this->note,
             'date_debut' => $this->date_debut,
             'heure_debut' => $this->heure_debut,
             'date_fin' => $this->date_fin,
@@ -26,7 +24,9 @@ class reservationResource extends JsonResource
             'statut' => $this->statut,
             'nom_match' => $this->nom_match,
             'type_match' => $this->type_match,
-            'nom_equipe_adversaire' => $this->nom_equipe_adversaire,
+            'stade_id' => $this->stade_id,
+            'admin_fed_id' => $this->admin_fed_id,
+            'admin_equipe_id' => $this->admin_equipe_id,
             // 'admin_equipe_id' => new UserResource($this->whenLoaded('user')),
             // 'admin_fed_id' => new UserResource($this->whenLoaded('user')),
         ];
