@@ -24,7 +24,7 @@ class userResource extends JsonResource
             'email_verified_at' => $this->email_verified_at,
             'password' =>bcrypt( $this->password),
             'remember_token' => $this->remember_token,
-            // 'role' => $this->Roles()->get()[0]["name"],
+            'role' => $this->Roles()->get()[0]["name"],
         ];
     }
 }

@@ -148,7 +148,7 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxsxxx',
         'password'=>bcrypt('123'),
     ]);
-    // $user1->assignRole('Admin Federation');
+    $user1->assignRole('Admin Equipe');
     // $user1->givePermissionTo('Consulter Equipes');
 
 
@@ -161,6 +161,7 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxuxxx',
         'password'=>bcrypt('123'),
     ]);
+    $user1->assignRole('Admin Ste');
 
 }
 }
