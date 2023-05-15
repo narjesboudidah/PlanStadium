@@ -153,7 +153,7 @@ class UserSeeder extends Seeder
 
 
 
-    User::create([
+   $user2 =  User::create([
         'nom'=>'Hamza',
         'prenom'=>'boudidah',
         'telephone'=>'29801566',
@@ -161,7 +161,7 @@ class UserSeeder extends Seeder
         'adresse'=>'xxxuxxx',
         'password'=>bcrypt('123'),
     ]);
-    $user1->assignRole('Admin Ste');
+    $user2->assignRole('Admin Ste');
 
 }
 }
