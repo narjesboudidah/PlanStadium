@@ -48,7 +48,7 @@ class EquipesController extends Controller
             'nom_equipe' => 'required|max:255|unique:equipes',
             'adresse' => 'required|unique:equipes|string|max:255',
             'pays' => 'required|string',
-            'logo' => 'required|unique:equipes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'logo' => 'required|unique:equipes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'site_web' => 'nullable|unique:equipes|string',
             'type_equipe' => 'required|string',
             'description' => 'nullable|unique:equipes|string',
@@ -59,10 +59,26 @@ class EquipesController extends Controller
         }
 
 
-        $equipe = equipes::create($request->all());
+        $equipe = new equipes ;
+        $equipe->nom_equipe = $request->input('nom_equipe');
+        $equipe->adresse = $request->input('adresse');
+        $equipe->pays = $request->input('pays');
+        $equipe->site_web = $request->input('site_web');
+        $equipe->type_equipe = $request->input('type_equipe');
+        $equipe->description = $request->input('description');
+
+        if ($request->file('logo'))
+        {
+            $filename = time()."_".$request->file('logo')->getClientOriginalName();
+            // $path = $request->file('logo')->storeAs('uploads', $filename, 'public');
+            $path = $request->file('logo')->move(public_path('uploads'), $filename);
+
+            $equipe->logo = $path;
+            $equipe->save();
+        }
         if ($equipe) {
             $array = [
-                'data' => new equipeResource($equipe),
+                'data' => $equipe,
                 'message' => 'The equipes save',
                 'status' => 201,
             ];

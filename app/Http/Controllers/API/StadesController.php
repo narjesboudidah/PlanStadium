@@ -12,6 +12,46 @@ use Illuminate\Support\Facades\Validator;
 class stadesController extends Controller
 {
     /*Display a listing of the resource.*/
+
+    public function getEvents($id)
+    {
+        $stade = stades::find($id);
+        if ($stade) {
+            $array = [
+                'data' => $stade->events()->get(),
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(null, 401, ['The stade not found']);
+    }
+    public function getMaintenances($id)
+    {
+        $stade = stades::find($id);
+        if ($stade) {
+            $array = [
+                'data' => $stade->maintenances()->get(),
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(null, 401, ['The stade not found']);
+    }
+    public function getMatches($id)
+    {
+        $stade = stades::find($id);
+        if ($stade) {
+            $array = [
+                'data' => $stade->matchs()->get(),
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(null, 401, ['The stade not found']);
+    }
     public function index()
     {
         $stades = stadeResource::collection(stades::get()); //ki tabda bech trajaa akther min 7aja

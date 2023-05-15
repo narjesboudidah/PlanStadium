@@ -191,6 +191,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Stade']], function () {
         Route::get('/stade/{id}', [StadesController::class, 'show']);
+        Route::get('/stade/{id}/events', [StadesController::class, 'getEvents']);
+        Route::get('/stade/{id}/matchs', [StadesController::class, 'getMatches']);
+        Route::get('/stade/{id}/maintenances', [StadesController::class, 'getMaintenances']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Ajout Stade']], function () {
         Route::post('/stades', [StadesController::class, 'store']);
@@ -270,7 +273,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/reservations', [ReservationsController::class, 'store']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Reservation']], function () {
-        Route::get('/reservation/{id}', [ReservationsController::class, 'show']); 
+        Route::get('/reservation/{id}', [ReservationsController::class, 'show']);
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Modifier Reservation']], function () {
         Route::put('/reservation/{id}', [ReservationsController::class, 'update']);
