@@ -22,7 +22,9 @@ return new class extends Migration
             $table->unsignedInteger('admin_fed_id');
             $table->foreign('admin_fed_id','admin_fed_id_fk_9')->references('id')->on('users')->onDelete('cascade');
 
-            $table->string('note');
+            $table->unsignedInteger('stade_id');
+            $table->foreign('stade_id','stade_id_fk_9')->references('id')->on('stades')->²onDelete('cascade');
+
             $table->date('date_debut')->format('Y-m-d');
             $table->time('heure_debut');
             $table->date('date_fin')->format('Y-m-d');
@@ -30,8 +32,6 @@ return new class extends Migration
             $table->enum('type_reservation',['Match','Entraînement','Evénements spéciaux'])->default('Evénements spéciaux');
             $table->enum('statut',['en attente', 'refusé', "accepté"])->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)
             $table->string('nom_match')->nullable();
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id','user_id_fk')->references('id')->on('users')->²onDelete('cascade');
             $table->enum('type_match',['National','International'])->default('National')->nullable();
             $table->string('nom_equipe_adversaire')->nullable();
             $table->softDeletes();

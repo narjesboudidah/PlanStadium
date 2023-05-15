@@ -54,7 +54,6 @@ class ReservationsController extends Controller
     {
         //$todayDate = date('Y/m/d');
         $validator = Validator::make($request->all(), [
-            'note' => 'required|string|max:2023',
             'date_debut' => 'required|date|date_format:Y-m-d',
             'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
@@ -64,6 +63,7 @@ class ReservationsController extends Controller
             'nom_match' => 'nullable|string|max:2023',
             'type_match' => 'nullable|string|max:2023',
             'nom_equipe_adversaire' => 'nullable|string|max:2023',
+            'stade_id' => 'required|exists:stades,id',
             'admin_equipe_id' => 'required|exists:users,id',
             'admin_fed_id' => 'required|exists:users,id',
         ]);
@@ -89,7 +89,6 @@ class ReservationsController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'note' => 'string|max:2023',
             'date_debut' => 'date|date_format:Y-m-d',
             'heure_debut' => 'date_format:H:i',
             'date_fin' => 'date|date_format:Y-m-d|after:date_debut',
@@ -99,6 +98,7 @@ class ReservationsController extends Controller
             'nom_match' => 'string|max:2023',
             'type_match' => 'string|max:2023',
             'nom_equipe_adversaire' => 'string|max:2023',
+            'stade_id' => 'required|exists:stades,id',
             'admin_equipe_id' => 'exists:users,id',
             'admin_fed_id' => 'exists:users,id',
         ]);
