@@ -9,6 +9,7 @@ use App\Models\reservations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationsController extends Controller
 {
@@ -66,23 +67,25 @@ class ReservationsController extends Controller
             'nom_equipe_adversaire' => 'nullable|string|max:2023',
             'stade_id' => 'required|exists:stades,id',
             'admin_equipe_id' => 'required|exists:users,id',
-            'admin_fed_id' => 'required|exists:users,id',
+            'admin_fed_id' => 'nullable|exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
-            return response(null, 400, [$validator->errors()]);
+            return response()->json(null, 400, [$validator->errors()]);
         }
 
-        $reservation = reservations::create($request->all());
+        $admin_equipe_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+        $reservation = reservations::create(array_merge($request->all(), ['admin_equipe_id' => $admin_equipe_id,'admin_fed_id' => $admin_equipe_id]));
+
         if ($reservation) {
             $array = [
                 'data' => new reservationResource($reservation),
                 'message' => 'The user save',
                 'status' => 201,
             ];
-            return response($array);
+            return response()->json($array);
         }
-        return response(null, 400, ['The reservation not save']);
+        return response()->json(null, 400, ['The reservation not save']);
     }
 
 
@@ -174,10 +177,12 @@ class ReservationsController extends Controller
             ];
             return response($array);
         }
+        $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
         // Confirmer la réservation (mettre à jour le statut par exemple)
         $reservation->update([
-            'statut' => 'accepté'
+            'statut' => 'accepté',
+            'admin_fed_id' => $admin_fed_id
         ]);
 
         // Rediriger avec un message de succès
@@ -203,10 +208,12 @@ class ReservationsController extends Controller
             ];
             return response($array);
         }
+        $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
         // Annuler la réservation (mettre à jour le statut par exemple)
         $reservation->update([
-            'statut' => 'refusé'
+            'statut' => 'refusé',
+            'admin_fed_id' => $admin_fed_id
         ]);
 
         // Rediriger avec un message de succès

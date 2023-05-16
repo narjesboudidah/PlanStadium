@@ -162,10 +162,12 @@ public function store(Request $request)
             ];
             return response($array);
         }
-
+        $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+    
         // Confirmer la réservation (mettre à jour le statut par exemple)
         $maintenance->update([
-            'statut' => 'accepté'
+            'statut' => 'accepté',
+            'admin_fed_id' => $admin_fed_id
         ]);
 
         // Rediriger avec un message de succès
@@ -192,9 +194,12 @@ public function store(Request $request)
             return response($array);
         }
 
+        $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+
         // Annuler la réservation (mettre à jour le statut par exemple)
         $maintenance->update([
-            'statut' => 'refusé'
+            'statut' => 'refusé',
+            'admin_fed_id' => $admin_fed_id
         ]);
 
         // Rediriger avec un message de succès
