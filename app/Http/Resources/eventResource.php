@@ -23,8 +23,10 @@ class eventResource extends JsonResource
             'type_event' => $this->type_event,
             'nom_event' => $this->nom_event,
             'type_match' => $this->type_match,
-            'nom_equipe_adversaire' => $this->nom_equipe_adversaire,
+            'equipe1_id' => $this->equipe1_id,
+            'equipe2_id' => $this->equipe2_id,
             'stade_id' => $this->stade_id,
+            'admin_fed_id' => $this->admin_fed_id,
         ];
     }
 }

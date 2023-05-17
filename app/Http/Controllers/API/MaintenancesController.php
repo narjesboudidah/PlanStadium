@@ -240,6 +240,53 @@ public function store(Request $request)
         // Retourner les maintenances filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
+    public function MaintenanceFilterEtat($etat)
+    {
+        // Vérifier si un état de filtrage a été spécifié
+        if (!is_null($etat)) {
+            // Effectuer la requête pour filtrer les maintenances en fonction de l'état
+            $maintenances = maintenances::where('etat', $etat)->get();
+        } else {
+            // Si aucun état de filtrage n'est spécifié, récupérer toutes les maintenances
+            $maintenances = maintenances::all();
+        }
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $maintenancesResource = MaintenanceResource::collection($maintenances);
+    
+        $array = [
+            'data' => $maintenancesResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+    public function MaintenanceFilterstatut($statut)
+    {
+        // Vérifier si une statut de filtrage a été spécifié
+        if (!is_null($statut)) {
+            // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+            $maintenances = maintenances::where('statut', $statut)->get();
+        } else {
+            // Si aucun statut de filtrage n'est spécifié, récupérer toutes les maintenances
+            $maintenances = maintenances::all();
+        }
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $maintenancesResource = MaintenanceResource::collection($maintenances);
+    
+        $array = [
+            'data' => $maintenancesResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+    
     public function MaintenanceFilterStade ($date_debut, $stade_id, $statut)
     {
         // Vérifier si une date de filtrage a été spécifiée

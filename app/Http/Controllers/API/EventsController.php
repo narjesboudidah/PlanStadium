@@ -8,6 +8,7 @@ use App\Models\events;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
 {
@@ -51,16 +52,19 @@ class EventsController extends Controller
             'type_event' => 'required|string|max:255',
             'nom_event' => 'nullable|string|max:255',
             'type_match' => 'nullable|string|max:255',
-            'nom_equipe_adversaire' => 'nullable|string|max:255',
+            'equipe1_id' => 'nullable|exists:equipes,id',
+            'equipe2_id' => 'nullable|exists:equipes,id',
             'stade_id' => 'required|exists:stades,id',
+            'admin_fed_id' => 'exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
             return response(null, 400, [$validator->errors()]);
         }
 
+        $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
-        $event = events::create($request->all());
+        $event = events::create(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id]));
         if ($event) {
             $array = [
                 'data' => new eventResource($event),
@@ -83,8 +87,10 @@ class EventsController extends Controller
             'type_event' => 'string|max:255',
             'nom_event' => 'string|max:255',
             'type_match' => 'string|max:255',
-            'nom_equipe_adversaire' => 'string|max:255',
             'stade_id' => 'exists:stades,id',
+            'admin_fed_id' => 'exists:users,id',
+            'equipe1_id' => 'exists:equipes,id',
+            'equipe2_id' => 'exists:equipes,id',
         ]);
 
         if ($validator->fails()) {
@@ -104,7 +110,9 @@ class EventsController extends Controller
             ], 404);
         }
 
-        $event->update($request->all());
+        $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+
+        $event->update(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id]));
         if ($event) {
             return response()->json([
                 'data' => new eventResource($event),

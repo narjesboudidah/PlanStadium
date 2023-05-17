@@ -249,11 +249,35 @@ class ReservationsController extends Controller
                 'message' => 'OK',
                 'status' => 200,
             ];
+        }}
+        public function MaintenanceFilterType($type_reservation)
+        {
+            // Vérifier si un type de réservation de filtrage a été spécifié
+            if (isset($type_reservation)) {
+        
+                // Effectuer la requête pour filtrer les réservations en fonction du type de réservation
+                $reservations = reservations::where('type_reservation', $type_reservation)->get();
+                $reservationsResource = ReservationResource::collection($reservations);
+                $array = [
+                    'data' => $reservationsResource,
+                    'message' => 'OK',
+                    'status' => 200,
+                ];
+            } else {
+                // Si aucun type de réservation de filtrage n'est spécifié, récupérer toutes les réservations
+                $reservations = reservations::all();
+                $reservationsResource = ReservationResource::collection($reservations);
+                $array = [
+                    'data' => $reservationsResource,
+                    'message' => 'OK',
+                    'status' => 200,
+                ];
+            }
+        
+            // Retourner les réservations filtrées à la vue ou effectuer d'autres actions nécessaires
+            return response($array);
         }
-
-        // Retourner les reservations filtrés à la vue ou effectuer d'autres actions nécessaires
-        return response($array);
-    }
+        
 
     public function acceptReservation($reservationId)
     {
