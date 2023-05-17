@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Mail\UserCreatedEmail;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\userResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 
 class userController extends Controller
@@ -76,17 +78,21 @@ class userController extends Controller
 
         if ($user) {
             $array = [
-                'data' => new userResource($user),
+                'data' => new UserResource($user),
                 'message' => 'The user is saved',
                 'status' => 201,
             ];
+    
+            $email = $request->input('email');
+            $password = $request->input('password');
+    
+            Mail::to($email)->send(new UserCreatedEmail($email, $password));
+    
             return response()->json($array);
         }
 
         return response()->json(['message' => 'The user is not saved'], 400);
     }
-
-
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
@@ -142,12 +148,12 @@ class userController extends Controller
         }
     }
 
-    public function getUser (Request $request)
+    public function getUser(Request $request)
     {
         return response([
             'user' => $request->user(),
             'role' => $request->user()->Roles()->get()[0]["name"],
-            'permissions' => $request->user()->Permissions()->get()->map(function($permission){
+            'permissions' => $request->user()->Permissions()->get()->map(function ($permission) {
                 return $permission->name;
             }),
         ]);
