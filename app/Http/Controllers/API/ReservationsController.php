@@ -77,7 +77,7 @@ class ReservationsController extends Controller
         if ($reservation) {
             $array = [
                 'data' => new reservationResource($reservation),
-                'message' => 'The user save',
+                'message' => 'The reservation save',
                 'status' => 201,
             ];
             return response()->json($array);
