@@ -22,7 +22,7 @@ class reservationResource extends JsonResource
             'heure_fin' => $this->heure_fin,
             'type_reservation' => $this->type_reservation,
             'statut' => $this->statut,
-            'nom_match' => $this->nom_match,
+            'nom_event' => $this->nom_match,
             'type_match' => $this->type_match,
             'stade_id' => $this->stade_id,
             'admin_fed_id' => $this->admin_fed_id,
