@@ -17,22 +17,14 @@ class MaintenancesController extends Controller
     /*Display a listing of the resource.*/
     public function index(Request $request)
     {
-        if($request->user()->Roles()->get()[0]["name"] == "Admin Federation"){
             $maintenances = maintenanceResource::collection(maintenances::get());//ki tabda bech trajaa akther min 7aja
-            return response([
+            $array = [
                 'data' => $maintenances,
                 'message' => 'ok',
                 'status' => 200,
-            ]);
-        } else if ($request->user()->Roles()->get()[0]["name"] == "Admin Ste"){
-            return response([
-                "data" => $request->user()->maintenances()->get(),
-            ]);
-        } else {
-            return response([
-                "data" => [],
-            ],403);
-        }
+                'user' => $request->user(),
+            ];
+            return response($array);
     }
 
     /*Display the specified resource.*/
@@ -72,8 +64,9 @@ public function store(Request $request)
     }
 
     $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+    $statut = 'en attente';
 
-    $maintenance = maintenances::create(array_merge($request->all(), ['admin_ste_id' => $admin_ste_id,'admin_fed_id' => $admin_ste_id]));
+    $maintenance = maintenances::create(array_merge($request->all(), ['admin_ste_id' => $admin_ste_id,'admin_fed_id' => $admin_ste_id, 'statut' => $statut]));
 
     if ($maintenance) {
         $array = [
@@ -107,7 +100,6 @@ public function store(Request $request)
         'date_fin' => 'date|date_format:Y-m-d|after:date_debut',
         'heure_fin' => 'date_format:H:i',
         'etat' => 'string|max:255',
-        'statut' => 'string|max:255',
         'description' => 'string|max:255',
         'admin_fed_id' => 'exists:users,id',
         'admin_ste_id' => 'exists:users,id',
@@ -150,10 +142,10 @@ public function store(Request $request)
     }
     public function confirmerMaintenance($id)
     {
-        // Trouver la réservation en fonction de l'ID
+        // Trouver la maintenance en fonction de l'ID
         $maintenance = maintenances::find($id);
 
-        // Vérifier si la réservation existe
+        // Vérifier si la maintenance existe
         if (!$maintenance) {
             $array = [
                 'data' => null,
@@ -164,7 +156,7 @@ public function store(Request $request)
         }
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
     
-        // Confirmer la réservation (mettre à jour le statut par exemple)
+        // Confirmer la maintenance (mettre à jour le statut par exemple)
         $maintenance->update([
             'statut' => 'accepté',
             'admin_fed_id' => $admin_fed_id
@@ -181,10 +173,10 @@ public function store(Request $request)
 
     public function annulerMaintenance($id)
     {
-        // Trouver la réservation en fonction de l'ID
+        // Trouver la maintenances en fonction de l'ID
         $maintenance = maintenances::find($id);
 
-        // Vérifier si la réservation existe
+        // Vérifier si la maintenance existe
         if (!$maintenance) {
             $array = [
                 'data' => null,
@@ -196,7 +188,7 @@ public function store(Request $request)
 
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
-        // Annuler la réservation (mettre à jour le statut par exemple)
+        // Annuler la maintenance (mettre à jour le statut par exemple)
         $maintenance->update([
             'statut' => 'refusé',
             'admin_fed_id' => $admin_fed_id
@@ -211,21 +203,38 @@ public function store(Request $request)
         return response($array);
     }
 
-    public function MaintenanceFilter()
+    public function MaintenanceFilter(Request $request)
     {
-        // Obtenez la date d'aujourd'hui
+         // Obtenez la date d'aujourd'hui
         $today = date('Y-m-d');
-    
-        // Effectuer la requête pour filtrer les maintenances en fonction de la date d'aujourd'hui
-        $maintenances = maintenances::whereDate('created_at', $today)->get();
-        $maintenancesResource = maintenanceResource::collection($maintenances);
-    
+
+        // Obtenez l'utilisateur connecté
+        $user = auth()->user();
+        $statut = 'en attente';
+        // Vérifiez le rôle de l'utilisateur
+        if ($request->user()->Roles()->get()[0]["name"] == "Admin Federation") {
+            // Effectuer la requête pour filtrer les maintenances en fonction de la date d'aujourd'hui
+            $maintenances = maintenances::whereDate('created_at', $today)
+                ->where('statut', $statut)
+                ->get();
+        } elseif ($request->user()->Roles()->get()[0]["name"] == 'Admin Ste') {
+            // Si l'utilisateur est un admin d'équipe, filtrez les maintenances en fonction de l'utilisateur et de la date d'aujourd'hui
+            $maintenances = maintenances::where('admin_Ste_id', $user->id)
+                ->where('statut', $statut)
+                ->whereDate('created_at', $today)
+                ->get();
+        } else {
+            // Si l'utilisateur a un autre rôle, renvoyez une réponse vide
+            $maintenances = [];
+        }
+        $reservationResource = maintenanceResource::collection($maintenances);
+
         $array = [
-            'data' => $maintenancesResource,
+            'data' => $reservationResource,
             'message' => 'OK',
-            'status' => 200,
+            'statut' => 200,
         ];
-    
+
         // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
@@ -254,16 +263,12 @@ public function store(Request $request)
         // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
-    public function MaintenanceFilterstatut($statut)
+    public function MaintenanceFilterstatut()
     {
-        // Vérifier si une statut de filtrage a été spécifié
-        if (!is_null($statut)) {
-            // Effectuer la requête pour filtrer les maintenances en fonction de la statut
-            $maintenances = maintenances::where('statut', $statut)->get();
-        } else {
-            // Si aucun statut de filtrage n'est spécifié, récupérer toutes les maintenances
-            $maintenances = maintenances::all();
-        }
+        $statut='accepté';
+
+        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        $maintenances = maintenances::where('statut', $statut)->get();
     
         // Créer une collection de ressources pour les maintenances filtrées
         $maintenancesResource = MaintenanceResource::collection($maintenances);

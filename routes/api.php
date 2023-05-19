@@ -113,7 +113,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/maintenances/filteretat/{etat}', [MaintenancesController::class, 'MaintenanceFilterEtat']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('/maintenances/filterstatut/{statut}', [MaintenancesController::class, 'MaintenanceFilterstatut']);
+        Route::get('/maintenances/filterstatut', [MaintenancesController::class, 'MaintenanceFilterstatut']);
     });
 
 
