@@ -22,11 +22,11 @@ return new class extends Migration
             $table->unsignedInteger('stade_id');
             $table->foreign('stade_id','stade_id_fk_10')->references('id')->on('stades')->onDelete('cascade');
 
-            $table->unsignedInteger('equipe1_id');
-            $table->foreign('equipe1_id','equipe1_id_fk_10')->references('id')->on('equipes')->onDelete('cascade')->nullable();
+            $table->unsignedInteger('equipe1_id')->nullable();
+            $table->foreign('equipe1_id','equipe1_id_fk_10')->references('id')->on('equipes')->onDelete('cascade');
             
-            $table->unsignedInteger('equipe2_id');
-            $table->foreign('equipe2_id','equipe2_id_fk_10')->references('id')->on('equipes')->onDelete('cascade')->nullable();
+            $table->unsignedInteger('equipe2_id')->nullable();
+            $table->foreign('equipe2_id','equipe2_id_fk_10')->references('id')->on('equipes')->onDelete('cascade');
 
             $table->date('date_debut')->format('Y-m-d');
             $table->time('heure_debut');

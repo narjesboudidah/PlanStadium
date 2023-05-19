@@ -211,35 +211,26 @@ public function store(Request $request)
         return response($array);
     }
 
-    public function MaintenanceFilter($date)
+    public function MaintenanceFilter()
     {
-        // Vérifier si une date de filtrage a été spécifiée
-        if (isset($date)) {
-            // Convertir la date de filtrage en objet Carbon pour une manipulation facile
-            $filterDate = Carbon::parse($date)->toDateString();
-
-            // Effectuer la requête pour filtrer les maintenances en fonction de la date
-            $maintenances = maintenances::whereDate('date', $filterDate)->get();
-            $maintenancesResource = maintenanceResource::collection($maintenances);
-            $array = [
-                'data' => $maintenancesResource,
-                'message' => 'OK',
-                'status' => 200,
-            ];
-        } else {
-            // Si aucune date de filtrage n'est spécifiée, récupérer tous les maintenances
-            $maintenances = maintenances::all();
-            $maintenancesResource = maintenanceResource::collection($maintenances);
-            $array = [
-                'data' => $maintenancesResource,
-                'message' => 'OK',
-                'status' => 200,
-            ];
-        }
-
-        // Retourner les maintenances filtrés à la vue ou effectuer d'autres actions nécessaires
+        // Obtenez la date d'aujourd'hui
+        $today = date('Y-m-d');
+    
+        // Effectuer la requête pour filtrer les maintenances en fonction de la date d'aujourd'hui
+        $maintenances = maintenances::whereDate('created_at', $today)->get();
+        $maintenancesResource = maintenanceResource::collection($maintenances);
+    
+        $array = [
+            'data' => $maintenancesResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
+    
+
     public function MaintenanceFilterEtat($etat)
     {
         // Vérifier si un état de filtrage a été spécifié

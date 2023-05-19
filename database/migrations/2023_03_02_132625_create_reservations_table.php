@@ -24,6 +24,12 @@ return new class extends Migration
 
             $table->unsignedInteger('stade_id');
             $table->foreign('stade_id','stade_id_fk_9')->references('id')->on('stades')->²onDelete('cascade');
+           
+            $table->unsignedInteger('equipe1_id')->nullable();
+            $table->foreign('equipe1_id','equipe1_id_fk_9')->references('id')->on('equipes')->²onDelete('cascade');
+            
+            $table->unsignedInteger('equipe2_id')->nullable();
+            $table->foreign('equipe2_id','equipe2_id_fk_9')->references('id')->on('equipes')->²onDelete('cascade');
 
             $table->date('date_debut')->format('Y-m-d');
             $table->time('heure_debut');
@@ -33,7 +39,6 @@ return new class extends Migration
             $table->enum('statut',['en attente', 'refusé', "accepté"])->default('en attente'); //statut de la réservation (confirmé, en attente, annulé, etc.)
             $table->string('nom_event')->nullable();
             $table->enum('type_match',['National','International'])->default('National')->nullable();
-            $table->string('nom_equipe_adversaire')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

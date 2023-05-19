@@ -22,13 +22,13 @@ class reservationResource extends JsonResource
             'heure_fin' => $this->heure_fin,
             'type_reservation' => $this->type_reservation,
             'statut' => $this->statut,
-            'nom_match' => $this->nom_match,
+            'nom_event' => $this->nom_event,
             'type_match' => $this->type_match,
             'stade_id' => $this->stade_id,
             'admin_fed_id' => $this->admin_fed_id,
             'admin_equipe_id' => $this->admin_equipe_id,
-            // 'admin_equipe_id' => new UserResource($this->whenLoaded('user')),
-            // 'admin_fed_id' => new UserResource($this->whenLoaded('user')),
+            'equipe1_id' => $this->equipe1_id,
+            'equipe2_id' => $this->equipe2_id,
         ];
     }
 }

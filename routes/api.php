@@ -104,7 +104,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/maintenance/refuser/{id}', [MaintenancesController::class, 'annulerMaintenance']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('/maintenances/filter/{date}', [MaintenancesController::class, 'MaintenanceFilter']);
+        Route::get('/maintenances/filter', [MaintenancesController::class, 'MaintenanceFilter']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/maintenances/filter/{date_debut}/{stade_id}/{statut}', [MaintenancesController::class, 'MaintenanceFilterStade']);
@@ -287,16 +287,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Supprimer Reservation']], function () {
         Route::delete('/reservation/{id}', [ReservationsController::class, 'destroy']);
     });
-    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Annuler Reservation']], function () {
-        Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
-    });
-    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('/reservations/filter/{date}', [ReservationsController::class, 'MaintenanceFilter']);
-    });
-    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
-        Route::get('/reservations/filterType/{type_reservation}', [ReservationsController::class, 'MaintenanceFilterType']);
-    });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Confirmer Reservation']], function () {
         Route::post('/reservations/accept/{id}', [ReservationsController::class, 'acceptReservation']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation', 'permission:Annuler Reservation']], function () {
+        Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
+        Route::get('/reservations/filter', [ReservationsController::class, 'ReservationFilter']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/reservations/filter/{date}', [ReservationsController::class, 'ReservationFilterDate']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
+        Route::get('/reservations/filterType/{type_reservation}', [ReservationsController::class, 'ReservationFilterType']);
     });
 });
