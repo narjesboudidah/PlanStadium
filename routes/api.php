@@ -72,9 +72,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation','permission:Consulter User']], function () {
         Route::get('/user/{id}', [userController::class, 'show']);
     });
-    Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier User']], function () {
-        Route::put('/user/{id}', [userController::class, 'update']);
-    });
+    Route::put('/user/{id}', [userController::class, 'update']);
+    Route::put('/userUpdate', [userController::class, 'updateUser']);
+    Route::get('/usershow', [userController::class, 'showuser']);
     Route::group(['middleware' => ['role:Admin Federation','permission:Supprimer User']], function () {
         Route::delete('/user/{id}', [userController::class, 'destroy']);
     });

@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 
 class userController extends Controller
@@ -29,6 +30,20 @@ class userController extends Controller
     /*Display the specified resource.*/
     public function show($id)
     {
+        $user = User::find($id);
+        if ($user) {
+            $array = [
+                'data' => new userResource($user),
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(null, 401, ['The user not found']);
+    }
+    public function showuser()
+    {
+        $id = Auth::id();
         $user = User::find($id);
         if ($user) {
             $array = [
@@ -123,6 +138,36 @@ class userController extends Controller
             'status' => 201,
         ], 201);
     }
+    public function updateUser(Request $request)
+{
+    $id = Auth::id();
+    $user = User::find($id);
+    
+    if (!$user) {
+        return response()->json([
+            'data' => null,
+            'message' => 'User not found',
+            'status' => 404,
+        ], 404);
+    }
+
+    $validatedData = $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'telephone' => 'required|string|unique:users,telephone,'.$user->id,
+        'email' => 'required|email|unique:users,email,'.$user->id,
+        'adresse' => 'required|string',
+    ]);
+
+    $user->update($validatedData);
+
+    return response()->json([
+        'data' => new UserResource($user),
+        'message' => 'User updated successfully',
+        'status' => 201,
+    ], 201);
+}
+
 
 
     /* Remove the specified resource from storage.*/
