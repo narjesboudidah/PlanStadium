@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('admin_fed_id','admin_fed_id_fk_11')->references('id')->on('users')->onDelete('cascade');
     
             $table->date('date')->format('Y-m-d');
+            $table->string('action');
             $table->softDeletes();
             $table->timestamps();
         });

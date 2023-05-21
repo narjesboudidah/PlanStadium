@@ -25,27 +25,12 @@ class historiquesController extends Controller
     }
 
 
-    /*Display the specified resource.*/
-    public function show($id)
-    {
-        $historique = historiques::find($id);
-        if ($historique) {
-            $array = [
-                'data' => new historiqueResource($historique),
-                'message' => 'ok',
-                'status' => 200,
-            ];
-            return response($array);
-        }
-        return response(null, 401, ['The historique not found']);
-    }
-
-
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
         $todayDate = date('Y/m/d');
         $validator = Validator::make($request->all(), [
+            'action' => 'required|max:255',
             'date' => 'required|date|date_format:Y-m-d|before_or_equal:'.$todayDate,
             'user_id' => 'required|exists:users,id',
         ]);
