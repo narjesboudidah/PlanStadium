@@ -336,6 +336,44 @@ public function store(Request $request)
         // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
+    public function Maintenancestatut()
+    {
+        $statut='en attente';
+
+        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        $maintenances = maintenances::where('statut', $statut)->get();
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $maintenancesResource = MaintenanceResource::collection($maintenances);
+    
+        $array = [
+            'data' => $maintenancesResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+    public function MaintenancesHistorique()
+    {
+        $statut = 'en attente';
+
+        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        $maintenances = maintenances::where('statut', '!=', $statut)->get();
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $maintenancesResource = MaintenanceResource::collection($maintenances);
+    
+        $array = [
+            'data' => $maintenancesResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
     
     public function MaintenanceFilterStade ($date_debut, $stade_id, $statut)
     {

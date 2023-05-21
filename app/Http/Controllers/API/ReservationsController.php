@@ -111,7 +111,7 @@ class ReservationsController extends Controller
             'statut' => 'string|max:2023',
             'nom_match' => 'string|max:2023',
             'type_match' => 'string|max:2023',
-            'stade_id' => 'required|exists:stades,id',
+            'stade_id' => 'exists:stades,id',
             'admin_equipe_id' => 'exists:users,id',
             'admin_fed_id' => 'exists:users,id',
             'equipe1_id' => 'exists:equipes,id',
@@ -237,6 +237,45 @@ class ReservationsController extends Controller
             ];
             return response()->json($array);
         }
+    }
+
+    public function ReservationFilterstatut()
+    {
+        $statut='refusé';
+
+        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        $reservations = reservations::where('statut', $statut)->get();
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $reservationResource = reservationResource::collection($reservations);
+    
+        $array = [
+            'data' => $reservationResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+    public function Reservationstatut()
+    {
+        $statut='en attente';
+
+        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        $reservations = reservations::where('statut', $statut)->get();
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $reservationResource = reservationResource::collection($reservations);
+    
+        $array = [
+            'data' => $reservationResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
     }
 
     public function ReservationFilter(Request $request)

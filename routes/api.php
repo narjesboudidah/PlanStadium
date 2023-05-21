@@ -115,6 +115,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/maintenances/filterstatut', [MaintenancesController::class, 'MaintenanceFilterstatut']);
     });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/MaintenancesFS', [MaintenancesController::class, 'Maintenancestatut']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/MaintenancesHistorique', [MaintenancesController::class, 'MaintenancesHistorique']);
+    });
 
 
 
@@ -154,6 +160,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/matchs/filter/{date}/{stade_id}', [MatchsController::class, 'matchFilter']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/matchs/filterCompetition/{competition_id}', [MatchsController::class, 'matchFilterC']);
     });
 
     //historiques
@@ -292,6 +301,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Annuler Reservation']], function () {
         Route::get('/reservation/refuser/{id}', [ReservationsController::class, 'annulerReservation']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
+        Route::get('/ReservationFilterstatut', [ReservationsController::class, 'ReservationFilterstatut']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
+        Route::get('/Reservationstatut', [ReservationsController::class, 'Reservationstatut']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
         Route::get('/reservations/filter', [ReservationsController::class, 'ReservationFilter']);

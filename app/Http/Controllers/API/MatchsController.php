@@ -244,5 +244,32 @@ class MatchsController extends Controller
         // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }    
+    public function matchFilterC($competition_id)
+{
+    // Vérifier si une ID de compétition de filtrage a été spécifiée
+    if (isset($competition_id)) {
+
+        $matchs = matchs::where('competition_id', $competition_id)
+            ->get();
+
+        $matchResource = matchResource::collection($matchs);
+        $array = [
+            'data' => $matchResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    } else {
+        $matchs = matchs::all();
+        $matchResource = matchResource::collection($matchs);
+        $array = [
+            'data' => $matchResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    }
+
+    return response()->json($array);
+}
+    
 
 }
