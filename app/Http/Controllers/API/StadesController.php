@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\stadeResource;
 use App\Models\stades;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 
 class stadesController extends Controller
@@ -104,12 +107,23 @@ class stadesController extends Controller
 
         $stade = stades::create($request->all());
         if ($stade) {
-            $array = [
-                'data' => new stadeResource($stade),
-                'message' => 'The stade save',
-                'status' => 201,
-            ];
-            return response($array, 201);
+             $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Ajout stade',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new stadeResource($stade),
+                    'message' => 'The stade save',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
         return response(null, 400, ['The stade not save']);
     }
@@ -155,12 +169,23 @@ class stadesController extends Controller
         $validatedData = $validator->validated();
 
         $stade->update($validatedData);
+        $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Modifier stade',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
 
-        return response()->json([
-            'data' => new StadeResource($stade),
-            'message' => 'Stade updated successfully',
-            'status' => 201,
-        ], 201);
+            if ($historique) {
+                $array = [
+                    'data' => new stadeResource($stade),
+                    'message' => 'Stade updated successfully',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
     }
 
 
@@ -180,12 +205,23 @@ class stadesController extends Controller
         }
         $stade->delete($id);
         if ($stade) {
-            $array = [
-                'data' => null,
-                'message' => 'The stade delete',
-                'status' => 200,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer stade',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new stadeResource($stade),
+                    'message' => 'The stade delete',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 }

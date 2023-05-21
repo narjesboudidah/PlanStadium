@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\maintenanceResource;
 use App\Models\maintenances;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -69,12 +71,23 @@ public function store(Request $request)
     $maintenance = maintenances::create(array_merge($request->all(), ['admin_ste_id' => $admin_ste_id,'admin_fed_id' => $admin_ste_id, 'statut' => $statut]));
 
     if ($maintenance) {
-        $array = [
-            'data' => new MaintenanceResource($maintenance),
-            'message' => 'The maintenance saved',
-            'status' => 201,
-        ];
-        return response()->json($array);
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Ajout maintenance',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new MaintenanceResource($maintenance),
+                'message' => 'The maintenance saved',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
 
     return response()->json(['message' => 'The maintenance could not be saved'], 400);
@@ -107,12 +120,23 @@ public function store(Request $request)
     ]);
 
     $maintenance->update($validatedData);
+    $todayDate = date('Y-m-d H:i:s');
+    $admin_id = Auth::id();
+    $historique = historiques::create([
+        'action' => 'Modifier maintenance',
+        'date' => $todayDate,
+        'admin_fed_id' => $admin_id,
+    ]);
 
-    return response()->json([
-        'data' => new maintenanceResource($maintenance),
-        'message' => 'maintenance updated successfully',
-        'status' => 201,
-    ], 201);
+    if ($historique) {
+        $array = [
+            'data' => new MaintenanceResource($maintenance),
+            'message' => 'maintenance updated successfully',
+            'historique' => new HistoriqueResource($historique),
+            'status' => 201,
+        ];
+        return response()->json($array);
+    }
 }
 
 
@@ -132,12 +156,23 @@ public function store(Request $request)
         }
         $maintenance->delete($id);
         if ($maintenance) {
-            $array = [
-                'data' => null,
-                'message' => 'The maintenance delete',
-                'status' => 200,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer maintenance',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new MaintenanceResource($maintenance),
+                    'message' => 'The maintenance delete',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
     public function confirmerMaintenance($id)
@@ -161,14 +196,23 @@ public function store(Request $request)
             'statut' => 'accepté',
             'admin_fed_id' => $admin_fed_id
         ]);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Accepter maintenance',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
 
-        // Rediriger avec un message de succès
-        $array = [
-            'data' => null,
-            'message' => 'accepté avec success',
-            'status' => 501,
-        ];
-        return response($array);
+            if ($historique) {
+                $array = [
+                    'data' => new MaintenanceResource($maintenance),
+                    'message' => 'accepté avec success',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
     }
 
     public function annulerMaintenance($id)
@@ -194,13 +238,23 @@ public function store(Request $request)
             'admin_fed_id' => $admin_fed_id
         ]);
 
-        // Rediriger avec un message de succès
-        $array = [
-            'data' => null,
-            'message' => 'refusé avec success',
-            'status' => 501,
-        ];
-        return response($array);
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Refuser maintenance',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new MaintenanceResource($maintenance),
+                'message' => 'refusé avec success',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
 
     public function MaintenanceFilter(Request $request)

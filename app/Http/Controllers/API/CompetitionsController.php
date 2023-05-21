@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\competitionResource;
 use App\Models\competitions;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class CompetitionsController extends Controller
 {
@@ -60,12 +63,23 @@ class CompetitionsController extends Controller
 
         $competition = competitions::create($request->all());
         if ($competition) {
-            $array = [
-                'data' => new competitionResource($competition),
-                'message' => 'The competition has been saved',
-                'status' => 201,
-            ];
-            return response()->json($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'ajout compétition',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new competitionResource($competition),
+                    'message' => 'The competition has been saved',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
         return response()->json(['message' => 'The competition could not be saved'], 400);
     }
@@ -100,10 +114,23 @@ class CompetitionsController extends Controller
         }
     
         $competition->update($request->all());
-        return response()->json([
-            'message' => 'The competition was updated',
-            'status' => 201,
-        ], 201);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Modifier compétition',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new competitionResource($competition),
+                    'message' => 'The competition was updated',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
     }    
 
     /* Remove the specified resource from storage.*/
@@ -119,7 +146,23 @@ class CompetitionsController extends Controller
         // Supprimer la compétition
         $competition->delete($id);
         if ($competition) {
-            return response()->json(['message' => 'The competition was deleted'], 200);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer compétition',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new competitionResource($competition),
+                    'message' => 'The competition was deleted',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 

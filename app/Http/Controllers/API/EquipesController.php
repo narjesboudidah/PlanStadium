@@ -5,9 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\equipeResource;
 use App\Models\equipes;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class EquipesController extends Controller
 {
@@ -73,12 +76,23 @@ class EquipesController extends Controller
         }
     
         if ($equipe->save()) {
-            $response = [
-                'data' => $equipe,
-                'message' => 'The equipe is saved.',
-                'status' => 201,
-            ];
-            return response()->json($response);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Ajout équipe',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+    
+            if ($historique) {
+                $array = [
+                    'data' => $equipe,
+                    'message' => 'The equipe is saved.',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     
         return response()->json(['message' => 'Failed to save the equipe.'], 400);
@@ -109,11 +123,23 @@ class EquipesController extends Controller
 
     $equipe->update($validatedData);
 
-    return response()->json([
+    $todayDate = date('Y-m-d H:i:s');
+    $admin_id = Auth::id();
+    $historique = historiques::create([
+         'action' => 'Modifier équipe',
+         'date' => $todayDate,
+         'admin_fed_id' => $admin_id,
+        ]);
+    
+     if ($historique) {
+        $array = [
         'data' => new equipeResource($equipe),
         'message' => 'equipe updated successfully',
+        'historique' => new HistoriqueResource($historique),
         'status' => 201,
-    ], 201);
+        ];
+        return response()->json($array);
+    }
 }
 
 
@@ -133,12 +159,23 @@ class EquipesController extends Controller
         }
         $equipe->delete($id);
         if ($equipe) {
-            $array = [
-                'data' => null,
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                 'action' => 'Supprimer équipe',
+                 'date' => $todayDate,
+                 'admin_fed_id' => $admin_id,
+                ]);
+            
+             if ($historique) {
+                $array = [
+                'data' => new equipeResource($equipe),
                 'message' => 'The equipes delete',
-                'status' => 200,
-            ];
-            return response($array);
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 }

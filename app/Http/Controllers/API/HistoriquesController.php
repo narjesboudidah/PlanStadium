@@ -32,7 +32,7 @@ class historiquesController extends Controller
         $validator = Validator::make($request->all(), [
             'action' => 'required|max:255',
             'date' => 'required|date|date_format:Y-m-d|before_or_equal:'.$todayDate,
-            'user_id' => 'required|exists:users,id',
+            'admin_fed_id' => 'required|exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil

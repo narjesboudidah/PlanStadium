@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\reservationResource;
 use App\Models\events;
 use App\Models\reservations;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -75,12 +77,23 @@ class ReservationsController extends Controller
         $reservation = reservations::create(array_merge($request->all(), ['admin_equipe_id' => $admin_equipe_id, 'admin_fed_id' => $admin_equipe_id, 'statut' => $statut]));
 
         if ($reservation) {
-            $array = [
-                'data' => new reservationResource($reservation),
-                'message' => 'The reservation save',
-                'status' => 201,
-            ];
-            return response()->json($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Ajout reservation',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+    
+            if ($historique) {
+                $array = [
+                    'data' => new reservationResource($reservation),
+                    'message' => 'The reservation saved',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
         return response()->json(['message' => 'The reservation not save'], 400);
     }
@@ -126,12 +139,23 @@ class ReservationsController extends Controller
 
         $reservation->update($request->all());
         if ($reservation) {
-            $array = [
-                'data' => new reservationResource($reservation),
-                'message' => 'The reservation update',
-                'status' => 201,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Modifier reservation',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+    
+            if ($historique) {
+                $array = [
+                    'data' => new reservationResource($reservation),
+                    'message' => 'The reservation update',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 
@@ -152,12 +176,23 @@ class ReservationsController extends Controller
         }
         $reservation->delete($id);
         if ($reservation) {
-            $array = [
-                'data' => null,
-                'message' => 'The reservation delete',
-                'status' => 200,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer reservation',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+    
+            if ($historique) {
+                $array = [
+                    'data' => new reservationResource($reservation),
+                    'message' => 'The reservation delete',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 
@@ -185,13 +220,23 @@ class ReservationsController extends Controller
             'admin_fed_id' => $admin_fed_id
         ]);
 
-        // Rediriger avec un message de succès
-        $array = [
-            'data' => null,
-            'message' => 'refusé avec success',
-            'status' => 501,
-        ];
-        return response($array);
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Refuser reservation',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new reservationResource($reservation),
+                'message' => 'refusé avec success',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
 
     public function ReservationFilter(Request $request)
@@ -309,7 +354,23 @@ class ReservationsController extends Controller
         // Supprimez la réservation
         $reservation->delete();
 
-        return response()->json(['message' => 'Réservation acceptée et ajoutée à l\'événement.']);
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Accepter reservation',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new reservationResource($reservation),
+                'message' => 'Réservation acceptée et ajoutée à l\'événement.',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
 
 

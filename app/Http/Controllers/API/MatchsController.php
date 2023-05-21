@@ -5,10 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\matchResource;
 use App\Models\matchs;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class MatchsController extends Controller
 {
@@ -63,12 +66,23 @@ class MatchsController extends Controller
 
         $match = matchs::create($request->all());
         if ($match) {
-            $array = [
-                'data' => new matchResource($match),
-                'message' => 'The matchs save',
-                'status' => 201,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Ajout match',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new matchResource($match),
+                    'message' => 'The matchs save',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
         return response(null, 400, ['The matchs not save']);
     }
@@ -109,11 +123,23 @@ class MatchsController extends Controller
         }
     
         $match->update($request->all());
-        return response([
-            'data' => new matchResource($match),
-            'message' => 'The match updated successfully',
-            'status' => 200,
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Modifier match',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
         ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new matchResource($match),
+                'message' => 'The match updated successfully',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
     
 
@@ -133,12 +159,23 @@ class MatchsController extends Controller
         }
         $match->delete($id);
         if ($match) {
+            $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Supprimer match',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
             $array = [
-                'data' => null,
+                'data' => new matchResource($match),
                 'message' => 'The matchs delete',
-                'status' => 200,
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
             ];
-            return response($array);
+            return response()->json($array);
+        }
         }
     }
 

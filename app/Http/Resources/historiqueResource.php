@@ -18,7 +18,7 @@ class historiqueResource extends JsonResource
             'id' => $this->id,
             'date' => $this->date,
             'action' => $this->action,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'admin_fed_id' => $this->admin_fed_id,
         ];
     }
 }

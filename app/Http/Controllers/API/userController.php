@@ -6,6 +6,8 @@ use App\Mail\UserCreatedEmail;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\userResource;
 use App\Models\Role;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -59,55 +61,66 @@ class userController extends Controller
 
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|max:255',
-            'prenom' => 'required|max:255',
-            'telephone' => 'required|unique:users',
-            'email' => 'required|email|unique:users',
-            'adresse' => 'required',
-            'password' => 'required|string',
-            'role' => 'required|string|max:255',
-            'permissions' => 'array',
-            'permissions.*' => 'string|max:255',
+{
+    $validator = Validator::make($request->all(), [
+        'nom' => 'required|max:255',
+        'prenom' => 'required|max:255',
+        'telephone' => 'required|unique:users',
+        'email' => 'required|email|unique:users',
+        'adresse' => 'required',
+        'password' => 'required|string',
+        'role' => 'required|string|max:255',
+        'permissions' => 'array',
+        'permissions.*' => 'string|max:255',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
+    }
+
+    $user = User::create([
+        'nom' => $request->input('nom'),
+        'prenom' => $request->input('prenom'),
+        'telephone' => $request->input('telephone'),
+        'adresse' => $request->input('adresse'),
+        'email' => $request->input('email'),
+        'password' => bcrypt($request->input('password')),
+    ]);
+
+    $user->assignRole($request->input('role'));
+
+    foreach ($request->input('permissions') as $permission) {
+        $user->givePermissionTo($permission);
+    }
+
+    if ($user) {
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        Mail::to($email)->send(new UserCreatedEmail($email, $password));
+
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'ajout user',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
-        $user = User::create([
-            'nom' => $request->input('nom'),
-            'prenom' => $request->input('prenom'),
-            'telephone' => $request->input('telephone'),
-            'adresse' => $request->input('adresse'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-        ]);
-
-        $user->assignRole($request->input('role'));
-
-        foreach ($request->input('permissions') as $permission) {
-            $user->givePermissionTo($permission);
-        }
-
-        if ($user) {
+        if ($historique) {
             $array = [
                 'data' => new UserResource($user),
                 'message' => 'The user is saved',
+                'historique' => new HistoriqueResource($historique),
                 'status' => 201,
             ];
-    
-            $email = $request->input('email');
-            $password = $request->input('password');
-    
-            Mail::to($email)->send(new UserCreatedEmail($email, $password));
-    
             return response()->json($array);
         }
-
-        return response()->json(['message' => 'The user is not saved'], 400);
     }
+
+    return response()->json(['message' => 'The user is not saved'], 400);
+}
+
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
@@ -132,11 +145,23 @@ class userController extends Controller
 
         $User->update($validatedData);
 
-        return response()->json([
-            'data' => new userResource($User),
-            'message' => 'User updated successfully',
-            'status' => 201,
-        ], 201);
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Modifier user',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new UserResource($User),
+                'message' => 'User updated successfully',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
     public function updateUser(Request $request)
 {
@@ -160,12 +185,23 @@ class userController extends Controller
     ]);
 
     $user->update($validatedData);
+    $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Modifier user',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
 
-    return response()->json([
-        'data' => new UserResource($user),
-        'message' => 'User updated successfully',
-        'status' => 201,
-    ], 201);
+        if ($historique) {
+            $array = [
+                'data' => new UserResource($user),
+                'message' => 'User updated successfully',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
 }
 
 
@@ -184,12 +220,23 @@ class userController extends Controller
         }
         $user->delete($id);
         if ($user) {
-            $array = [
-                'data' => null,
-                'message' => 'The user delete',
-                'status' => 200,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer user',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new UserResource($user),
+                    'message' => 'The user delete',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 

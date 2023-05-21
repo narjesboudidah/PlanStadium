@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\eventResource;
 use App\Models\events;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -66,12 +68,23 @@ class EventsController extends Controller
 
         $event = events::create(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id]));
         if ($event) {
-            $array = [
-                'data' => new eventResource($event),
-                'message' => 'The event save',
-                'status' => 201,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Ajout event',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new eventResource($event),
+                    'message' => 'The event save',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
         return response(null, 400, ['The event not save']);
     }
@@ -114,11 +127,23 @@ class EventsController extends Controller
 
         $event->update(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id]));
         if ($event) {
-            return response()->json([
-                'data' => new eventResource($event),
-                'message' => 'The event update',
-                'status' => 201,
-            ], 201);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Modifier event',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new eventResource($event),
+                    'message' => 'The event update',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 
@@ -139,12 +164,23 @@ class EventsController extends Controller
         }
         $event->delete($id);
         if ($event) {
-            $array = [
-                'data' => null,
-                'message' => 'The event delete',
-                'status' => 200,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer event',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new eventResource($event),
+                    'message' => 'The event delete',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 

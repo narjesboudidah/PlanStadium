@@ -5,9 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\societeMaintenanceResource;
 use App\Models\societe_maintenances;
+use App\Http\Resources\historiqueResource;
+use App\Models\historiques;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 
 class SocieteMaintenancesController extends Controller
@@ -60,12 +63,23 @@ class SocieteMaintenancesController extends Controller
 
         $societeMaintenance = societe_maintenances::create($request->all());
         if ($societeMaintenance) {
-            $array = [
-                'data' => new societeMaintenanceResource($societeMaintenance),
-                'message' => 'The societeMaintenance save',
-                'status' => 201,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'ajout Ste',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new societeMaintenanceResource($societeMaintenance),
+                    'message' => 'The societeMaintenance saved',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
         return response(null, 400, ['The societeMaintenance not save']);
     }
@@ -112,11 +126,23 @@ class SocieteMaintenancesController extends Controller
 
     $societeMaintenance->update($validator->validated());
 
-    return response()->json([
-        'data' => new SocieteMaintenanceResource($societeMaintenance),
-        'message' => 'SocieteMaintenance updated successfully',
-        'status' => 201,
-    ], 201);
+    $todayDate = date('Y-m-d H:i:s');
+    $admin_id = Auth::id();
+    $historique = historiques::create([
+        'action' => 'Modifier Ste',
+        'date' => $todayDate,
+        'admin_fed_id' => $admin_id,
+    ]);
+
+    if ($historique) {
+        $array = [
+            'data' => new societeMaintenanceResource($societeMaintenance),
+            'message' => 'SocieteMaintenance updated successfully',
+            'historique' => new HistoriqueResource($historique),
+            'status' => 201,
+        ];
+        return response()->json($array);
+    }
 }
 
 
@@ -136,12 +162,23 @@ class SocieteMaintenancesController extends Controller
         }
         $societeMaintenance->delete($id);
         if ($societeMaintenance) {
-            $array = [
-                'data' => null,
-                'message' => 'The societe Maintenance delete',
-                'status' => 200,
-            ];
-            return response($array);
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Supprimer Ste',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id,
+            ]);
+
+            if ($historique) {
+                $array = [
+                    'data' => new societeMaintenanceResource($societeMaintenance),
+                    'message' => 'The societe Maintenance delete',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201,
+                ];
+                return response()->json($array);
+            }
         }
     }
 }
