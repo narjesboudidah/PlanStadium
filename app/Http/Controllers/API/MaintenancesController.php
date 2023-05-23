@@ -317,6 +317,31 @@ public function store(Request $request)
         // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
+    public function MaintenanceFilterStades($stade_id)
+    {
+        // Vérifier si un état de filtrage a été spécifié
+        if (!is_null($stade_id)) {
+            // Effectuer la requête pour filtrer les maintenances en fonction de l'état
+            $maintenances = maintenances::where('stade_id', $stade_id)->get();
+        } else {
+            // Si aucun état de filtrage n'est spécifié, récupérer toutes les maintenances
+            $maintenances = maintenances::all();
+        }
+    
+        // Créer une collection de ressources pour les maintenances filtrées
+        $maintenancesResource = MaintenanceResource::collection($maintenances);
+    
+        $array = [
+            'data' => $maintenancesResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+    
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }
+
+
     public function MaintenanceFilterstatut()
     {
         $statut='accepté';

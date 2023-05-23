@@ -244,6 +244,35 @@ class MatchsController extends Controller
         // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }    
+    public function matchFilterStade($stade_id)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($stade_id)) {
+            $matchs = matchs::where('stade_id', $stade_id)
+                ->get();
+    
+            $matchResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchs,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les événements
+            $matchs = matchs::all();
+            $matchResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+    
+        // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }    
+
+
     public function matchFilterC($competition_id)
 {
     // Vérifier si une ID de compétition de filtrage a été spécifiée

@@ -60,6 +60,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/events/filter/{date_debut}/{stade_id}', [EventsController::class, 'eventFilter']);
     });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/events/filterStade/{stade_id}', [EventsController::class, 'eventFilterStade']);
+    });
 
 
     //User
@@ -108,6 +111,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/maintenances/filter/{date_debut}/{stade_id}/{statut}', [MaintenancesController::class, 'MaintenanceFilterStade']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/maintenances/filterStade/{stade_id}', [MaintenancesController::class, 'MaintenanceFilterStades']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/maintenances/filteretat/{etat}', [MaintenancesController::class, 'MaintenanceFilterEtat']);
@@ -160,6 +166,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/matchs/filter/{date}/{stade_id}', [MatchsController::class, 'matchFilter']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
+        Route::get('/matchs/filterStade/{stade_id}', [MatchsController::class, 'matchFilterStade']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/matchs/filterCompetition/{competition_id}', [MatchsController::class, 'matchFilterC']);

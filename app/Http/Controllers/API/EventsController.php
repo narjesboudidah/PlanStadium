@@ -270,5 +270,33 @@ class EventsController extends Controller
         // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }    
+    public function eventFilterStade($stade_id)
+    {
+        // Vérifier si une date de filtrage a été spécifiée
+        if (isset($stade_id)) {
+            // Effectuer la requête pour filtrer les événements en fonction de l'ID du stade et de la date de début
+            $events = events::where('stade_id', $stade_id)
+                ->get();
+    
+            $eventResource = eventResource::collection($events);
+            $array = [
+                'data' => $events,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            // Si aucune date de filtrage n'est spécifiée, récupérer tous les événements
+            $events = events::all();
+            $eventResource = eventResource::collection($events);
+            $array = [
+                'data' => $eventResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+    
+        // Retourner les événements filtrés à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
+    }    
 
 }
