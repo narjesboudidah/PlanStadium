@@ -176,10 +176,6 @@ class EventsController extends Controller
         }
     }
     
-    
-    
-
-
 
     /* Remove the specified resource from storage.*/
     public function destroy($id)

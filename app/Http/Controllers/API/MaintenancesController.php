@@ -400,7 +400,7 @@ public function store(Request $request)
         return response($array);
     }
     
-    public function MaintenanceFilterStade ($date_debut, $stade_id, $statut)
+    public function MaintenanceFilterStade ($date_debut, $stade_id)
     {
         // Vérifier si une date de filtrage a été spécifiée
         if (isset($date_debut)) {
@@ -409,6 +409,7 @@ public function store(Request $request)
     
             // Convertir la date de début de filtrage en objet Carbon pour une manipulation facile
             $filterDate = Carbon::parse($date_debut)->toDateString();
+            $statut ="accepté";
     
             // Effectuer la requête pour filtrer les événements en fonction de l'ID du stade et de la date de début
             $maintenances = maintenances::where('stade_id', $stade_id)
