@@ -27,6 +27,7 @@ class eventResource extends JsonResource
             'equipe2_id' => $this->equipe2_id,
             'stade_id' => $this->stade_id,
             'admin_fed_id' => $this->admin_fed_id,
+            'admin_equipe_id' => $this->admin_equipe_id,
         ];
     }
 }

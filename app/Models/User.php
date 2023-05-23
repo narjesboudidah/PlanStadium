@@ -25,6 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'telephone',
         'email',
         'adresse',
+        'nom_equipe',
+        'nom_ste',
         'email_verified_at',
         'password',
         'remember_token',
@@ -58,6 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function equipes(){
         return $this->hasOne(equipes::class);
     }
+    
 
     public function maintenances(){
         return $this->hasMany(maintenances::class);

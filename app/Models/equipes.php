@@ -13,13 +13,10 @@ class equipes extends Model
     protected $guarded = ['created_at', 'updated_at'];
 
     public function user(){
+        return $this->belongsTo(User::class);
     }
 
     public function matchs(){
         return $this->hasMany(matchs::class);
-    }
-
-    public function role_user_pivot(){
-        return $this->hasMany(role_user_pivot::class);
     }
 }

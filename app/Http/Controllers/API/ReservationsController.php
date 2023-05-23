@@ -385,6 +385,7 @@ class ReservationsController extends Controller
         $event->type_event = $reservation->type_reservation;
         $event->nom_event = $reservation->nom_event;
         $event->type_match = $reservation->type_match;
+        $event->admin_equipe_id = $reservation->admin_equipe_id;
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $event->admin_fed_id = $admin_fed_id;
         // Enregistrez l'événement

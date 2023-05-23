@@ -21,6 +21,8 @@ class userResource extends JsonResource
             'telephone' => $this->telephone,
             'email' => $this->email,
             'adresse' => $this->adresse,
+            'nom_equipe' => $this->nom_equipe,
+            'nom_ste' => $this->nom_ste,
             'email_verified_at' => $this->email_verified_at,
             'password' =>bcrypt( $this->password),
             'remember_token' => $this->remember_token,

@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Mail\EventModificationNotification;
+use App\Mail\EventSupprimerNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\eventResource;
 use App\Models\events;
 use App\Http\Resources\historiqueResource;
+use App\Models\User;
 use App\Models\historiques;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
@@ -58,6 +62,7 @@ class EventsController extends Controller
             'equipe2_id' => 'nullable|exists:equipes,id',
             'stade_id' => 'required|exists:stades,id',
             'admin_fed_id' => 'exists:users,id',
+            'admin_equipe_id' => 'exists:users,id',
         ]);
 
         if ($validator->fails()) { //ken fama mochkil
@@ -65,8 +70,9 @@ class EventsController extends Controller
         }
 
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+        $admin_equipe_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
-        $event = events::create(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id]));
+        $event = events::create(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id,'admin_equipe_id' => $admin_equipe_id,]));
         if ($event) {
             $todayDate = date('Y-m-d H:i:s');
             $admin_id = Auth::id();
@@ -102,10 +108,11 @@ class EventsController extends Controller
             'type_match' => 'string|max:255',
             'stade_id' => 'exists:stades,id',
             'admin_fed_id' => 'exists:users,id',
+            'admin_equipe_id' => 'exists:users,id',
             'equipe1_id' => 'exists:equipes,id',
             'equipe2_id' => 'exists:equipes,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'data' => null,
@@ -113,20 +120,42 @@ class EventsController extends Controller
                 'status' => 400,
             ], 400);
         }
-
+    
         $event = events::find($id);
         if (!$event) {
             return response()->json([
                 'data' => null,
-                'message' => 'The event not Found',
+                'message' => 'The event was not found',
                 'status' => 404,
             ], 404);
         }
 
+        // Vérifier si la date de début est supérieure ou égale à la date d'aujourd'hui + 2 jours
+        $todayDate = date('Y-m-d');
+        $twoDaysLater = date('Y-m-d', strtotime('+2 days'));
+        $eventStartDate = $event->date_debut;
+        if (strtotime($eventStartDate) < strtotime($twoDaysLater)) {
+            $array = [
+                'data' => null,
+                'message' => 'Cannot updated event with start date within 2 days from now',
+                'status' => 400,
+            ];
+            return response()->json($array);
+        }
+    
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
-
+        
         $event->update(array_merge($request->all(), ['admin_fed_id' => $admin_fed_id]));
+    
         if ($event) {
+
+            // Envoyer un e-mail à l'utilisateur
+            $event = events::findOrFail($id);
+            $admin_equipe_id = $event->admin_equipe_id;
+            $admin_equipe = User::find($admin_equipe_id);
+            $admin_email = $admin_equipe->email;
+            Mail::to($admin_email)->send(new EventModificationNotification($event));
+            
             $todayDate = date('Y-m-d H:i:s');
             $admin_id = Auth::id();
             $historique = historiques::create([
@@ -134,11 +163,11 @@ class EventsController extends Controller
                 'date' => $todayDate,
                 'admin_fed_id' => $admin_id,
             ]);
-
+    
             if ($historique) {
                 $array = [
                     'data' => new eventResource($event),
-                    'message' => 'The event update',
+                    'message' => 'The event has been updated',
                     'historique' => new HistoriqueResource($historique),
                     'status' => 201,
                 ];
@@ -146,13 +175,15 @@ class EventsController extends Controller
             }
         }
     }
+    
+    
+    
 
 
 
     /* Remove the specified resource from storage.*/
     public function destroy($id)
     {
-
         $event = events::find($id);
         if (!$event) {
             $array = [
@@ -162,25 +193,45 @@ class EventsController extends Controller
             ];
             return response($array);
         }
-        $event->delete($id);
-        if ($event) {
-            $todayDate = date('Y-m-d H:i:s');
-            $admin_id = Auth::id();
-            $historique = historiques::create([
-                'action' => 'Supprimer event',
-                'date' => $todayDate,
-                'admin_fed_id' => $admin_id,
-            ]);
 
-            if ($historique) {
-                $array = [
-                    'data' => new eventResource($event),
-                    'message' => 'The event delete',
-                    'historique' => new HistoriqueResource($historique),
-                    'status' => 201,
-                ];
-                return response()->json($array);
-            }
+        // Vérifier si la date de début est supérieure ou égale à la date d'aujourd'hui + 2 jours
+        $todayDate = date('Y-m-d');
+        $twoDaysLater = date('Y-m-d', strtotime('+2 days'));
+        $eventStartDate = $event->date_debut;
+        if (strtotime($eventStartDate) < strtotime($twoDaysLater)) {
+            $array = [
+                'data' => null,
+                'message' => 'Cannot delete event with start date within 2 days from now',
+                'status' => 400,
+            ];
+            return response()->json($array);
+        }
+
+
+        // Envoyer un e-mail à l'utilisateur
+        $admin_equipe_id = $event->admin_equipe_id;
+        $admin_equipe = User::find($admin_equipe_id);
+        if ($admin_equipe) {
+            $admin_email = $admin_equipe->email;
+            Mail::to($admin_email)->send(new EventSupprimerNotification($event));
+        }
+
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Supprimer event',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new eventResource($event),
+                'message' => 'The event delete',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            $event->delete();
+            return response()->json($array);
         }
     }
 

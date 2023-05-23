@@ -69,6 +69,8 @@ class userController extends Controller
         'email' => 'required|email|unique:users',
         'adresse' => 'required',
         'password' => 'required|string',
+        'nom_equipe' => 'nullable|string|unique:users',
+        'nom_ste' => 'nullable|string|unique:users',
         'role' => 'required|string|max:255',
         'permissions' => 'array',
         'permissions.*' => 'string|max:255',
@@ -141,6 +143,8 @@ class userController extends Controller
             'email' => 'email|unique:users',
             'adresse' => 'string',
             'password' => 'string',
+            'nom_equipe' => 'nullable|string|unique:users',
+            'nom_ste' => 'nullable|string|unique:users',
         ]);
 
         $User->update($validatedData);
@@ -182,6 +186,8 @@ class userController extends Controller
         'telephone' => 'required|string|unique:users,telephone,'.$user->id,
         'email' => 'required|email|unique:users,email,'.$user->id,
         'adresse' => 'required|string',
+        'nom_equipe' => 'nullable|string|unique:users',
+        'nom_ste' => 'nullable|string|unique:users',
     ]);
 
     $user->update($validatedData);

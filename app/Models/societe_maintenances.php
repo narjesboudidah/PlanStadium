@@ -16,7 +16,5 @@ class societe_maintenances extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function role_user_pivot(){
-        return $this->hasMany(role_user_pivot::class);
-    }
+    
 }

@@ -18,6 +18,9 @@ return new class extends Migration
 
             $table->unsignedInteger('admin_fed_id');
             $table->foreign('admin_fed_id','admin_fed_id_fk_10')->references('id')->on('users')->onDelete('cascade');
+            
+            $table->unsignedInteger('admin_equipe_id');
+            $table->foreign('admin_equipe_id','admin_equipe_id_fk_10')->references('id')->on('users')->onDelete('cascade');
 
             $table->unsignedInteger('stade_id');
             $table->foreign('stade_id','stade_id_fk_10')->references('id')->on('stades')->onDelete('cascade');
