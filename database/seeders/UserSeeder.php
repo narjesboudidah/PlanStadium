@@ -147,6 +147,7 @@ class UserSeeder extends Seeder
         'email'=>'narjes@gmail.com',
         'adresse'=>'xxxsxxx',
         'password'=>bcrypt('123'),
+        'nom_equipe'=>'ES Tunis',
     ]);
     $user1->assignRole('Admin Equipe');
     // $user1->givePermissionTo('Consulter Equipes');
@@ -160,6 +161,7 @@ class UserSeeder extends Seeder
         'email'=>'hamza@gmail.com',
         'adresse'=>'xxxuxxx',
         'password'=>bcrypt('123'),
+        'nom_ste'=>'Ste maintenance',
     ]);
     $user2->assignRole('Admin Ste');
 
