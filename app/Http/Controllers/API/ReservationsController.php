@@ -26,9 +26,7 @@ class ReservationsController extends Controller
                 'user' => $request->user(),
             ];
             return response($array);
-        }
-
-    
+    }
 
     /*Display the specified resource.*/
     public function show($id)
@@ -44,7 +42,6 @@ class ReservationsController extends Controller
         }
         return response(null, 401, ['The reservation not found']);
     }
-
 
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
@@ -70,11 +67,37 @@ class ReservationsController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
-        $admin_equipe_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $statut = 'en attente';
 
-        $reservation = reservations::create(array_merge($request->all(), ['admin_equipe_id' => $admin_equipe_id, 'admin_fed_id' => $admin_equipe_id, 'statut' => $statut]));
+        $reservationData = [
+            'date_debut' => $request->date_debut,
+            'heure_debut' => $request->heure_debut,
+            'date_fin' => $request->date_fin,
+            'heure_fin' => $request->heure_fin,
+            'type_reservation' => $request->type_reservation,
+            'statut' => $request->statut,
+            'nom_event' => $request->nom_event,
+            'type_match' => $request->type_match,
+            'statut' => $request->statut,
+            'equipe1_id' => $request->equipe1_id,
+            'equipe2_id' => $request->equipe2_id,
+            'stade_id' => $request->stade_id,
+            'admin_equipe_id' => Auth::id(),
+            'admin_fed_id' => Auth::id(),
+        ];
+
+        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut, date_fin 
+        $existingEvent = events::where('stade_id', $request->stade_id)
+            ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
+            ->first();
+
+         if ($existingEvent) {
+            return response()->json(['message' => 'Un event avec les mêmes valeurs existe déjà'], 400);
+        }
+        $admin_equipe_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+        $reservationData['admin_equipe_id'] = $admin_equipe_id;
+        $reservationData['admin_fed_id'] = $admin_equipe_id;
+        $reservation = reservations::create(array_merge($reservationData, ['statut' => $statut]));
 
         if ($reservation) {
             $todayDate = date('Y-m-d H:i:s');
@@ -88,16 +111,15 @@ class ReservationsController extends Controller
             if ($historique) {
                 $array = [
                     'data' => new reservationResource($reservation),
-                    'message' => 'The reservation saved',
+                    'message' => 'La réservation a été enregistrée',
                     'historique' => new HistoriqueResource($historique),
                     'status' => 201,
                 ];
                 return response()->json($array);
             }
         }
-        return response()->json(['message' => 'The reservation not save'], 400);
+        return response()->json(['message' => 'La réservation n\'a pas pu être enregistrée'], 400);
     }
-
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
@@ -159,8 +181,6 @@ class ReservationsController extends Controller
         }
     }
 
-
-
     /* Remove the specified resource from storage.*/
     public function destroy($id)
     {
@@ -196,8 +216,7 @@ class ReservationsController extends Controller
         }
     }
 
-    
-
+    //annuler reservation
     public function annulerReservation($id)
     {
         // Trouver la réservation en fonction de l'ID
@@ -239,14 +258,15 @@ class ReservationsController extends Controller
         }
     }
 
+    //filter liste de tous les réservation refusés
     public function ReservationFilterstatut()
     {
         $statut='refusé';
 
-        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        // Effectuer la requête pour filtrer les reservations en fonction de la statut
         $reservations = reservations::where('statut', $statut)->get();
     
-        // Créer une collection de ressources pour les maintenances filtrées
+        // Créer une collection de ressources pour les reservations filtrées
         $reservationResource = reservationResource::collection($reservations);
     
         $array = [
@@ -255,17 +275,29 @@ class ReservationsController extends Controller
             'status' => 200,
         ];
     
-        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        // Retourner les reservations filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
-    public function Reservationstatut()
+
+    //filter liste de tous les réservation
+    public function Reservationstatut(Request $request)
     {
         $statut='en attente';
 
-        // Effectuer la requête pour filtrer les maintenances en fonction de la statut
+        if ($request->user()->Roles()->get()[0]["name"] == "Admin Federation") {
+        // Effectuer la requête pour filtrer les reservations en fonction de la statut
         $reservations = reservations::where('statut', $statut)->get();
-    
-        // Créer une collection de ressources pour les maintenances filtrées
+        } elseif ($request->user()->Roles()->get()[0]["name"] == 'Admin Equipe') {
+            $admin_id = Auth::id();
+            // Si l'utilisateur est un admin d'équipe, filtrez les reservations en fonction de l'utilisateur et de la date d'aujourd'hui
+            $reservations = reservations::where('statut', $statut)
+                ->where('admin_equipe_id', $admin_id)
+                ->get();
+        } else {
+            // Si l'utilisateur a un autre rôle, renvoyez une réponse vide
+            $reservations = [];
+        }
+        // Créer une collection de ressources pour les reservations filtrées
         $reservationResource = reservationResource::collection($reservations);
     
         $array = [
@@ -274,10 +306,11 @@ class ReservationsController extends Controller
             'status' => 200,
         ];
     
-        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        // Retourner les reservations filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
 
+    //filter les réservations en attentes d'aujourd'hui
     public function ReservationFilter(Request $request)
     {
         // Obtenez la date d'aujourd'hui
@@ -313,6 +346,8 @@ class ReservationsController extends Controller
         // Retourner les reservations filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
+
+    //filter les réservations par date
     public function ReservationFilterDate($date)
     {
         // Vérifier si une date de filtrage a été spécifiée
@@ -340,6 +375,8 @@ class ReservationsController extends Controller
         }
         return response($array);
     }
+
+    //filter les réservations par type de reservation
     public function ReservationFilterType($type_reservation)
     {
         // Vérifier si un type de réservation de filtrage a été spécifié
@@ -368,7 +405,7 @@ class ReservationsController extends Controller
         return response($array);
     }
 
-
+    //acceptReservation
     public function acceptReservation($reservationId)
     {
         $reservation = reservations::findOrFail($reservationId);
