@@ -4,12 +4,17 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\reservationResource;
+use App\Mail\reservationaccepter;
+use App\Mail\reservationrefuse;
 use App\Models\events;
+use App\Models\maintenances;
 use App\Models\reservations;
 use App\Http\Resources\historiqueResource;
 use App\Models\historiques;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,13 +91,19 @@ class ReservationsController extends Controller
             'admin_fed_id' => Auth::id(),
         ];
 
-        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut, date_fin 
+        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
         $existingEvent = events::where('stade_id', $request->stade_id)
             ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
             ->first();
 
-         if ($existingEvent) {
-            return response()->json(['message' => 'Un event avec les mêmes valeurs existe déjà'], 400);
+        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut
+        $existingMaintenance = maintenances::where('stade_id', $request->stade_id)
+            ->where('statut', 'accepté')
+            ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
+            ->first();
+
+        if ($existingEvent && $existingMaintenance) {
+            return response()->json(['message' => 'Date déjà réserver'], 400);
         }
         $admin_equipe_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $reservationData['admin_equipe_id'] = $admin_equipe_id;
@@ -232,6 +243,11 @@ class ReservationsController extends Controller
             return response($array);
         }
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+
+        $admin_equipe_id = $reservation->admin_equipe_id;
+        $admin_equipe = User::find($admin_equipe_id);
+        $admin_email = $admin_equipe->email;
+        Mail::to($admin_email)->send(new reservationrefuse($reservation));
 
         // Annuler la réservation (mettre à jour le statut par exemple)
         $reservation->update([
@@ -410,6 +426,19 @@ class ReservationsController extends Controller
     {
         $reservation = reservations::findOrFail($reservationId);
 
+        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
+        $existingEvent = events::where('stade_id', $reservation->stade_id)
+            ->whereBetween('date_debut', [$reservation->date_debut, $reservation->date_fin])
+            ->first();
+        
+        $existingMaintenance = maintenances::where('stade_id', $reservation->stade_id)
+        ->where('statut', 'accepté')
+        ->whereBetween('date_debut', [$reservation->date_debut, $reservation->date_fin])
+        ->first();
+
+        if ($existingEvent && $existingMaintenance) {
+            return response()->json(['message' => 'Date déjà réserver'], 400);
+        }
         // Créez un nouvel événement à partir des informations de la réservation
         $event = new events();
         $event->stade_id = $reservation->stade_id;
@@ -425,8 +454,15 @@ class ReservationsController extends Controller
         $event->admin_equipe_id = $reservation->admin_equipe_id;
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $event->admin_fed_id = $admin_fed_id;
+        
         // Enregistrez l'événement
         $event->save();
+
+        
+        $admin_equipe_id = $reservation->admin_equipe_id;
+        $admin_equipe = User::find($admin_equipe_id);
+        $admin_email = $admin_equipe->email;
+        Mail::to($admin_email)->send(new reservationaccepter($reservation));
 
         // Supprimez la réservation
         $reservation->delete();

@@ -4,11 +4,16 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\maintenanceResource;
+use App\Mail\maintenanceaccepter;
+use App\Mail\maintenancerefuse;
+use App\Models\events;
 use App\Models\maintenances;
 use App\Http\Resources\historiqueResource;
 use App\Models\historiques;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -77,14 +82,19 @@ class MaintenancesController extends Controller
             'statut' => $staut,
         ];
 
-        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut, date_fin et statut
+        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut
         $existingMaintenance = maintenances::where('stade_id', $request->stade_id)
             ->where('statut', 'accepté')
             ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
             ->first();
 
-        if ($existingMaintenance) {
-            return response()->json(['message' => 'Une maintenance avec les mêmes valeurs existe déjà'], 400);
+        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
+        $existingEvent = events::where('stade_id', $request->stade_id)
+        ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
+        ->first();
+        
+        if ($existingMaintenance && $existingEvent) {
+            return response()->json(['message' => 'Date déjà réserver'], 400);
         }
 
         $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
@@ -210,11 +220,31 @@ class MaintenancesController extends Controller
         }
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
+        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
+        $existingEvent = events::where('stade_id', $maintenance->stade_id)
+            ->whereBetween('date_debut', [$maintenance->date_debut, $maintenance->date_fin])
+            ->first();
+        
+        $existingMaintenance = maintenances::where('stade_id', $maintenance->stade_id)
+        ->where('statut', 'accepté')
+        ->whereBetween('date_debut', [$maintenance->date_debut, $maintenance->date_fin])
+        ->first();
+
+        if ($existingEvent && $existingMaintenance) {
+            return response()->json(['message' => 'Date déjà réserver'], 400);
+        }
+
         // Confirmer la maintenance (mettre à jour le statut par exemple)
         $maintenance->update([
             'statut' => 'accepté',
             'admin_fed_id' => $admin_fed_id
         ]);
+
+        $admin_ste_id = $maintenance->admin_ste_id;
+        $admin_ste = User::find($admin_ste_id);
+        $admin_email = $admin_ste->email;
+        Mail::to($admin_email)->send(new maintenanceaccepter($maintenance));
+
         $todayDate = date('Y-m-d H:i:s');
         $admin_id = Auth::id();
         $historique = historiques::create([
@@ -252,6 +282,11 @@ class MaintenancesController extends Controller
 
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
 
+        $admin_ste_id = $maintenance->admin_ste_id;
+        $admin_ste = User::find($admin_ste_id);
+        $admin_email = $admin_ste->email;
+        Mail::to($admin_email)->send(new maintenancerefuse($maintenance));
+        
         // Annuler la maintenance (mettre à jour le statut par exemple)
         $maintenance->update([
             'statut' => 'refusé',
