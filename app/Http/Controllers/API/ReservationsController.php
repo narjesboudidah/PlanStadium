@@ -138,7 +138,7 @@ class ReservationsController extends Controller
         $validator = Validator::make($request->all(), [
             'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
             'heure_debut' => 'required|date_format:H:i',
-            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
+            'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
             'heure_fin' => 'required|date_format:H:i',
             'type_reservation' => 'required|string',
             'statut' => 'string|max:2023',

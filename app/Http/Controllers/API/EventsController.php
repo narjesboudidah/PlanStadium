@@ -116,7 +116,7 @@ class EventsController extends Controller
         $validator = Validator::make($request->all(), [
             'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
             'heure_debut' => 'required|date_format:H:i',
-            'date_fin' => 'required|date_format:Y-m-d|after:date_debut',
+            'date_fin' => 'required|date_format:Y-m-d|after_or_equal:date_debut',
             'heure_fin' => 'required|date_format:H:i',
             'type_event' => 'required|string|max:255',
             'nom_event' => 'string|max:255',
