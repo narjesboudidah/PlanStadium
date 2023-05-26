@@ -47,53 +47,75 @@ class MaintenancesController extends Controller
 
     /*Store a newly created resource in storage.*/
 
-public function store(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'date_debut' => 'required|date|date_format:Y-m-d',
-        'heure_debut' => 'required|date_format:H:i',
-        'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
-        'heure_fin' => 'required|date_format:H:i',
-        'etat' => 'required|string|max:255',
-        'description' => 'nullable|string|max:255',
-        'admin_fed_id' => 'nullable|exists:users,id',
-        'admin_ste_id' => 'exists:users,id',
-        'stade_id' => 'required|exists:stades,id',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 400);
-    }
-
-    $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
-    $statut = 'en attente';
-
-    $maintenance = maintenances::create(array_merge($request->all(), ['admin_ste_id' => $admin_ste_id,'admin_fed_id' => $admin_ste_id, 'statut' => $statut]));
-
-    if ($maintenance) {
-        $todayDate = date('Y-m-d H:i:s');
-        $admin_id = Auth::id();
-        $historique = historiques::create([
-            'action' => 'Ajout maintenance',
-            'date' => $todayDate,
-            'admin_fed_id' => $admin_id,
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date_debut' => 'required|date|date_format:Y-m-d',
+            'heure_debut' => 'required|date_format:H:i',
+            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
+            'heure_fin' => 'required|date_format:H:i',
+            'etat' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'admin_fed_id' => 'nullable|exists:users,id',
+            'admin_ste_id' => 'exists:users,id',
+            'stade_id' => 'required|exists:stades,id',
+            'statut' => 'string|max:255',
         ]);
-
-        if ($historique) {
-            $array = [
-                'data' => new MaintenanceResource($maintenance),
-                'message' => 'The maintenance saved',
-                'historique' => new HistoriqueResource($historique),
-                'status' => 201,
-            ];
-            return response()->json($array);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
         }
+    
+        $maintenanceData = [
+            'date_debut' => $request->date_debut,
+            'heure_debut' => $request->heure_debut,
+            'date_fin' => $request->date_fin,
+            'heure_fin' => $request->heure_fin,
+            'etat' => $request->etat,
+            'description' => $request->description,
+            'admin_ste_id' => Auth::id(),
+            'admin_fed_id' => Auth::id(),
+            'stade_id' => $request->stade_id,
+            'statut' => $request->statut,
+        ];
+    
+        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut, date_fin et statut
+        $existingMaintenance = maintenances::where('stade_id', $request->stade_id)
+            ->where('statut', 'accepté')
+            ->where('date_debut', $request->date_debut)
+            ->where('date_fin', $request->date_fin)
+            ->first();
+    
+        if ($existingMaintenance) {
+            return response()->json(['message' => 'Une maintenance avec les mêmes valeurs existe déjà'], 400);
+        }
+    
+        $maintenance = maintenances::create($maintenanceData);
+    
+        if ($maintenance) {
+            $todayDate = date('Y-m-d H:i:s');
+            $admin_id = Auth::id();
+            $historique = historiques::create([
+                'action' => 'Ajout maintenance',
+                'date' => $todayDate,
+                'admin_fed_id' => $admin_id
+            ]);
+    
+            if ($historique) {
+                $array = [
+                    'data' => new MaintenanceResource($maintenance),
+                    'message' => 'La maintenance a été enregistrée',
+                    'historique' => new HistoriqueResource($historique),
+                    'status' => 201
+                ];
+                return response()->json($array);
+            }
+        }
+    
+        return response()->json(['message' => 'La maintenance n\'a pas pu être enregistrée'], 400);
     }
-
-    return response()->json(['message' => 'The maintenance could not be saved'], 400);
-}
-
-
+    
+    
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
