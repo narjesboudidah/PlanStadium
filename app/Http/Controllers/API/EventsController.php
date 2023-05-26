@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\eventResource;
 use App\Models\events;
 use App\Http\Resources\historiqueResource;
+use App\Models\maintenances;
 use App\Models\User;
 use App\Models\historiques;
 use Carbon\Carbon;
@@ -45,15 +46,14 @@ class EventsController extends Controller
         return response(null, 401, ['The event not found']);
     }
 
-
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d',
+            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
             'heure_debut' => 'required|date_format:H:i',
-            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
+            'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
             'heure_fin' => 'required|date_format:H:i',
             'type_event' => 'required|string|max:255',
             'nom_event' => 'nullable|string|max:255',
@@ -65,8 +65,23 @@ class EventsController extends Controller
             'admin_equipe_id' => 'exists:users,id',
         ]);
 
-        if ($validator->fails()) { //ken fama mochkil
+        if ($validator->fails()) { 
             return response(null, 400, [$validator->errors()]);
+        }
+
+         // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
+         $existingEvent = events::where('stade_id', $request->stade_id)
+         ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
+         ->first();
+
+         // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut
+         $existingMaintenance = maintenances::where('stade_id', $request->stade_id)
+         ->where('statut', 'accepté')
+         ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
+         ->first();
+
+        if ($existingEvent && $existingMaintenance) {
+            return response()->json(['message' => 'Date déjà réserver'], 400);
         }
 
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
@@ -99,14 +114,14 @@ class EventsController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'date_format:Y-m-d',
-            'heure_debut' => 'date_format:H:i',
-            'date_fin' => 'date_format:Y-m-d|after:date_debut',
-            'heure_fin' => 'date_format:H:i',
-            'type_event' => 'string|max:255',
+            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
+            'heure_debut' => 'required|date_format:H:i',
+            'date_fin' => 'required|date_format:Y-m-d|after:date_debut',
+            'heure_fin' => 'required|date_format:H:i',
+            'type_event' => 'required|string|max:255',
             'nom_event' => 'string|max:255',
             'type_match' => 'string|max:255',
-            'stade_id' => 'exists:stades,id',
+            'stade_id' => 'required|exists:stades,id',
             'admin_fed_id' => 'exists:users,id',
             'admin_equipe_id' => 'exists:users,id',
             'equipe1_id' => 'exists:equipes,id',
@@ -129,6 +144,21 @@ class EventsController extends Controller
                 'status' => 404,
             ], 404);
         }
+
+        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
+        $existingEvent = events::where('stade_id', $event->stade_id)
+        ->whereBetween('date_debut', [$event->date_debut, $event->date_fin])
+        ->first();
+
+        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut
+        $existingMaintenance = maintenances::where('stade_id', $event->stade_id)
+        ->where('statut', 'accepté')
+        ->whereBetween('date_debut', [$event->date_debut, $event->date_fin])
+        ->first();
+
+       if ($existingEvent && $existingMaintenance) {
+           return response()->json(['message' => 'Date déjà réserver'], 400);
+       }
 
         // Vérifier si la date de début est supérieure ou égale à la date d'aujourd'hui + 2 jours
         $todayDate = date('Y-m-d');

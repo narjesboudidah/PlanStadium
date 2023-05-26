@@ -53,7 +53,7 @@ class MaintenancesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d',
+            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
             'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
             'heure_fin' => 'required|date_format:H:i',
@@ -137,16 +137,17 @@ class MaintenancesController extends Controller
             ], 404);
         }
 
+        if($maintenance->statut === 'en attente'){
         $validatedData = $request->validate([
-            'date_debut' => 'date|date_format:Y-m-d',
-            'heure_debut' => 'date_format:H:i',
-            'date_fin' => 'date|date_format:Y-m-d|after:date_debut',
-            'heure_fin' => 'date_format:H:i',
-            'etat' => 'string|max:255',
+            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
+            'heure_debut' => 'required|date_format:H:i',
+            'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
+            'heure_fin' => 'required|date_format:H:i',
+            'etat' => 'required|string|max:255',
             'description' => 'string|max:255',
             'admin_fed_id' => 'exists:users,id',
             'admin_ste_id' => 'exists:users,id',
-            'stade_id' => 'exists:stades,id',
+            'stade_id' => 'required|exists:stades,id',
         ]);
 
         $maintenance->update($validatedData);
@@ -166,6 +167,9 @@ class MaintenancesController extends Controller
                 'status' => 201,
             ];
             return response()->json($array);
+        }}
+        else{
+            return response()->json(['message' => 'Il n\'est pas possible de modifier la maintenance car elle a déjà été acceptée.'], 400);
         }
     }
 
@@ -286,7 +290,7 @@ class MaintenancesController extends Controller
         $admin_ste = User::find($admin_ste_id);
         $admin_email = $admin_ste->email;
         Mail::to($admin_email)->send(new maintenancerefuse($maintenance));
-        
+
         // Annuler la maintenance (mettre à jour le statut par exemple)
         $maintenance->update([
             'statut' => 'refusé',

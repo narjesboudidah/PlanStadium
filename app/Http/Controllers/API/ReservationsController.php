@@ -23,14 +23,14 @@ class ReservationsController extends Controller
     /*Display a listing of the resource.*/
     public function index(Request $request)
     {
-            $reservations = reservationResource::collection(reservations::get()); //ki tabda bech trajaa akther min 7aja
-            $array = [
-                'data' => $reservations,
-                'message' => 'ok',
-                'status' => 200,
-                'user' => $request->user(),
-            ];
-            return response($array);
+        $reservations = reservationResource::collection(reservations::get()); //ki tabda bech trajaa akther min 7aja
+        $array = [
+            'data' => $reservations,
+            'message' => 'ok',
+            'status' => 200,
+            'user' => $request->user(),
+        ];
+        return response($array);
     }
 
     /*Display the specified resource.*/
@@ -53,7 +53,7 @@ class ReservationsController extends Controller
     {
         //$todayDate = date('Y/m/d');
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d',
+            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
             'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
             'heure_fin' => 'required|date_format:H:i',
@@ -118,7 +118,7 @@ class ReservationsController extends Controller
                 'date' => $todayDate,
                 'admin_fed_id' => $admin_id,
             ]);
-    
+
             if ($historique) {
                 $array = [
                     'data' => new reservationResource($reservation),
@@ -136,15 +136,15 @@ class ReservationsController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'date_debut' => 'date|date_format:Y-m-d',
-            'heure_debut' => 'date_format:H:i',
-            'date_fin' => 'date|date_format:Y-m-d|after:date_debut',
-            'heure_fin' => 'date_format:H:i',
-            'type_reservation' => 'string',
+            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
+            'heure_debut' => 'required|date_format:H:i',
+            'date_fin' => 'required|date|date_format:Y-m-d|after:date_debut',
+            'heure_fin' => 'required|date_format:H:i',
+            'type_reservation' => 'required|string',
             'statut' => 'string|max:2023',
             'nom_match' => 'string|max:2023',
             'type_match' => 'string|max:2023',
-            'stade_id' => 'exists:stades,id',
+            'stade_id' => 'required|exists:stades,id',
             'admin_equipe_id' => 'exists:users,id',
             'admin_fed_id' => 'exists:users,id',
             'equipe1_id' => 'exists:equipes,id',
@@ -170,25 +170,29 @@ class ReservationsController extends Controller
             return $array;
         }
 
-        $reservation->update($request->all());
-        if ($reservation) {
-            $todayDate = date('Y-m-d H:i:s');
-            $admin_id = Auth::id();
-            $historique = historiques::create([
-                'action' => 'Modifier reservation',
-                'date' => $todayDate,
-                'admin_fed_id' => $admin_id,
-            ]);
-    
-            if ($historique) {
-                $array = [
-                    'data' => new reservationResource($reservation),
-                    'message' => 'The reservation update',
-                    'historique' => new HistoriqueResource($historique),
-                    'status' => 201,
-                ];
-                return response()->json($array);
-            }
+        if ($reservation->statut === 'en attente') {
+            $reservation->update($request->all());
+            if ($reservation) {
+                $todayDate = date('Y-m-d H:i:s');
+                $admin_id = Auth::id();
+                $historique = historiques::create([
+                    'action' => 'Modifier reservation',
+                    'date' => $todayDate,
+                    'admin_fed_id' => $admin_id,
+                ]);
+
+                if ($historique) {
+                    $array = [
+                        'data' => new reservationResource($reservation),
+                        'message' => 'The reservation update',
+                        'historique' => new HistoriqueResource($historique),
+                        'status' => 201,
+                    ];
+                    return response()->json($array);
+                }
+            }}
+            else{
+            return response()->json(['message' => 'Il n\'est pas possible de modifier la réservation car elle a déjà été acceptée.'], 400);
         }
     }
 
@@ -214,7 +218,7 @@ class ReservationsController extends Controller
                 'date' => $todayDate,
                 'admin_fed_id' => $admin_id,
             ]);
-    
+
             if ($historique) {
                 $array = [
                     'data' => new reservationResource($reservation),
@@ -277,20 +281,20 @@ class ReservationsController extends Controller
     //filter liste de tous les réservation refusés
     public function ReservationFilterstatut()
     {
-        $statut='refusé';
+        $statut = 'refusé';
 
         // Effectuer la requête pour filtrer les reservations en fonction de la statut
         $reservations = reservations::where('statut', $statut)->get();
-    
+
         // Créer une collection de ressources pour les reservations filtrées
         $reservationResource = reservationResource::collection($reservations);
-    
+
         $array = [
             'data' => $reservationResource,
             'message' => 'OK',
             'status' => 200,
         ];
-    
+
         // Retourner les reservations filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
@@ -298,11 +302,11 @@ class ReservationsController extends Controller
     //filter liste de tous les réservation
     public function Reservationstatut(Request $request)
     {
-        $statut='en attente';
+        $statut = 'en attente';
 
         if ($request->user()->Roles()->get()[0]["name"] == "Admin Federation") {
-        // Effectuer la requête pour filtrer les reservations en fonction de la statut
-        $reservations = reservations::where('statut', $statut)->get();
+            // Effectuer la requête pour filtrer les reservations en fonction de la statut
+            $reservations = reservations::where('statut', $statut)->get();
         } elseif ($request->user()->Roles()->get()[0]["name"] == 'Admin Equipe') {
             $admin_id = Auth::id();
             // Si l'utilisateur est un admin d'équipe, filtrez les reservations en fonction de l'utilisateur et de la date d'aujourd'hui
@@ -315,13 +319,13 @@ class ReservationsController extends Controller
         }
         // Créer une collection de ressources pour les reservations filtrées
         $reservationResource = reservationResource::collection($reservations);
-    
+
         $array = [
             'data' => $reservationResource,
             'message' => 'OK',
             'status' => 200,
         ];
-    
+
         // Retourner les reservations filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
@@ -430,11 +434,11 @@ class ReservationsController extends Controller
         $existingEvent = events::where('stade_id', $reservation->stade_id)
             ->whereBetween('date_debut', [$reservation->date_debut, $reservation->date_fin])
             ->first();
-        
+
         $existingMaintenance = maintenances::where('stade_id', $reservation->stade_id)
-        ->where('statut', 'accepté')
-        ->whereBetween('date_debut', [$reservation->date_debut, $reservation->date_fin])
-        ->first();
+            ->where('statut', 'accepté')
+            ->whereBetween('date_debut', [$reservation->date_debut, $reservation->date_fin])
+            ->first();
 
         if ($existingEvent && $existingMaintenance) {
             return response()->json(['message' => 'Date déjà réserver'], 400);
@@ -454,11 +458,11 @@ class ReservationsController extends Controller
         $event->admin_equipe_id = $reservation->admin_equipe_id;
         $admin_fed_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $event->admin_fed_id = $admin_fed_id;
-        
+
         // Enregistrez l'événement
         $event->save();
 
-        
+
         $admin_equipe_id = $reservation->admin_equipe_id;
         $admin_equipe = User::find($admin_equipe_id);
         $admin_email = $admin_equipe->email;
