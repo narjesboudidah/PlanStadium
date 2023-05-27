@@ -385,8 +385,11 @@ class MaintenancesController extends Controller
     {
         // Vérifier si un état de filtrage a été spécifié
         if (!is_null($stade_id)) {
+            $statut = 'accepté';
             // Effectuer la requête pour filtrer les maintenances en fonction de l'état
-            $maintenances = maintenances::where('stade_id', $stade_id)->get();
+            $maintenances = maintenances::where('stade_id', $stade_id)
+                        ->where('statut',$statut)
+                        ->get();
         } else {
             // Si aucun état de filtrage n'est spécifié, récupérer toutes les maintenances
             $maintenances = maintenances::all();

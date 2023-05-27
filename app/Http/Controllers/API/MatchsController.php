@@ -27,7 +27,6 @@ class MatchsController extends Controller
         return response($array);
     }
 
-
     /*Display the specified resource.*/
     public function show($id)
     {
@@ -42,7 +41,6 @@ class MatchsController extends Controller
         }
         return response(null, 401, ['The matchs not found']);
     }
-
 
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
@@ -86,7 +84,6 @@ class MatchsController extends Controller
         }
         return response(null, 400, ['The matchs not save']);
     }
-
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
@@ -142,8 +139,6 @@ class MatchsController extends Controller
         }
     }
     
-
-
     /* Remove the specified resource from storage.*/
     public function destroy($id)
     {
@@ -272,33 +267,32 @@ class MatchsController extends Controller
         return response($array);
     }    
 
-
     public function matchFilterC($competition_id)
-{
-    // Vérifier si une ID de compétition de filtrage a été spécifiée
-    if (isset($competition_id)) {
+    {
+        // Vérifier si une ID de compétition de filtrage a été spécifiée
+        if (isset($competition_id)) {
 
-        $matchs = matchs::where('competition_id', $competition_id)
-            ->get();
+            $matchs = matchs::where('competition_id', $competition_id)
+                ->get();
 
-        $matchResource = matchResource::collection($matchs);
-        $array = [
-            'data' => $matchResource,
-            'message' => 'OK',
-            'status' => 200,
-        ];
-    } else {
-        $matchs = matchs::all();
-        $matchResource = matchResource::collection($matchs);
-        $array = [
-            'data' => $matchResource,
-            'message' => 'OK',
-            'status' => 200,
-        ];
+            $matchResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        } else {
+            $matchs = matchs::all();
+            $matchResource = matchResource::collection($matchs);
+            $array = [
+                'data' => $matchResource,
+                'message' => 'OK',
+                'status' => 200,
+            ];
+        }
+
+        return response()->json($array);
     }
-
-    return response()->json($array);
-}
-    
+        
 
 }
