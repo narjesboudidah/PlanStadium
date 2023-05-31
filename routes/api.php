@@ -214,6 +214,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/stades', [StadesController::class, 'index']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Stade']], function () {
+        Route::get('/stade/nom/{id}', [StadesController::class, 'getnom']);
         Route::get('/stade/{id}', [StadesController::class, 'show']);
         Route::get('/stade/{id}/events', [StadesController::class, 'getEvents']);
         Route::get('/stade/{id}/matchs', [StadesController::class, 'getMatches']);

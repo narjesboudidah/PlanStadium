@@ -17,10 +17,8 @@ return new class extends Migration
             $table->increments('id');
             $table->string('nom')->unique();
             $table->string('pays');
-            $table->integer('capacite')->nullable();
-            $table->integer('surface')->nullable();
-            $table->integer('longitude')->nullable();
-            $table->integer('latitude')->nullable();
+            $table->string('capacite')->nullable();
+            $table->string('surface')->nullable();
             $table->string('proprietaire');
             $table->string('telephone')->unique();
             $table->string('adresse')->unique();

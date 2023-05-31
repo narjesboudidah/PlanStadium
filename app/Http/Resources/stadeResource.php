@@ -20,8 +20,6 @@ class stadeResource extends JsonResource
             'pays' => $this->pays,
             'capacite' => $this->capacite,
             'surface' => $this->surface,
-            'longitude' => $this->longitude,
-            'latitude' => $this->latitude,
             'proprietaire' => $this->proprietaire,
             'telephone' => $this->telephone,
             'adresse' => $this->adresse,

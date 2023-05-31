@@ -89,8 +89,8 @@ class stadesController extends Controller
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'pays' => 'required|string|max:255',
-            'capacite' => 'nullable|numeric',
-            'surface' => 'nullable|numeric',
+            'capacite' => 'nullable|string',
+            'surface' => 'nullable|string',
             'proprietaire' => 'required|string|max:255',
             'telephone' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
@@ -136,10 +136,8 @@ class stadesController extends Controller
         $validator = Validator::make($request->all(), [
             'nom' => 'string|max:255',
             'pays' => 'string|max:255',
-            'capacite' => 'nullable|numeric',
-            'surface' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'latitude' => 'nullable|numeric',
+            'capacite' => 'nullable|string',
+            'surface' => 'nullable|string',
             'proprietaire' => 'string|max:255',
             'telephone' => 'string|max:255',
             'adresse' => 'string|max:255',
@@ -223,5 +221,20 @@ class stadesController extends Controller
                 return response()->json($array);
             }
         }
+    }
+    public function getnom($id)
+    {
+        $stade = stades::where('id', '!=', $id)->get();
+        
+        $stadeResource = stadeResource::collection($stade);
+
+        $array = [
+            'data' => $stadeResource,
+            'message' => 'OK',
+            'status' => 200,
+        ];
+
+        // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
+        return response($array);
     }
 }
