@@ -51,74 +51,78 @@ class ReservationsController extends Controller
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
     {
-        //$todayDate = date('Y/m/d');
         $validator = Validator::make($request->all(), [
             'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
             'heure_debut' => 'required|date_format:H:i',
             'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
             'heure_fin' => 'required|date_format:H:i',
             'type_reservation' => 'required|string',
-            'statut' => 'required|string|max:2023',
-            'nom_event' => 'nullable|string|max:2023',
-            'type_match' => 'nullable|string|max:2023',
-            'statut' => 'string|max:2023',
-            'equipe1_id' => 'exists:equipes,id',
+            'nom_event' => 'nullable|string|max:255',
+            'type_match' => 'nullable|string|max:255',
             'equipe2_id' => 'exists:equipes,id',
             'stade_id' => 'required|exists:stades,id',
             'admin_equipe_id' => 'exists:users,id',
             'admin_fed_id' => 'exists:users,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
+        
         $statut = 'en attente';
-
+    
         $reservationData = [
             'date_debut' => $request->date_debut,
             'heure_debut' => $request->heure_debut,
             'date_fin' => $request->date_fin,
             'heure_fin' => $request->heure_fin,
             'type_reservation' => $request->type_reservation,
-            'statut' => $request->statut,
+            'statut' => $statut,
             'nom_event' => $request->nom_event,
             'type_match' => $request->type_match,
-            'statut' => $request->statut,
-            'equipe1_id' => $request->equipe1_id,
             'equipe2_id' => $request->equipe2_id,
             'stade_id' => $request->stade_id,
             'admin_equipe_id' => Auth::id(),
             'admin_fed_id' => Auth::id(),
         ];
-
-        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
+    
+        // Vérifier si un event existe avec les mêmes valeurs de stade, date_debut
         $existingEvent = events::where('stade_id', $request->stade_id)
             ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
             ->first();
-
-        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut
+    
+        // Vérifier si une maintenance existe avec les mêmes valeurs de stade, date_debut
         $existingMaintenance = maintenances::where('stade_id', $request->stade_id)
             ->where('statut', 'accepté')
             ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
             ->first();
-
-        if ($existingEvent && $existingMaintenance) {
-            return response()->json(['message' => 'Date déjà réserver'], 400);
+    
+        if ($existingEvent || $existingMaintenance) {
+            return response()->json(['message' => 'Date déjà réservée'], 400);
         }
+        
         $admin_equipe_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+        $user = \App\Models\User::find($admin_equipe_id);
+        $nom_equipe = $user->nom_equipe;
+    
+        $equipe = \App\Models\equipes::where('nom_equipe', $nom_equipe)->first();
+        $equipe_id = $equipe->id;
         $reservationData['admin_equipe_id'] = $admin_equipe_id;
         $reservationData['admin_fed_id'] = $admin_equipe_id;
+        
         $reservation = reservations::create(array_merge($reservationData, ['statut' => $statut]));
-
+        $reservation->equipe1_id = $equipe_id;
+        $reservation->save();
+    
         if ($reservation) {
             $todayDate = date('Y-m-d H:i:s');
             $admin_id = Auth::id();
             $historique = historiques::create([
-                'action' => 'Ajout reservation',
+                'action' => 'Ajout réservation',
                 'date' => $todayDate,
                 'admin_fed_id' => $admin_id,
             ]);
-
+    
             if ($historique) {
                 $array = [
                     'data' => new reservationResource($reservation),
@@ -129,8 +133,10 @@ class ReservationsController extends Controller
                 return response()->json($array);
             }
         }
+        
         return response()->json(['message' => 'La réservation n\'a pas pu être enregistrée'], 400);
     }
+    
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)

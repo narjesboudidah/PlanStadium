@@ -43,6 +43,20 @@ class userController extends Controller
         }
         return response(null, 401, ['The user not found']);
     }
+    public function shownom($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $array = [
+                'data' => $user->nom, // Récupérer uniquement le nom de l'utilisateur
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(['message' => 'The user not found'], 401);
+    }
+
     public function showuser()
     {
         $id = Auth::id();
