@@ -232,6 +232,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Stade']], function () {
         Route::delete('/stade/{id}', [StadesController::class, 'destroy']);
     });
+    Route::group(['middleware' => ['role:Admin Federation']], function () {
+        Route::get('/stadenom/{id}', [userController::class, 'shownom']);
+    });
 
 
     //Permissions

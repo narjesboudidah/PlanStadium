@@ -81,6 +81,19 @@ class stadesController extends Controller
         return response(null, 401, ['The stade not found']);
     }
 
+    public function shownom($id)
+    {
+        $stade = stades::find($id);
+        if ($stade) {
+            $array = [
+                'data' => $stade->nom, 
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(['message' => 'The stadium not found'], 401);
+    }
 
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
@@ -127,7 +140,6 @@ class stadesController extends Controller
         }
         return response(null, 400, ['The stade not save']);
     }
-
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
@@ -185,8 +197,6 @@ class stadesController extends Controller
                 return response()->json($array);
             }
     }
-
-
 
     /* Remove the specified resource from storage.*/
     public function destroy($id)
