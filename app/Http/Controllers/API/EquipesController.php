@@ -15,17 +15,32 @@ use Illuminate\Support\Facades\Auth;
 class EquipesController extends Controller
 {
     /*Display a listing of the resource.*/
-    public function index(Request $request)
+    public function index()
     {
-
-        $equipes = equipeResource::collection(equipes::get()); //ki tabda bech trajaa akther min 7aja
+        $equipes = equipes::all();
+    
+        $equipesData = [];
+        foreach ($equipes as $equipe) {
+            $logoUrl = url($equipe->logo);
+            $equipesData[] = [
+                'id' => $equipe->id,
+                'nom_equipe' => $equipe->nom_equipe,
+                'adresse' => $equipe->adresse,
+                'pays' => $equipe->pays,
+                'logo' => $logoUrl,
+                'site_web' => $equipe->site_web,
+                'type_equipe' => $equipe->type_equipe,
+                'description' => $equipe->description,
+            ];
+        }
+    
         $array = [
-            'data' => $equipes,
+            'data' => $equipesData,
             'message' => 'ok',
             'status' => 200,
-            'user' => $request->user(),
         ];
-        return response($array);
+    
+        return response()->json($array);
     }
 
     /*Display the specified resource.*/
@@ -33,15 +48,46 @@ class EquipesController extends Controller
     {
         $equipe = equipes::find($id);
         if ($equipe) {
-            $array = [
-                'data' => new equipeResource($equipe),
-                'message' => 'ok',
-                'status' => 200,
+            $logoUrl = url($equipe->logo);
+            $equipesData[] = [
+                'id' => $equipe->id,
+                'nom_equipe' => $equipe->nom_equipe,
+                'adresse' => $equipe->adresse,
+                'pays' => $equipe->pays,
+                'logo' => $logoUrl,
+                'site_web' => $equipe->site_web,
+                'type_equipe' => $equipe->type_equipe,
+                'description' => $equipe->description,
             ];
-            return response($array);
-        }
-        return response(null, 401, ['The equipe not found']);
+        $array = [
+            'data' => $equipesData,
+            'message' => 'ok',
+            'status' => 200,
+        ];
+    
+        return response()->json($array);
     }
+    return response()->json(null, 401, ['The equipe not found']);
+    }
+
+    public function showimage($nom)
+{
+    $equipe = equipes::where('nom_equipe', $nom)->first();
+    if ($equipe) {
+        $logoUrl = url($equipe->logo);
+        $equipesData = [
+            'logo' => $logoUrl
+        ];
+        $array = [
+            'data' => $equipesData,
+            'message' => 'ok',
+            'status' => 200,
+        ];
+    
+        return response()->json($array);
+    }
+    return response()->json(null, 401, ['The equipe not found']);
+}
 
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
@@ -57,45 +103,42 @@ class EquipesController extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return response(null, 400, [$validator->errors()]);
         }
     
-        $equipe = new equipes;
-        $equipe->nom_equipe = $request->input('nom_equipe');
-        $equipe->adresse = $request->input('adresse');
-        $equipe->pays = $request->input('pays');
-        $equipe->site_web = $request->input('site_web');
-        $equipe->type_equipe = $request->input('type_equipe');
-        $equipe->description = $request->input('description');
-    
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
-            $filename = time() . '_' . $logo->getClientOriginalName();
-            $path = $logo->move(public_path('uploads'), $filename);
-            $equipe->logo = 'uploads/' . $filename;
+        $equipes = equipes::create($request->all());
+    if ($request->hasFile('logo')) {
+        $imagePath = $request->file('logo')->store('public/images');
+        $equipes->logo = str_replace('public/', 'storage/', $imagePath);
+        $equipes->save();
+    }
+    $imageUrl = asset($equipes->logo);
+
+    if ($equipes) {
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'ajout Ste',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+
+        if ($historique) {
+            // Récupérer l'URL complète de l'image
+            $imageUrl = url($equipes->logo);
+
+            $array = [
+                'data' => new equipeResource($equipes),
+                'message' => 'The equipes saved',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+                'image_url' => $imageUrl,
+            ];
+            return response()->json($array);
         }
-    
-        if ($equipe->save()) {
-            $todayDate = date('Y-m-d H:i:s');
-            $admin_id = Auth::id();
-            $historique = historiques::create([
-                'action' => 'Ajout équipe',
-                'date' => $todayDate,
-                'admin_fed_id' => $admin_id,
-            ]);
-    
-            if ($historique) {
-                $array = [
-                    'data' => $equipe,
-                    'message' => 'The equipe is saved.',
-                    'historique' => new HistoriqueResource($historique),
-                    'status' => 201,
-                ];
-                return response()->json($array);
-            }
-        }
-    
-        return response()->json(['message' => 'Failed to save the equipe.'], 400);
+    }
+
+    return response(null, 400, ['The equipes not saved']);
     }
     
 

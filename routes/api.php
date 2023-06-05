@@ -43,7 +43,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Event
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Events']], function () {
-        Route::get('/events', [EventsController::class, 'index']);
+        Route::get('/eventsL', [EventsController::class, 'index']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Events']], function () {
+        Route::get('/events', [EventsController::class, 'indexH']);
     });
     Route::group(['middleware' => ['role:Admin Federation','permission:Ajout Event']], function () {
         Route::post('/events', [EventsController::class, 'store']);
@@ -143,6 +146,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Equipe']], function () {
         Route::get('/equipe/{id}', [EquipesController::class, 'show']);
     });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Equipe']], function () {
+        Route::get('/equipeimage/{nom}', [EquipesController::class, 'showimage']);
+    });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Equipe']], function () {
         Route::put('/equipe/{id}', [EquipesController::class, 'update']);
     });
@@ -203,6 +209,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Ste']], function () {
         Route::get('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'show']);
     });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Ste', 'permission:Consulter Ste']], function () {
+        Route::get('/societeMaintenanceimage/{nom}', [SocieteMaintenancesController::class, 'showimage']);
+    });
     Route::group(['middleware' => ['role:Admin Federation','permission:Modifier Ste']], function () {
         Route::put('/societeMaintenance/{id}', [SocieteMaintenancesController::class, 'update']);
     });
@@ -219,6 +228,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste', 'permission:Consulter Stade']], function () {
         Route::get('/stade/nom/{id}', [StadesController::class, 'getnom']);
         Route::get('/stade/{id}', [StadesController::class, 'show']);
+        Route::get('/stadeimage/{nom}', [StadesController::class, 'showimage']);
         Route::get('/stade/{id}/events', [StadesController::class, 'getEvents']);
         Route::get('/stade/{id}/matchs', [StadesController::class, 'getMatches']);
         Route::get('/stade/{id}/maintenances', [StadesController::class, 'getMaintenances']);
@@ -253,8 +263,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Supprimer Permission']], function () {
         Route::delete('/permission/{id}', [permissionsController::class, 'destroy']);
     });
-
-
 
 
     //Role

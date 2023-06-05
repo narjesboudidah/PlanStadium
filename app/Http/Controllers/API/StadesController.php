@@ -57,30 +57,83 @@ class stadesController extends Controller
     }
     public function index()
     {
-        $stades = stadeResource::collection(stades::get()); //ki tabda bech trajaa akther min 7aja
+        $stades = stades::all();
+    
+        $stadesData = [];
+        foreach ($stades as $stade) {
+            $imageUrl = url($stade->image);
+            $stadesData[] = [
+                'id' => $stade->id,
+                'nom' => $stade->nom,
+                'pays' => $stade->pays,
+                'capacite' => $stade->capacite,
+                'surface' => $stade->surface,
+                'proprietaire' => $stade->proprietaire,
+                'telephone' => $stade->telephone,
+                'adresse' => $stade->adresse,
+                'image' => $imageUrl,
+                'etat' => $stade->etat,
+                'description' => $stade->description,
+                'date_dernier_travaux' => $stade->date_dernier_travaux,
+            ];
+        }
+    
         $array = [
-            'data' => $stades,
+            'data' => $stadesData,
             'message' => 'ok',
             'status' => 200,
         ];
-        return response($array);
+    
+        return response()->json($array);
     }
 
     /*Display the specified resource.*/
     public function show($id)
-    {
-        $stade = stades::find($id);
-        if ($stade) {
-            $array = [
-                'data' => new stadeResource($stade),
-                'message' => 'ok',
-                'status' => 200,
-            ];
-            return response($array);
-        }
-        return response(null, 401, ['The stade not found']);
+{
+    $stade = stades::find($id);
+    if ($stade) {
+        $imageUrl = url($stade->image);
+        $stadesData = [
+            'nom' => $stade->nom,
+            'pays' => $stade->pays,
+            'capacite' => $stade->capacite,
+            'surface' => $stade->surface,
+            'proprietaire' => $stade->proprietaire,
+            'telephone' => $stade->telephone,
+            'adresse' => $stade->adresse,
+            'image' => $imageUrl, // Assurez-vous que l'URL complète de l'image est correcte
+            'etat' => $stade->etat,
+            'description' => $stade->description,
+            'date_dernier_travaux' => $stade->date_dernier_travaux,
+        ];
+        $array = [
+            'data' => $stadesData,
+            'message' => 'ok',
+            'status' => 200,
+        ];
+        return response()->json($array);
     }
+    return response()->json(null, 401, ['The stade not found']);
+}
 
+public function showimage($nom)
+{
+    $stade = stades::where('nom', $nom)->first();
+    if ($stade) {
+        $logoUrl = url($stade->image);
+        $stadesData = [
+            'image' => $logoUrl
+        ];
+        $array = [
+            'data' => $stadesData,
+            'message' => 'ok',
+            'status' => 200,
+        ];
+    
+        return response()->json($array);
+    }
+    return response()->json(null, 401, ['The stade not found']);
+}
     public function shownom($id)
     {
         $stade = stades::find($id);
@@ -107,38 +160,49 @@ class stadesController extends Controller
             'proprietaire' => 'required|string|max:255',
             'telephone' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'etat' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date_dernier_travaux' => 'required|date|date_format:Y-m-d|before_or_equal:' . $todayDate,
         ]);
 
-        if ($validator->fails()) { //ken fama mochkil
+        if ($validator->fails()) {
             return response(null, 400, [$validator->errors()]);
         }
 
-
         $stade = stades::create($request->all());
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('public/images');
+            $stade->image = str_replace('public/', 'storage/', $imagePath);
+            $stade->save();
+        }
+        $imageUrl = asset($stade->image);
+    
         if ($stade) {
-             $todayDate = date('Y-m-d H:i:s');
+            $todayDate = date('Y-m-d H:i:s');
             $admin_id = Auth::id();
             $historique = historiques::create([
-                'action' => 'Ajout stade',
+                'action' => 'ajout Ste',
                 'date' => $todayDate,
                 'admin_fed_id' => $admin_id,
             ]);
-
+    
             if ($historique) {
+                // Récupérer l'URL complète de l'image
+                $imageUrl = url($stade->image);
+    
                 $array = [
                     'data' => new stadeResource($stade),
-                    'message' => 'The stade save',
+                    'message' => 'The stade saved',
                     'historique' => new HistoriqueResource($historique),
                     'status' => 201,
+                    'image_url' => $imageUrl,
                 ];
                 return response()->json($array);
             }
         }
-        return response(null, 400, ['The stade not save']);
+    
+        return response(null, 400, ['The stade not saved']);
     }
 
     /*Update the specified resource in storage.*/

@@ -42,22 +42,50 @@ class SocieteMaintenancesController extends Controller
     
         return response()->json($array);
     }
-      
 
     /*Display the specified resource.*/
     public function show($id)
     {
         $societeMaintenance = societe_maintenances::find($id);
         if ($societeMaintenance) {
+            $logoUrl = url($societeMaintenance->logo);
+            $societeMaintenancesData[] = [
+                'nom' => $societeMaintenance->nom,
+                'adresse' => $societeMaintenance->adresse,
+                'tel' => $societeMaintenance->tel,
+                'logo' => $logoUrl,
+                'email' => $societeMaintenance->email,
+                'description' => $societeMaintenance->description,
+            ];
             $array = [
-                'data' => new societeMaintenanceResource($societeMaintenance),
+                'data' => $societeMaintenancesData,
                 'message' => 'ok',
                 'status' => 200,
             ];
-            return response($array);
+        
+        return response()->json($array);
         }
         return response(null, 401, ['The societe Maintenance not found']);
     }
+
+    public function showimage($nom)
+{
+    $societeMaintenance = societe_maintenances::where('nom', $nom)->first();
+    if ($societeMaintenance) {
+        $logoUrl = url($societeMaintenance->logo);
+        $societeMaintenancesData = [
+            'logo' => $logoUrl
+        ];
+        $array = [
+            'data' => $societeMaintenancesData,
+            'message' => 'ok',
+            'status' => 200,
+        ];
+    
+        return response()->json($array);
+    }
+    return response()->json(null, 401, ['The societe Maintenance not found']);
+}
 
 
     /*Store a newly created resource in storage.*/
