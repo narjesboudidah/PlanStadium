@@ -14,8 +14,8 @@ class permissionsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $permissions = permissionResource::collection(permission::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs permissions
+        $permissions = permissionResource::collection(permission::get());
         $array = [
             'data' => $permissions,
             'message' => 'ok',

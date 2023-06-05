@@ -14,8 +14,8 @@ class historiquesController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $historiques = historiqueResource::collection(historiques::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs historiques
+        $historiques = historiqueResource::collection(historiques::get()); 
         $array = [
             'data' => $historiques,
             'message' => 'ok',

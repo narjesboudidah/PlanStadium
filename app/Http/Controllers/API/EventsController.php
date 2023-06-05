@@ -21,8 +21,8 @@ class EventsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $events = eventResource::collection(events::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs events
+        $events = eventResource::collection(events::get()); 
         $array = [
             'data' => $events,
             'message' => 'ok',

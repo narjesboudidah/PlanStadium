@@ -17,8 +17,8 @@ class EquipesController extends Controller
     /*Display a listing of the resource.*/
     public function index(Request $request)
     {
-
-        $equipes = equipeResource::collection(equipes::get()); //ki tabda bech trajaa akther min 7aja
+        //En cas de retour plusieurs equipes
+        $equipes = equipeResource::collection(equipes::get()); 
         $array = [
             'data' => $equipes,
             'message' => 'ok',

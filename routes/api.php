@@ -33,10 +33,11 @@ use App\Http\Controllers\StatsController;
 // return $request->user();
 // });
 
-//Auth
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+//Auth
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [userController::class, 'getUser']);
     Route::get('/stats', [StatsController::class, 'getCountStats']);
@@ -292,6 +293,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe']], function () {
         Route::get('/competitions/filter/{annee}', [CompetitionsController::class, 'competitionFilter']);
     });
+    
 
     //Reservation
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Reservations']], function () {

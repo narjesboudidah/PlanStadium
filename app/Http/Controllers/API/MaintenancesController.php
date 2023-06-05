@@ -23,8 +23,8 @@ class MaintenancesController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index(Request $request)
-    {
-        $maintenances = maintenanceResource::collection(maintenances::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs maintenances
+        $maintenances = maintenanceResource::collection(maintenances::get()); 
         $array = [
             'data' => $maintenances,
             'message' => 'ok',
@@ -96,7 +96,7 @@ class MaintenancesController extends Controller
         if ($existingMaintenance && $existingEvent) {
             return response()->json(['message' => 'Date déjà réserver'], 400);
         }
-
+        
         $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $maintenanceData['admin_ste_id'] = $admin_ste_id;
         $maintenanceData['admin_fed_id'] = $admin_ste_id;
