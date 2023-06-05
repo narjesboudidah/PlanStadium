@@ -22,8 +22,8 @@ class ReservationsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index(Request $request)
-    {
-        $reservations = reservationResource::collection(reservations::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs réservations
+        $reservations = reservationResource::collection(reservations::get()); 
         $array = [
             'data' => $reservations,
             'message' => 'ok',
