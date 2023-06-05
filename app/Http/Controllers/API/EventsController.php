@@ -21,8 +21,23 @@ class EventsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {   //En cas de retour plusieurs events
-        $events = eventResource::collection(events::get()); 
+    {
+        $datesystem = date('Y-m-d'); // Récupère la date actuelle
+        
+        $events = eventResource::collection(events::where('date_debut', '>=', $datesystem)->get()); // Récupère les événements dont la date de début est supérieure ou égale à la date actuelle
+        
+        $array = [
+            'data' => $events,
+            'message' => 'ok',
+            'status' => 200,
+        ];
+        
+        return response()->json($array);
+    }
+    
+    public function indexH()
+    {
+        $events = eventResource::collection(events::get()); //ki tabda bech trajaa akther min 7aja
         $array = [
             'data' => $events,
             'message' => 'ok',
