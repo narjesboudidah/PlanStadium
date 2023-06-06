@@ -79,7 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/user/{id}', [userController::class, 'show']);
     });
     Route::group(['middleware' => ['role:Admin Federation']], function () {
-        Route::get('/usernom/{id}', [userController::class, 'shownom']);
+        Route::get('/usernom/{id}', [userController::class, 'shownomU']);
     });
     Route::put('/user/{id}', [userController::class, 'update']);
     Route::put('/userUpdate', [userController::class, 'updateUser']);
@@ -132,6 +132,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe|Admin Ste']], function () {
         Route::get('/MaintenancesHistorique', [MaintenancesController::class, 'MaintenancesHistorique']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation']], function () {
+        Route::get('/Maintenancelogo/{id}', [MaintenancesController::class, 'Maintenancelogo']);
     });
 
 
@@ -243,7 +246,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/stade/{id}', [StadesController::class, 'destroy']);
     });
     Route::group(['middleware' => ['role:Admin Federation']], function () {
-        Route::get('/stadenom/{id}', [userController::class, 'shownom']);
+        Route::get('/stadenom/{id}', [StadesController::class, 'shownom']);
     });
 
 
@@ -313,6 +316,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Reservation']], function () {
         Route::get('/reservation/{id}', [ReservationsController::class, 'show']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation']], function () {
+        Route::get('/Reservationlogo/{id}', [ReservationsController::class, 'Reservationlogo']);
     });
     Route::group(['middleware' => ['role:Admin Equipe', 'permission:Modifier Reservation']], function () {
         Route::put('/reservation/{id}', [ReservationsController::class, 'update']);

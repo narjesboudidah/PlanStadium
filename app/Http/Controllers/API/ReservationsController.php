@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\reservationResource;
 use App\Mail\reservationaccepter;
 use App\Mail\reservationrefuse;
+use App\Models\equipes;
 use App\Models\events;
 use App\Models\maintenances;
 use App\Models\reservations;
@@ -46,6 +47,32 @@ class ReservationsController extends Controller
             return response($array);
         }
         return response(null, 401, ['The reservation not found']);
+    }
+
+    public function Reservationlogo($id)
+    {
+        $user = User::select('nom_equipe')->where('id', $id)->first();
+        
+        if ($user) {
+            $logo = equipes::select('logo')->where('nom_equipe', $user->nom_equipe)->first();
+    
+            if ($logo) {
+                $logo1 = 'http://127.0.0.1:8000/' . $logo->logo;
+                $array = [
+                    'data' => $logo1,
+                    'message' => 'OK',
+                    'statut' => 200,
+                ];
+    
+                return response($array);
+            }
+        }
+        
+        // Si aucun utilisateur ou logo n'est trouvé, retourner une réponse appropriée
+        return response([
+            'message' => 'Logo introuvable',
+            'statut' => 404,
+        ], 404);
     }
 
     /*Store a newly created resource in storage.*/

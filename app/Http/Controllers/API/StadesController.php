@@ -88,52 +88,52 @@ class stadesController extends Controller
     }
 
     /*Display the specified resource.*/
-    public function show($id)
-{
-    $stade = stades::find($id);
-    if ($stade) {
-        $imageUrl = url($stade->image);
-        $stadesData = [
-            'nom' => $stade->nom,
-            'pays' => $stade->pays,
-            'capacite' => $stade->capacite,
-            'surface' => $stade->surface,
-            'proprietaire' => $stade->proprietaire,
-            'telephone' => $stade->telephone,
-            'adresse' => $stade->adresse,
-            'image' => $imageUrl, // Assurez-vous que l'URL complète de l'image est correcte
-            'etat' => $stade->etat,
-            'description' => $stade->description,
-            'date_dernier_travaux' => $stade->date_dernier_travaux,
-        ];
-        $array = [
-            'data' => $stadesData,
-            'message' => 'ok',
-            'status' => 200,
-        ];
-        return response()->json($array);
+        public function show($id)
+    {
+        $stade = stades::find($id);
+        if ($stade) {
+            $imageUrl = url($stade->image);
+            $stadesData = [
+                'nom' => $stade->nom,
+                'pays' => $stade->pays,
+                'capacite' => $stade->capacite,
+                'surface' => $stade->surface,
+                'proprietaire' => $stade->proprietaire,
+                'telephone' => $stade->telephone,
+                'adresse' => $stade->adresse,
+                'image' => $imageUrl, // Assurez-vous que l'URL complète de l'image est correcte
+                'etat' => $stade->etat,
+                'description' => $stade->description,
+                'date_dernier_travaux' => $stade->date_dernier_travaux,
+            ];
+            $array = [
+                'data' => $stadesData,
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response()->json($array);
+        }
+        return response()->json(null, 401, ['The stade not found']);
     }
-    return response()->json(null, 401, ['The stade not found']);
-}
 
-public function showimage($nom)
-{
-    $stade = stades::where('nom', $nom)->first();
-    if ($stade) {
-        $logoUrl = url($stade->image);
-        $stadesData = [
-            'image' => $logoUrl
-        ];
-        $array = [
-            'data' => $stadesData,
-            'message' => 'ok',
-            'status' => 200,
-        ];
-    
-        return response()->json($array);
+    public function showimage($nom)
+    {
+        $stade = stades::where('nom', $nom)->first();
+        if ($stade) {
+            $logoUrl = url($stade->image);
+            $stadesData = [
+                'image' => $logoUrl
+            ];
+            $array = [
+                'data' => $stadesData,
+                'message' => 'ok',
+                'status' => 200,
+            ];
+        
+            return response()->json($array);
+        }
+        return response()->json(null, 401, ['The stade not found']);
     }
-    return response()->json(null, 401, ['The stade not found']);
-}
     public function shownom($id)
     {
         $stade = stades::find($id);
@@ -160,7 +160,7 @@ public function showimage($nom)
             'proprietaire' => 'required|string|max:255',
             'telephone' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'etat' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date_dernier_travaux' => 'required|date|date_format:Y-m-d|before_or_equal:' . $todayDate,

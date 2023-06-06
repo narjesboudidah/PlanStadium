@@ -43,7 +43,7 @@ class userController extends Controller
         }
         return response(null, 401, ['The user not found']);
     }
-    public function shownom($id)
+    public function shownomU($id)
     {
         $user = User::find($id);
         if ($user) {

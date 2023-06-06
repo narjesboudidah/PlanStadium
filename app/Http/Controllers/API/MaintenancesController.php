@@ -10,8 +10,9 @@ use App\Models\events;
 use App\Models\maintenances;
 use App\Http\Resources\historiqueResource;
 use App\Models\historiques;
+use App\Models\societe_maintenances;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -317,6 +318,31 @@ class MaintenancesController extends Controller
     }
 
     //filter les maintenances en attentes d'aujourd'hui
+    public function Maintenancelogo($id)
+{
+    $user = User::select('nom_ste')->where('id', $id)->first();
+    
+    if ($user) {
+        $logo = societe_maintenances::select('logo')->where('nom', $user->nom_ste)->first();
+
+        if ($logo) {
+            $logo1 = 'http://127.0.0.1:8000/' . $logo->logo;
+            $array = [
+                'data' => $logo1,
+                'message' => 'OK',
+                'statut' => 200,
+            ];
+
+            return response($array);
+        }
+    }
+    
+    // Si aucun utilisateur ou logo n'est trouvé, retourner une réponse appropriée
+    return response([
+        'message' => 'Logo introuvable',
+        'statut' => 404,
+    ], 404);
+}
     public function MaintenanceFilter(Request $request)
     {
         // Obtenez la date d'aujourd'hui
