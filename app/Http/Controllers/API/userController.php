@@ -100,6 +100,8 @@ class userController extends Controller
         'telephone' => $request->input('telephone'),
         'adresse' => $request->input('adresse'),
         'email' => $request->input('email'),
+        'nom_equipe' => $request->input('nom_equipe'),
+        'nom_ste' => $request->input('nom_ste'),
         'password' => bcrypt($request->input('password')),
     ]);
 
@@ -151,14 +153,11 @@ class userController extends Controller
         }
 
         $validatedData = $request->validate([
-            'nom' => 'max:255',
-            'prenom' => 'max:255',
-            'telephone' => 'unique:users',
-            'email' => 'email|unique:users',
-            'adresse' => 'string',
-            'password' => 'string',
-            'nom_equipe' => 'nullable|string|unique:users',
-            'nom_ste' => 'nullable|string|unique:users',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'telephone' => 'required|string|unique:users,telephone,'.$User->id,
+            'email' => 'required|email|unique:users,email,'.$User->id,
+            'adresse' => 'required|string',
         ]);
 
         $User->update($validatedData);

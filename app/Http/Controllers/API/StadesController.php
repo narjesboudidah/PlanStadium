@@ -88,7 +88,7 @@ class stadesController extends Controller
     }
 
     /*Display the specified resource.*/
-        public function show($id)
+    public function show($id)
     {
         $stade = stades::find($id);
         if ($stade) {

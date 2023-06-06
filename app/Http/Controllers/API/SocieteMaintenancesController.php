@@ -49,7 +49,7 @@ class SocieteMaintenancesController extends Controller
         $societeMaintenance = societe_maintenances::find($id);
         if ($societeMaintenance) {
             $logoUrl = url($societeMaintenance->logo);
-            $societeMaintenancesData[] = [
+            $societeMaintenancesData = [
                 'nom' => $societeMaintenance->nom,
                 'adresse' => $societeMaintenance->adresse,
                 'tel' => $societeMaintenance->tel,
@@ -65,7 +65,7 @@ class SocieteMaintenancesController extends Controller
         
         return response()->json($array);
         }
-        return response(null, 401, ['The societe Maintenance not found']);
+        return response()->json(null, 401, ['The societe Maintenance not found']);
     }
 
     public function showimage($nom)
@@ -95,7 +95,7 @@ class SocieteMaintenancesController extends Controller
         'nom' => 'required|string|max:255',
         'adresse' => 'required|string',
         'tel' => 'required|unique:societe_maintenances',
-        'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096|unique:societe_maintenances',
+        'logo' => 'required|string|mimes:jpeg,png,jpg,gif,svg|max:4096|unique:societe_maintenances',
         'email' => 'required|email|unique:societe_maintenances',
         'description' => 'nullable|string',
     ]);
