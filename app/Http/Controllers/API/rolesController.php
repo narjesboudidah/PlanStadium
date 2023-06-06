@@ -14,8 +14,8 @@ class rolesController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $roles = roleResource::collection(role::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs roles
+        $roles = roleResource::collection(role::get()); 
         $array = [
             'data' => $roles,
             'message' => 'ok',
@@ -48,8 +48,8 @@ class rolesController extends Controller
         $validator = Validator::make($request->all(), [
             'titre' => 'required|max:255',
         ]);
-
-        if ($validator->fails()) { //ken fama mochkil
+        //En cas de probléme 
+        if ($validator->fails()) {
             return response(null, 400, [$validator->errors()]);
         }
 

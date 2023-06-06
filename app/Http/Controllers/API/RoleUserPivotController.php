@@ -12,8 +12,8 @@ class RoleUserPivotController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $RoleUserPivots = RoleUserPivotResource::collection(role_user_pivot::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs compétitions
+        $RoleUserPivots = RoleUserPivotResource::collection(role_user_pivot::get()); 
         $array = [
             'data' => $RoleUserPivots,
             'message' => 'ok',

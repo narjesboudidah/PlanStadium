@@ -14,8 +14,8 @@ class permissionsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $permissions = permissionResource::collection(permission::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs permissions
+        $permissions = permissionResource::collection(permission::get());
         $array = [
             'data' => $permissions,
             'message' => 'ok',
@@ -47,8 +47,8 @@ class permissionsController extends Controller
         $validator = Validator::make($request->all(), [
             'titre' => 'required|max:255',
         ]);
-
-        if ($validator->fails()) { //ken fama mochkil
+        //En cas de probléme
+        if ($validator->fails()) { 
             return response(null, 400, [$validator->errors()]);
         }
 

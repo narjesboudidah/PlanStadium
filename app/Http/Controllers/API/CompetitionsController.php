@@ -15,8 +15,8 @@ class CompetitionsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $competitions = competitionResource::collection(competitions::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs compétitions
+        $competitions = competitionResource::collection(competitions::get()); 
         $array = [
             'data' => $competitions,
             'message' => 'ok',

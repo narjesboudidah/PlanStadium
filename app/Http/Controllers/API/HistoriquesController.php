@@ -14,8 +14,8 @@ class historiquesController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $historiques = historiqueResource::collection(historiques::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs historiques
+        $historiques = historiqueResource::collection(historiques::get()); 
         $array = [
             'data' => $historiques,
             'message' => 'ok',
@@ -34,8 +34,9 @@ class historiquesController extends Controller
             'date' => 'required|date|date_format:Y-m-d|before_or_equal:'.$todayDate,
             'admin_fed_id' => 'required|exists:users,id',
         ]);
-
-        if ($validator->fails()) { //ken fama mochkil
+        
+        //En cas de probléme
+        if ($validator->fails()) { 
             return response(null, 400, [$validator->errors()]);
         }
 

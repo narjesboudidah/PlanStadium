@@ -19,8 +19,8 @@ class userController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $users = userResource::collection(User::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs users
+        $users = userResource::collection(User::get());
         $array = [
             'data' => $users,
             'message' => 'ok',

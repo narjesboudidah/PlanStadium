@@ -17,8 +17,8 @@ class MatchsController extends Controller
 {
     /*Display a listing of the resource.*/
     public function index()
-    {
-        $matchs = matchResource::collection(matchs::get()); //ki tabda bech trajaa akther min 7aja
+    {   //En cas de retour plusieurs matchs
+        $matchs = matchResource::collection(matchs::get()); 
         $array = [
             'data' => $matchs,
             'message' => 'ok',
@@ -56,8 +56,8 @@ class MatchsController extends Controller
             'equipe1_id' => 'required|exists:equipes,id',
             'equipe2_id' => 'required|exists:equipes,id',
         ]);
-
-        if ($validator->fails()) { //ken fama mochkil
+        //En cas de probléme
+        if ($validator->fails()) { 
             return response(null, 400, [$validator->errors()]);
         }
 
