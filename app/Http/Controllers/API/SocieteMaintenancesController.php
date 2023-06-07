@@ -142,66 +142,64 @@ class SocieteMaintenancesController extends Controller
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'nom' => 'string|max:255',
-        'adresse' => 'string',
-        'tel' => [
-            Rule::unique('societe_maintenances')->ignore($id),
-        ],
-        'logo' => [
-            'image',
-            'mimes:jpeg,png,jpg,gif,svg',
-            'max:2048',
-            Rule::unique('societe_maintenances')->ignore($id),
-        ],
-        'email' => [
-            'email',
-            Rule::unique('societe_maintenances')->ignore($id),
-        ],
-        'description' => 'nullable|string',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'data' => null,
-            'message' => $validator->errors(),
-            'status' => 400,
-        ], 400);
+    {
+        $validator = Validator::make($request->all(), [
+            'nom' => 'string|max:255',
+            'adresse' => 'string',
+            'tel' => [
+                Rule::unique('societe_maintenances')->ignore($id),
+            ],
+            'logo' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif,svg',
+                'max:2048',
+                Rule::unique('societe_maintenances')->ignore($id),
+            ],
+            'email' => [
+                'email',
+                Rule::unique('societe_maintenances')->ignore($id),
+            ],
+            'description' => 'nullable|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => null,
+                'message' => $validator->errors(),
+                'status' => 400,
+            ], 400);
+        }
+    
+        $societeMaintenance = societe_maintenances::find($id);
+        if (!$societeMaintenance) {
+            return response()->json([
+                'data' => null,
+                'message' => 'SocieteMaintenance not found',
+                'status' => 404,
+            ], 404);
+        }
+    
+        $societeMaintenance->update($validator->validated());
+    
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = historiques::create([
+            'action' => 'Modifier Ste',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id,
+        ]);
+    
+        if ($historique) {
+            $array = [
+                'data' => new societeMaintenanceResource($societeMaintenance),
+                'message' => 'SocieteMaintenance updated successfully',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201,
+            ];
+            return response()->json($array);
+        }
     }
-
-    $societeMaintenance = societe_maintenances::find($id);
-    if (!$societeMaintenance) {
-        return response()->json([
-            'data' => null,
-            'message' => 'SocieteMaintenance not found',
-            'status' => 404,
-        ], 404);
-    }
-
-    $societeMaintenance->update($validator->validated());
-
-    $todayDate = date('Y-m-d H:i:s');
-    $admin_id = Auth::id();
-    $historique = historiques::create([
-        'action' => 'Modifier Ste',
-        'date' => $todayDate,
-        'admin_fed_id' => $admin_id,
-    ]);
-
-    if ($historique) {
-        $array = [
-            'data' => new societeMaintenanceResource($societeMaintenance),
-            'message' => 'SocieteMaintenance updated successfully',
-            'historique' => new HistoriqueResource($historique),
-            'status' => 201,
-        ];
-        return response()->json($array);
-    }
-}
-
-
-
+    
     /* Remove the specified resource from storage.*/
     public function destroy($id)
     {

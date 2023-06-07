@@ -49,7 +49,7 @@ class EquipesController extends Controller
         $equipe = equipes::find($id);
         if ($equipe) {
             $logoUrl = url($equipe->logo);
-            $equipesData[] = [
+            $equipesData = [
                 'id' => $equipe->id,
                 'nom_equipe' => $equipe->nom_equipe,
                 'adresse' => $equipe->adresse,
@@ -158,7 +158,7 @@ class EquipesController extends Controller
         'nom_equipe' => Rule::unique('equipes')->ignore($id),
             'adresse' => 'max:255',
             'pays' => 'string',
-            'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'string|mimes:jpeg,png,jpg,gif,svg',
             'site_web' => 'string',
             'type_equipe' => 'string',
             'description' => 'string',
