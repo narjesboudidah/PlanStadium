@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\matchResource;
+use App\Models\equipes;
 use App\Models\matchs;
 use App\Http\Resources\historiqueResource;
 use App\Models\historiques;
@@ -173,6 +174,28 @@ class MatchsController extends Controller
         }
         }
     }
+
+    public function Matchlogo($id)
+{
+        $logo = equipes::select('logo')->where('id', $id)->first();
+
+        if ($logo) {
+            $logo1 = 'http://127.0.0.1:8000/' . $logo->logo;
+            $array = [
+                'data' => $logo1,
+                'message' => 'OK',
+                'statut' => 200,
+            ];
+
+            return response($array);
+        }
+    
+    // Si aucun utilisateur ou logo n'est trouvé, retourner une réponse appropriée
+    return response([
+        'message' => 'Logo introuvable',
+        'statut' => 404,
+    ], 404);
+}
 
    /* public function matchFilter($date)
     {

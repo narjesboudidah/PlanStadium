@@ -151,6 +151,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/equipe/{id}', [EquipesController::class, 'show']);
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Equipe']], function () {
+        Route::get('/nomequipe/{id}', [EquipesController::class, 'shownom']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Equipe']], function () {
         Route::get('/equipeimage/{nom}', [EquipesController::class, 'showimage']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Equipe']], function () {
@@ -170,6 +173,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Match']], function () {
         Route::get('/match/{id}', [MatchsController::class, 'show']);
+    });
+    Route::group(['middleware' => ['role:Admin Federation|Admin Equipe', 'permission:Consulter Match']], function () {
+        Route::get('/matchlogo/{id}', [MatchsController::class, 'Matchlogo']);
     });
     Route::group(['middleware' => ['role:Admin Federation', 'permission:Modifier Match']], function () {
         Route::put('/match/{id}', [MatchsController::class, 'update']);

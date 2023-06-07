@@ -52,79 +52,100 @@ class MaintenancesController extends Controller
 
     /*Store a newly created resource in storage.*/
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
-            'heure_debut' => 'required|date_format:H:i',
-            'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
-            'heure_fin' => 'required|date_format:H:i',
-            'etat' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'admin_fed_id' => 'nullable|exists:users,id',
-            'admin_ste_id' => 'exists:users,id',
-            'stade_id' => 'required|exists:stades,id',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'date_debut' => 'required|date|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
+        'heure_debut' => 'required|date_format:H:i',
+        'date_fin' => 'required|date|date_format:Y-m-d|after_or_equal:date_debut',
+        'heure_fin' => 'required|date_format:H:i',
+        'etat' => 'required|string|max:255',
+        'description' => 'nullable|string|max:255',
+        'admin_fed_id' => 'nullable|exists:users,id',
+        'admin_ste_id' => 'exists:users,id',
+        'stade_id' => 'required|exists:stades,id',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-        $staut = 'en attente';
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
+    }
 
-        $maintenanceData = [
-            'date_debut' => $request->date_debut,
-            'heure_debut' => $request->heure_debut,
-            'date_fin' => $request->date_fin,
-            'heure_fin' => $request->heure_fin,
-            'etat' => $request->etat,
-            'description' => $request->description,
-            'admin_ste_id' => Auth::id(),
-            'admin_fed_id' => Auth::id(),
-            'stade_id' => $request->stade_id,
-            'statut' => $staut,
-        ];
+    $status = 'en attente';
 
-        // Vérifier si une maintenance existe avec les mêmes valeurs de state, date_debut
-        $existingMaintenance = maintenances::where('stade_id', $request->stade_id)
-            ->where('statut', 'accepté')
-            ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
-            ->first();
+    $maintenanceData = [
+        'date_debut' => $request->date_debut,
+        'heure_debut' => $request->heure_debut,
+        'date_fin' => $request->date_fin,
+        'heure_fin' => $request->heure_fin,
+        'etat' => $request->etat,
+        'description' => $request->description,
+        'admin_ste_id' => Auth::id(),
+        'admin_fed_id' => Auth::id(),
+        'stade_id' => $request->stade_id,
+        'statut' => $status,
+    ];
 
-        // Vérifier si un event existe avec les mêmes valeurs de state, date_debut
-        $existingEvent = events::where('stade_id', $request->stade_id)
+    // Vérifier si une maintenance existe avec les mêmes valeurs de stade, date_debut
+    $existingMaintenance = Maintenances::where('stade_id', $request->stade_id)
+        ->where('statut', 'accepté')
         ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
         ->first();
 
-        if ($existingMaintenance && $existingEvent) {
-            return response()->json(['message' => 'Date déjà réserver'], 400);
-        }
+    // Vérifier si un événement existe avec les mêmes valeurs de stade, date_debut
+    $existingEvent = Events::where('stade_id', $request->stade_id)
+        ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
+        ->first();
 
-        $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
-        $maintenanceData['admin_ste_id'] = $admin_ste_id;
-        $maintenanceData['admin_fed_id'] = $admin_ste_id;
-        $maintenance = maintenances::create($maintenanceData);
-
-        if ($maintenance) {
-            $todayDate = date('Y-m-d H:i:s');
-            $admin_id = Auth::id();
-            $historique = historiques::create([
-                'action' => 'Ajout maintenance',
-                'date' => $todayDate,
-                'admin_fed_id' => $admin_id
-            ]);
-
-            if ($historique) {
-                $array = [
-                    'data' => new MaintenanceResource($maintenance),
-                    'message' => 'La maintenance a été enregistrée',
-                    'historique' => new HistoriqueResource($historique),
-                    'status' => 201
-                ];
-                return response()->json($array);
-            }
-        }
-
-        return response()->json(['message' => 'La maintenance n\'a pas pu être enregistrée'], 400);
+    if ($existingMaintenance && $existingEvent) {
+        return response()->json(['message' => 'Date déjà réservée'], 400);
     }
+
+    $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
+    $maintenanceData['admin_ste_id'] = $admin_ste_id;
+    $maintenanceData['admin_fed_id'] = $admin_ste_id;
+
+    $User = User::where('id', $maintenanceData['admin_fed_id'])
+           ->where('nom_equipe', null)
+           ->where('nom_ste', null)
+           ->first();
+
+    if ($User) {
+        $maintenanceData['statut'] = 'accepté';
+        $maintenance = Maintenances::create($maintenanceData);
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = Historiques::create([
+            'action' => 'Ajout maintenance',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id
+        ]);
+    } else {
+        $maintenance = Maintenances::create($maintenanceData);
+    }
+
+    if ($maintenance) {
+        $todayDate = date('Y-m-d H:i:s');
+        $admin_id = Auth::id();
+        $historique = Historiques::create([
+            'action' => 'Ajout maintenance',
+            'date' => $todayDate,
+            'admin_fed_id' => $admin_id
+        ]);
+
+        if ($historique) {
+            $array = [
+                'data' => new MaintenanceResource($maintenance),
+                'message' => 'La maintenance a été enregistrée',
+                'historique' => new HistoriqueResource($historique),
+                'status' => 201
+            ];
+            return response()->json($array);
+        }
+    }
+
+    return response()->json(['message' => 'La maintenance n\'a pas pu être enregistrée'], 400);
+}
+
+
 
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)

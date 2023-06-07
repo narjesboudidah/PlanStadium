@@ -141,7 +141,19 @@ class EquipesController extends Controller
     return response(null, 400, ['The equipes not saved']);
     }
     
-
+    public function shownom($id)
+    {
+        $equipe = equipes::find($id);
+        if ($equipe) {
+            $array = [
+                'data' => $equipe->nom_equipes, 
+                'message' => 'ok',
+                'status' => 200,
+            ];
+            return response($array);
+        }
+        return response(['message' => 'The stadium not found'], 401);
+    }
     /*Update the specified resource in storage.*/
     public function update(Request $request, $id)
 {
