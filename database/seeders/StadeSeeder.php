@@ -16,14 +16,12 @@ class StadeSeeder extends Seeder
     public function run()
     {
         //stades::truncate(); //is used to delete all the records from a database table and reset the auto-incrementing ID to 1.
-        
+
         stades::create([
             'nom'=>'Stade olympique de Radès',
             'pays'=>'Tunisie',
             'capacite'=>'6000 ',
             'surface'=>'6000 ',
-            'longitude'=>'455',
-            'latitude'=>'556',
             'proprietaire'=>'proprietaire',
             'telephone'=>'77777777',
             'adresse'=>' Cité Olympique 2040 Radès, Ben Arous',

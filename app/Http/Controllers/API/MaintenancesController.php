@@ -25,7 +25,7 @@ class MaintenancesController extends Controller
     /*Display a listing of the resource.*/
     public function index(Request $request)
     {   //En cas de retour plusieurs maintenances
-        $maintenances = maintenanceResource::collection(maintenances::get()); 
+        $maintenances = maintenanceResource::collection(maintenances::get());
         $array = [
             'data' => $maintenances,
             'message' => 'ok',
@@ -93,11 +93,11 @@ class MaintenancesController extends Controller
         $existingEvent = events::where('stade_id', $request->stade_id)
         ->whereBetween('date_debut', [$request->date_debut, $request->date_fin])
         ->first();
-        
+
         if ($existingMaintenance && $existingEvent) {
             return response()->json(['message' => 'Date déjà réserver'], 400);
         }
-        
+
         $admin_ste_id = Auth::id(); // Récupérer l'ID de l'administrateur connecté
         $maintenanceData['admin_ste_id'] = $admin_ste_id;
         $maintenanceData['admin_fed_id'] = $admin_ste_id;
@@ -229,7 +229,7 @@ class MaintenancesController extends Controller
         $existingEvent = events::where('stade_id', $maintenance->stade_id)
             ->whereBetween('date_debut', [$maintenance->date_debut, $maintenance->date_fin])
             ->first();
-        
+
         $existingMaintenance = maintenances::where('stade_id', $maintenance->stade_id)
         ->where('statut', 'accepté')
         ->whereBetween('date_debut', [$maintenance->date_debut, $maintenance->date_fin])
@@ -321,7 +321,7 @@ class MaintenancesController extends Controller
     public function Maintenancelogo($id)
 {
     $user = User::select('nom_ste')->where('id', $id)->first();
-    
+
     if ($user) {
         $logo = societe_maintenances::select('logo')->where('nom', $user->nom_ste)->first();
 
@@ -336,7 +336,7 @@ class MaintenancesController extends Controller
             return response($array);
         }
     }
-    
+
     // Si aucun utilisateur ou logo n'est trouvé, retourner une réponse appropriée
     return response([
         'message' => 'Logo introuvable',
@@ -434,7 +434,7 @@ class MaintenancesController extends Controller
         return response($array);
     }
 
-    //filter les maintenances accepté 
+    //filter les maintenances accepté
     public function MaintenanceFilterstatut(Request $request)
     {
         $statut = 'accepté';
@@ -459,13 +459,14 @@ class MaintenancesController extends Controller
             'data' => $maintenancesResource,
             'message' => 'OK',
             'status' => 200,
+            'stadename' => $maintenances[0]->stades()->get(),
         ];
 
         // Retourner les maintenances filtrées à la vue ou effectuer d'autres actions nécessaires
         return response($array);
     }
 
-    //filter liste de tous les maintenances en attentes 
+    //filter liste de tous les maintenances en attentes
     public function Maintenancestatut(Request $request)
     {
         $statut = 'en attente';

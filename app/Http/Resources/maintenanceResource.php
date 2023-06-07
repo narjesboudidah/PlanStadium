@@ -26,6 +26,7 @@ class maintenanceResource extends JsonResource
             'stade_id' => $this->stade_id,
             'admin_fed_id' => $this->admin_fed_id,
             'admin_ste_id' => $this->admin_ste_id,
+            // 'stadename' => $this->stades()->get()->nom,
         ];
     }
 }
